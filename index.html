@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ay Takvimi — Anasayfa Prototipi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">ay<span>.</span>defteri</div>
+  <nav>
+    <a href="gunluk.html">Günlük</a>
+    <a href="aylik-takvim.html">Aylık Takvim</a>
+    <a href="bakim-takvimleri.html">Bakım Takvimleri</a>
+    <a href="hakkinda.html">Hakkında</a>
+  </nav>
+  <a href="aylik-takvim.html" class="btn btn-ghost" style="padding:10px 18px; font-size:0.82rem;">Takvime Ekle</a>
+</header>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow">02 Ağustos 2026 · İstanbul UTC+3</div>
+    <h1>Ay şu an <em>Balık</em><br>burcunda, küçülüyor.</h1>
+    <p class="hero-sub">Gerçek ekliptik konuma dayalı, dakikası dakikasına hesaplanmış burç ve faz verileri. Yorum değil, ölçüm.</p>
+
+    <div class="hero-data">
+      <div class="data-item">
+        <div class="num">23°42′</div>
+        <div class="label">Ekliptik Boylam</div>
+      </div>
+      <div class="data-item">
+        <div class="num">%38</div>
+        <div class="label">Aydınlanma</div>
+      </div>
+      <div class="data-item">
+        <div class="num">29 Tem</div>
+        <div class="label">Son Dolunay</div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a href="gunluk.html" class="btn btn-primary">Bugünün Detayını Gör</a>
+      <a href="aylik-takvim.html" class="btn btn-ghost">Aylık Takvime Bak</a>
+    </div>
+  </div>
+
+  <div class="wheel-wrap">
+    <div class="wheel-frame">
+      <svg viewBox="0 0 400 400" id="wheel"></svg>
+    </div>
+  </div>
+</section>
+
+<section class="panels">
+  <div class="panel">
+    <div class="idx">GÜNLÜK</div>
+    <h3>Ay Burcu &amp; Fazı</h3>
+    <p>Her gün için hesaplanmış konum, ilişkiler ve beden üzerindeki etkiler — kaynağı belirtilmiş, sade dille.</p>
+  </div>
+  <div class="panel">
+    <div class="idx">AYLIK</div>
+    <h3>Tam Takvim Görünümü</h3>
+    <p>Burç geçişleri, yeniay/dolunay anları tek tabloda; takvimine tek tıkla aktarılabilir.</p>
+  </div>
+  <div class="panel">
+    <div class="idx">ÖZEL</div>
+    <h3>Bakım Takvimleri</h3>
+    <p>Saç, kaş, epilasyon gibi uygulamalar için ayrı hassasiyetle hazırlanmış, kendine özgü tarihler.</p>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 ay.defteri</div>
+  <div class="mono">İstanbul · UTC+3</div>
+</footer>
+
+<script>
+// --- Basit zodyak çemberi çizimi ---
+const signs = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
+const svg = document.getElementById('wheel');
+const cx = 200, cy = 200, rOuter = 175, rTick = 160, rLabel = 140;
+const activeSignIndex = 11; // Balık (0-index: Koç=0 ... Balık=11)
+const moonAngleDeg = 340 + 23.7; // Balık burcu içinde yaklaşık konum
+
+function polar(cx, cy, r, angleDeg){
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+}
+
+let html = `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter}"/>`;
+html += `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter-60}" style="opacity:0.4"/>`;
+
+// major ticks (every 30deg = sign boundary) + minor ticks (every 10deg)
+for(let deg=0; deg<360; deg+=10){
+  const isMajor = deg % 30 === 0;
+  const p1 = polar(cx, cy, rOuter, deg);
+  const p2 = polar(cx, cy, isMajor ? rOuter-16 : rOuter-8, deg);
+  html += `<line class="${isMajor?'tick-major':'tick-minor'}" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}"/>`;
+}
+
+// sign labels
+signs.forEach((s, i)=>{
+  const midAngle = i*30 + 15;
+  const p = polar(cx, cy, rLabel, midAngle);
+  const isActive = i === activeSignIndex;
+  html += `<text class="sign-label${isActive?' active':''}" x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
+});
+
+// moon marker
+const moonPos = polar(cx, cy, rOuter-30, moonAngleDeg);
+html += `<circle class="moon-marker" cx="${moonPos.x}" cy="${moonPos.y}" r="7"/>`;
+
+// center text
+html += `<text class="center-label" x="${cx}" y="${cy-6}">Balık</text>`;
+html += `<text class="center-sub" x="${cx}" y="${cy+12}">KÜÇÜLÜYOR</text>`;
+
+svg.innerHTML = html;
+</script>
+
+</body>
+</html>
