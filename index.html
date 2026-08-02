@@ -162,7 +162,9 @@ signs.forEach((s, i)=>{
   const isActive = i === activeSignIndex;
   html += `<text class="sign-label${isActive?' active':''}" x="${pLabel.x}" y="${pLabel.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
 
-  
+  // sembol (isimden daha içte)
+  const pSym = polar(cx, cy, rSymbol, midAngle);
+  html += `<text class="sign-symbol${isActive?' active':''}" x="${pSym.x}" y="${pSym.y}" text-anchor="middle" dominant-baseline="middle">${symbols[i]}</text>`;
 });
 
 // ay işareti (dokunulmadı — aynı stil, aynı animasyon)
@@ -172,7 +174,6 @@ html += `<circle class="moon-marker" cx="${moonPos.x}" cy="${moonPos.y}" r="7"/>
 // merkez metin — artık canlı veri
 html += `<text class="center-label" x="${cx}" y="${cy-6}">${signs[activeSignIndex]}</text>`;
 html += `<text class="center-sub" x="${cx}" y="${cy+12}">${durum}</text>`;
-html += `<text class="sign-symbol${isActive?' active':''}" x="${pSym.x}" y="${pSym.y}" text-anchor="middle" dominant-baseline="middle">${symbols[i]}</text>`;
 
 svg.innerHTML = html;
 </script>
