@@ -29,6 +29,7 @@
   .logo{
     font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem;
     letter-spacing: 0.02em;
+    color: var(--ink);
   }
   .logo span{ color: var(--brass); }
   nav{ display:flex; gap:32px; }
@@ -235,6 +236,7 @@ table.data-table tr:hover td{ background: var(--panel); }
   gap: 20px;
   padding: 18px 24px;
   background: transparent; /* isteğe göre renk ekle */
+  color: var(--ink); /* ensure header text is readable on dark bg */
 }
 
 /* Brand (logo + yazı) */
@@ -262,6 +264,7 @@ table.data-table tr:hover td{ background: var(--panel); }
   font-size: 1.15rem;
   line-height: 1;
   letter-spacing: 0.2px;
+  color: var(--ink); /* make logo text readable */
 }
 
 .logo .dot {
@@ -277,7 +280,7 @@ table.data-table tr:hover td{ background: var(--panel); }
 
 .main-nav a {
   text-decoration: none;
-  color: #111; /* isteğe göre renk */
+  color: var(--ink-muted); /* use muted ink for nav links on dark bg */
   font-weight: 600;
   padding: 6px 8px;
   border-radius: 6px;
@@ -287,7 +290,7 @@ table.data-table tr:hover td{ background: var(--panel); }
 .main-nav a:hover,
 .main-nav a:focus {
   background: rgba(199,162,83,0.08);
-  color: #0b0b0b;
+  color: var(--ink); /* highlight on hover for readability */
   outline: none;
 }
 
@@ -295,6 +298,7 @@ table.data-table tr:hover td{ background: var(--panel); }
 .home-btn {
   border: 1px solid transparent;
   border-radius: 8px;
+  color: var(--ink); /* ensure home button text is visible */
 }
 
 /* Responsive: küçük ekranlarda nav'i bir hamburger ile değiştirilebilir yap */
