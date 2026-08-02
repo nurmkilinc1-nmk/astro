@@ -306,3 +306,27 @@ table.data-table tr:hover td{ background: var(--panel); }
   .main-nav { display: none; }
   /* İstersen burada bir hamburger buton ekleyebilirim */
 }
+
+
+/* --- Ana sayfa çemberi: geliştirilmiş katmanlar --- */
+.wheel-frame{ position:relative; }
+.wheel-frame::before{
+  content:''; position:absolute; inset:-8%; border-radius:50%;
+  background: radial-gradient(circle, rgba(199,162,83,0.12), transparent 70%);
+  z-index:-1;
+}
+.ring-decorative{
+  fill:none; stroke: var(--panel-border); stroke-width:1;
+  stroke-dasharray: 1 7; opacity:0.8;
+}
+.ring-rotator{
+  transform-origin: 200px 200px;
+  animation: wheel-spin 160s linear infinite;
+}
+@keyframes wheel-spin{
+  from{ transform: rotate(0deg); }
+  to{ transform: rotate(360deg); }
+}
+.sign-arc-active{ fill: var(--brass); opacity: 0.09; }
+.cusp-dot{ fill: var(--brass); opacity:0.7; }
+.cusp-dot.major{ opacity:1; }
