@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <header>
   <div class="logo">ay<span>.</span>defteri</div>
   <nav>
@@ -23,17 +22,36 @@
 
 <div class="page-wrap">
   <div class="page-header">
-    <h1>Günlük Ay Durumu</h1>
-    <p>Her gün için burç, faz ve etkileri burada yer alacak.</p>
+    <h1 id="baslik">Günlük Ay Durumu</h1>
+    <p id="alt-yazi">Hesaplanıyor...</p>
+  </div>
+
+  <div class="hero-data" style="margin-bottom:34px;">
+    <div class="data-item">
+      <div class="num" id="stat-lon">—</div>
+      <div class="label">Ekliptik Boylam</div>
+    </div>
+    <div class="data-item">
+      <div class="num" id="stat-illum">—</div>
+      <div class="label">Aydınlanma</div>
+    </div>
+    <div class="data-item">
+      <div class="num" id="stat-next-sign">—</div>
+      <div class="label">Sonraki Burç Geçişi</div>
+    </div>
+    <div class="data-item">
+      <div class="num" id="stat-next-phase">—</div>
+      <div class="label">Sonraki Faz</div>
+    </div>
   </div>
 
   <div class="info-card">
-    <h3>02 Ağustos 2026 — Balık Burcunda, Küçülüyor</h3>
-    <p>Bugünün detaylı yorumu buraya gelecek: ilişkiler, beden, öneriler.</p>
+    <h3 id="card-baslik">—</h3>
+    <p id="card-metin">Bugünün detaylı yorumu buraya gelecek: ilişkiler, beden, öneriler.</p>
   </div>
 
   <div class="placeholder-note">
-    Bu sayfa henüz yer tutucu içerik gösteriyor. Günlük içerikler eklenmeye başlandığında burası otomatik güncellenen bir yapıya dönüştürülecek.
+    Yukarıdaki tüm veriler bu sayfa her açıldığında gerçek Ay konumuna göre otomatik hesaplanır — elle güncelleme gerekmez.
   </div>
 </div>
 
@@ -41,5 +59,85 @@
   <div>© 2026 ay.defteri</div>
   <div class="mono">İstanbul · UTC+3</div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
+<script>
+const SIGNS = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
+const AY_TR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const TZ_OFFSET_MS = 3 * 60 * 60 * 1000;
+
+function moonLon(date) {
+  const l = Astronomy.EclipticGeoMoon(date).lon;
+  return ((l % 360) + 360) % 360;
+}
+function findCrossing(t1, t2, target) {
+  let lo = t1.getTime(), hi = t2.getTime();
+  const loDiff = ((moonLon(new Date(lo)) - target + 180) % 360 + 360) % 360 - 180;
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo + hi) / 2;
+    const diff = ((moonLon(new Date(mid)) - target + 180) % 360 + 360) % 360 - 180;
+    if ((diff < 0) === (loDiff < 0)) lo = mid; else hi = mid;
+  }
+  return new Date((lo + hi) / 2);
+}
+function toIstanbul(date) { return new Date(date.getTime() + TZ_OFFSET_MS); }
+function fmtTarih(d) {
+  const dd = String(d.getUTCDate()).padStart(2, "0");
+  const mm = AY_TR[d.getUTCMonth()];
+  const hh = String(d.getUTCHours()).padStart(2, "0");
+  const mi = String(d.getUTCMinutes()).padStart(2, "0");
+  return `${dd} ${mm}, ${hh}:${mi}`;
+}
+
+function render() {
+  const now = new Date();
+
+  // --- Şu anki burç ve derece ---
+  const lon = moonLon(now);
+  const signIdx = Math.floor(lon / 30);
+  const degreeInSign = lon - signIdx * 30;
+  const signName = SIGNS[signIdx];
+
+  // --- Faz: büyüyor/küçülüyor + aydınlanma yüzdesi ---
+  const phaseAngle = Astronomy.MoonPhase(now);
+  const durum = phaseAngle < 180 ? "büyüyor" : "küçülüyor";
+  const illumPct = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, now).phase_fraction * 100);
+
+  // --- Sonraki burç geçişi (4 saatlik adımlarla 15 gün ileriye tara) ---
+  const stepMs = 4 * 60 * 60 * 1000;
+  let t1 = now, sign1 = signIdx, nextTransition = null;
+  for (let t = now.getTime(); t < now.getTime() + 15 * 24 * 60 * 60 * 1000; t += stepMs) {
+    const cur = new Date(t);
+    const s = Math.floor(moonLon(cur) / 30);
+    if (s !== sign1) {
+      const cross = findCrossing(t1, cur, (s * 30) % 360);
+      nextTransition = { time: cross, sign: s };
+      break;
+    }
+    t1 = cur;
+  }
+
+  // --- Sonraki Yeniay/Dolunay ---
+  let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
+  while (q.quarter !== 0 && q.quarter !== 2) q = Astronomy.NextMoonQuarter(q);
+  const nextPhaseLabel = q.quarter === 0 ? "Yeniay" : "Dolunay";
+  const nextPhaseTime = toIstanbul(q.time.date);
+
+  // --- Yazdır ---
+  const nowIst = toIstanbul(now);
+  document.getElementById("baslik").textContent = `${nowIst.getUTCDate()} ${AY_TR[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} — Ay ${signName} Burcunda`;
+  document.getElementById("alt-yazi").textContent = `Ay şu an ${signName} burcunda, ${durum}. Her gün için burç, faz ve etkileri burada yer alacak.`;
+
+  document.getElementById("stat-lon").textContent = degreeInSign.toFixed(1) + "°";
+  document.getElementById("stat-illum").textContent = "%" + illumPct;
+  document.getElementById("stat-next-sign").textContent = nextTransition ? SIGNS[nextTransition.sign] : "—";
+  document.getElementById("stat-next-phase").textContent = nextPhaseLabel + " · " + fmtTarih(nextPhaseTime);
+
+  document.getElementById("card-baslik").textContent =
+    `${nowIst.getUTCDate()} ${AY_TR[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} — ${signName} Burcunda, ${durum}`;
+}
+
+render();
+</script>
 </body>
 </html>
