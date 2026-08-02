@@ -96,8 +96,12 @@
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
 <script>
 const signs = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
+// Unicode burç sembolleri (monokrom, geniş destek)
+const symbols = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
+
 const svg = document.getElementById('wheel');
 const cx = 200, cy = 200, rOuter = 175, rDeco = 188, rTick = 160, rLabel = 140;
+const rSymbol = 100; // sembollerin yerleşeceği yarıçap — ihtiyaca göre değiştir
 
 function polar(cx, cy, r, angleDeg){
   const rad = (angleDeg - 90) * Math.PI / 180;
@@ -150,12 +154,17 @@ for(let deg=0; deg<360; deg+=30){
   html += `<circle class="cusp-dot major" cx="${p.x}" cy="${p.y}" r="2"/>`;
 }
 
-// burç isimleri
+// burç isimleri ve semboller
 signs.forEach((s, i)=>{
   const midAngle = i*30 + 15;
-  const p = polar(cx, cy, rLabel, midAngle);
+  // isim (mevcut davranış)
+  const pLabel = polar(cx, cy, rLabel, midAngle);
   const isActive = i === activeSignIndex;
-  html += `<text class="sign-label${isActive?' active':''}" x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
+  html += `<text class="sign-label${isActive?' active':''}" x="${pLabel.x}" y="${pLabel.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
+
+  // sembol (isimden daha içte)
+  const pSym = polar(cx, cy, rSymbol, midAngle);
+  html += `<text class="sign-symbol${isActive?' active':''}" x="${pSym.x}" y="${pSym.y}" text-anchor="middle" dominant-baseline="middle">${symbols[i]}</text>`;
 });
 
 // ay işareti (dokunulmadı — aynı stil, aynı animasyon)
