@@ -10,15 +10,33 @@
 </head>
 <body>
 
-<header>
-  <div class="logo">ay<span>.</span>defteri</div>
-  <nav>
-    <a href="gunluk.html">Günlük</a>
-    <a href="aylik-takvim.html">Aylık Takvim</a>
-    <a href="bakim-takvimleri.html">Bakım Takvimleri</a>
-    <a href="hakkinda.html">Hakkında</a>
+<header class="site-header">
+  <!-- Tıklanabilir Logo & SVG İkon -->
+  <a href="index.html" class="logo-wrapper" aria-label="Anasayfa - ay.defteri">
+    <div class="logo-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- Hilal / Ay Figürü -->
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        <!-- Defter Sayfası İzi -->
+        <path d="M19 3v4"/>
+        <path d="M21 5h-4"/>
+      </svg>
+    </div>
+    <span class="logo-text">ay<span>.</span>defteri</span>
+  </a>
+
+  <!-- Navigasyon Menüsü -->
+  <nav class="main-nav">
+    <a href="gunluk.html" class="nav-link">Günlük</a>
+    <a href="aylik-takvim.html" class="nav-link">Aylık Takvim</a>
+    <a href="bakim-takvimleri.html" class="nav-link">Bakım Takvimleri</a>
+    <a href="hakkinda.html" class="nav-link">Hakkında</a>
   </nav>
-  <a href="aylik-takvim.html" class="btn btn-ghost" style="padding:10px 18px; font-size:0.82rem;">Takvime Ekle</a>
+
+  <!-- Aksiyon Butonu -->
+  <div class="header-actions">
+    <a href="aylik-takvim.html" class="btn btn-ghost">Takvime Ekle</a>
+  </div>
 </header>
 
 <section class="hero">
