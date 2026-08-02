@@ -162,9 +162,7 @@ signs.forEach((s, i)=>{
   const isActive = i === activeSignIndex;
   html += `<text class="sign-label${isActive?' active':''}" x="${pLabel.x}" y="${pLabel.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
 
-  // sembol (isimden daha içte)
-  const pSym = polar(cx, cy, rSymbol, midAngle);
-  html += `<text class="sign-symbol${isActive?' active':''}" x="${pSym.x}" y="${pSym.y}" text-anchor="middle" dominant-baseline="middle">${symbols[i]}</text>`;
+  
 });
 
 // ay işareti (dokunulmadı — aynı stil, aynı animasyon)
