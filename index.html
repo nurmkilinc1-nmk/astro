@@ -10,28 +10,30 @@
 </head>
 <body>
 
-<header>
-  <a>
-    <nav>
-      <svg class="logo-mark" width="30" height="30" viewBox="0 0 100 100" href="index.html" >
-      <circle class="ring" cx="50" cy="50" r="42" fill="none" stroke="#8C763F" stroke-width="3"/>
-      <line x1="50" y1="4" x2="50" y2="15" stroke="#C7A253" stroke-width="3"/>
-      <line x1="50" y1="85" x2="50" y2="96" stroke="#C7A253" stroke-width="3"/>
-      <line x1="4" y1="50" x2="15" y2="50" stroke="#C7A253" stroke-width="3"/>
-      <line x1="85" y1="50" x2="96" y2="50" stroke="#C7A253" stroke-width="3"/>
-      <circle cx="50" cy="50" r="21" fill="#E9E5D8"/>
-      <circle cx="59" cy="45" r="19" fill="#111729"/>
-    </svg>
-    <div class="logo">ay<span>.</span>defteri</div>
-    </nav>   
-  </a>
-  <nav>
+<header class="site-header">
+  <div class="brand">
+    <a href="index.html" class="brand-link" aria-label="Anasayfa">
+      <svg class="logo-mark" width="44" height="44" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        <circle class="ring" cx="50" cy="50" r="42" fill="none" stroke="#8C763F" stroke-width="3"/>
+        <line x1="50" y1="4" x2="50" y2="15" stroke="#C7A253" stroke-width="3"/>
+        <line x1="50" y1="85" x2="50" y2="96" stroke="#C7A253" stroke-width="3"/>
+        <line x1="4" y1="50" x2="15" y2="50" stroke="#C7A253" stroke-width="3"/>
+        <line x1="85" y1="50" x2="96" y2="50" stroke="#C7A253" stroke-width="3"/>
+        <circle cx="50" cy="50" r="21" fill="#E9E5D8"/>
+        <circle cx="59" cy="45" r="19" fill="#111729"/>
+      </svg>
+      <div class="logo">ay<span class="dot">.</span>defteri</div>
+    </a>
+  </div>
+
+  <nav class="main-nav" role="navigation" aria-label="Ana menü">
     <a href="gunluk.html">Günlük</a>
     <a href="aylik-takvim.html">Aylık Takvim</a>
     <a href="bakim-takvimleri.html">Bakım Takvimleri</a>
     <a href="hakkinda.html">Hakkında</a>
   </nav>
-  <a href="index.html" class="btn btn-ghost" style="padding:10px 18px; font-size:0.82rem;">Anasayfa</a>
+
+  <a href="index.html" class="btn btn-ghost home-btn" style="padding:10px 18px; font-size:0.82rem;">Anasayfa</a>
 </header>
 
 <section class="hero">
