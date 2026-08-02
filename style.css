@@ -317,7 +317,7 @@ table.data-table tr:hover td{ background: var(--panel); }
 }
 .ring-decorative{
   fill:none; stroke: var(--panel-border); stroke-width:1;
-  stroke-dasharray: 1 7; opacity:0.8;
+  stroke-dasharray: 1 7; opacity:1.2;
 }
 .ring-rotator{
   transform-origin: 200px 200px;
