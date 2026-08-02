@@ -330,3 +330,25 @@ table.data-table tr:hover td{ background: var(--panel); }
 .sign-arc-active{ fill: var(--brass); opacity: 0.09; }
 .cusp-dot{ fill: var(--brass); opacity:0.7; }
 .cusp-dot.major{ opacity:1; }
+
+/* burç sembolleri */
+.sign-symbol {
+  fill: #C7A253;             /* altın ton, ihtiyaca göre değiştir */
+  font-size: 28px;           /* sembol boyutu */
+  font-family: "Segoe UI Symbol", "Arial Unicode MS", "Noto Color Emoji", sans-serif;
+  pointer-events: none;
+  transition: transform .18s ease, fill .18s ease;
+}
+
+/* aktif burç için biraz vurgulama */
+.sign-symbol.active {
+  fill: #E9E5D8;
+  font-size: 34px;
+  transform: scale(1.05);
+}
+
+/* gerekirse mobilde küçült */
+@media (max-width:600px){
+  .sign-symbol { font-size:20px; }
+  .sign-symbol.active { font-size:24px; }
+}
