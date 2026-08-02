@@ -93,23 +93,50 @@
   <div class="mono">İstanbul · UTC+3</div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
 <script>
-// --- Basit zodyak çemberi çizimi ---
 const signs = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
 const svg = document.getElementById('wheel');
-const cx = 200, cy = 200, rOuter = 175, rTick = 160, rLabel = 140;
-const activeSignIndex = 11; // Balık (0-index: Koç=0 ... Balık=11)
-const moonAngleDeg = 340 + 23.7; // Balık burcu içinde yaklaşık konum
+const cx = 200, cy = 200, rOuter = 175, rDeco = 188, rTick = 160, rLabel = 140;
 
 function polar(cx, cy, r, angleDeg){
   const rad = (angleDeg - 90) * Math.PI / 180;
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
-let html = `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter}"/>`;
+function donutSlice(cx, cy, rInner, rOuter, startDeg, endDeg){
+  const p1 = polar(cx, cy, rOuter, startDeg);
+  const p2 = polar(cx, cy, rOuter, endDeg);
+  const p3 = polar(cx, cy, rInner, endDeg);
+  const p4 = polar(cx, cy, rInner, startDeg);
+  const largeArc = (endDeg - startDeg) > 180 ? 1 : 0;
+  return `M ${p1.x} ${p1.y} A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${p2.x} ${p2.y} L ${p3.x} ${p3.y} A ${rInner} ${rInner} 0 ${largeArc} 0 ${p4.x} ${p4.y} Z`;
+}
+
+function moonLon(date){
+  const l = Astronomy.EclipticGeoMoon(date).lon;
+  return ((l % 360) + 360) % 360;
+}
+
+const now = new Date();
+const lon = moonLon(now);
+const activeSignIndex = Math.floor(lon / 30);
+const moonAngleDeg = lon;
+const phaseAngle = Astronomy.MoonPhase(now);
+const durum = phaseAngle < 180 ? "BÜYÜYOR" : "KÜÇÜLÜYOR";
+
+let html = "";
+
+// dış dekoratif noktalı halka (yavaşça dönen)
+html += `<g class="ring-rotator"><circle class="ring-decorative" cx="${cx}" cy="${cy}" r="${rDeco}"/></g>`;
+
+// aktif burç dilimi vurgusu (donut segment)
+html += `<path class="sign-arc-active" d="${donutSlice(cx, cy, rOuter-60, rOuter, activeSignIndex*30, activeSignIndex*30+30)}"/>`;
+
+html += `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter}"/>`;
 html += `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter-60}" style="opacity:0.4"/>`;
 
-// major ticks (every 30deg = sign boundary) + minor ticks (every 10deg)
+// major/minor tick'ler
 for(let deg=0; deg<360; deg+=10){
   const isMajor = deg % 30 === 0;
   const p1 = polar(cx, cy, rOuter, deg);
@@ -117,7 +144,13 @@ for(let deg=0; deg<360; deg+=10){
   html += `<line class="${isMajor?'tick-major':'tick-minor'}" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}"/>`;
 }
 
-// sign labels
+// burç kavşak noktaları (her 30 derecede küçük daire)
+for(let deg=0; deg<360; deg+=30){
+  const p = polar(cx, cy, rOuter+7, deg);
+  html += `<circle class="cusp-dot major" cx="${p.x}" cy="${p.y}" r="2"/>`;
+}
+
+// burç isimleri
 signs.forEach((s, i)=>{
   const midAngle = i*30 + 15;
   const p = polar(cx, cy, rLabel, midAngle);
@@ -125,13 +158,13 @@ signs.forEach((s, i)=>{
   html += `<text class="sign-label${isActive?' active':''}" x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
 });
 
-// moon marker
+// ay işareti (dokunulmadı — aynı stil, aynı animasyon)
 const moonPos = polar(cx, cy, rOuter-30, moonAngleDeg);
 html += `<circle class="moon-marker" cx="${moonPos.x}" cy="${moonPos.y}" r="7"/>`;
 
-// center text
-html += `<text class="center-label" x="${cx}" y="${cy-6}">Balık</text>`;
-html += `<text class="center-sub" x="${cx}" y="${cy+12}">KÜÇÜLÜYOR</text>`;
+// merkez metin — artık canlı veri
+html += `<text class="center-label" x="${cx}" y="${cy-6}">${signs[activeSignIndex]}</text>`;
+html += `<text class="center-sub" x="${cx}" y="${cy+12}">${durum}</text>`;
 
 svg.innerHTML = html;
 </script>
