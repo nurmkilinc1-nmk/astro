@@ -3,37 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ay Takvimi — Anasayfa Prototipi</title>
+<title>ay.defteri — Anasayfa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="site-header">
-  <div class="brand">
-    <a href="index.html" class="brand-link" aria-label="Anasayfa">
-      <svg class="logo-mark" width="44" height="44" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-        <circle class="ring" cx="50" cy="50" r="42" fill="none" stroke="#8C763F" stroke-width="3"/>
-        <line x1="50" y1="4" x2="50" y2="15" stroke="#C7A253" stroke-width="3"/>
-        <line x1="50" y1="85" x2="50" y2="96" stroke="#C7A253" stroke-width="3"/>
-        <line x1="4" y1="50" x2="15" y2="50" stroke="#C7A253" stroke-width="3"/>
-        <line x1="85" y1="50" x2="96" y2="50" stroke="#C7A253" stroke-width="3"/>
-        <circle cx="50" cy="50" r="21" fill="#E9E5D8"/>
-        <circle cx="59" cy="45" r="19" fill="#111729"/>
-      </svg>
-      <div class="logo">ay<span class="dot">.</span>defteri</div>
-    </a>
-  </div>
-
-  <nav class="main-nav" role="navigation" aria-label="Ana menü">
+<header>
+  <a href="index.html" class="logo-link">
+    <svg class="logo-mark" width="30" height="30" viewBox="0 0 100 100">
+      <circle class="ring" cx="50" cy="50" r="42" fill="none" stroke="#8C763F" stroke-width="3"/>
+      <line x1="50" y1="4" x2="50" y2="15" stroke="#C7A253" stroke-width="3"/>
+      <line x1="50" y1="85" x2="50" y2="96" stroke="#C7A253" stroke-width="3"/>
+      <line x1="4" y1="50" x2="15" y2="50" stroke="#C7A253" stroke-width="3"/>
+      <line x1="85" y1="50" x2="96" y2="50" stroke="#C7A253" stroke-width="3"/>
+      <circle cx="50" cy="50" r="21" fill="#E9E5D8"/>
+      <circle cx="59" cy="45" r="19" fill="#111729"/>
+    </svg>
+    <div class="logo">ay<span>.</span>defteri</div>
+  </a>
+  <nav>
     <a href="gunluk.html">Günlük</a>
     <a href="aylik-takvim.html">Aylık Takvim</a>
     <a href="bakim-takvimleri.html">Bakım Takvimleri</a>
     <a href="hakkinda.html">Hakkında</a>
   </nav>
-
-  <a href="index.html" class="btn btn-ghost home-btn" style="padding:10px 18px; font-size:0.82rem;">Anasayfa</a>
+  <a href="aylik-takvim.html" class="btn btn-ghost" style="padding:10px 18px; font-size:0.82rem;">Takvime Ekle</a>
 </header>
 
 <div class="voc-banner not-void" id="voc-banner">
@@ -99,18 +95,18 @@
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
 <script>
 const signs = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
-// Unicode burç sembolleri (monokrom, geniş destek)
 const symbols = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
+const AY_TR_TAM = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const AY_TR_KISA = ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
+const TZ_OFFSET_MS = 3 * 60 * 60 * 1000;
 
 const svg = document.getElementById('wheel');
 const cx = 200, cy = 200, rOuter = 175, rDeco = 188, rTick = 160, rLabel = 140;
-const rSymbol = 100; // sembollerin yerleşeceği yarıçap — ihtiyaca göre değiştir
 
 function polar(cx, cy, r, angleDeg){
   const rad = (angleDeg - 90) * Math.PI / 180;
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
-
 function donutSlice(cx, cy, rInner, rOuter, startDeg, endDeg){
   const p1 = polar(cx, cy, rOuter, startDeg);
   const p2 = polar(cx, cy, rOuter, endDeg);
@@ -119,104 +115,180 @@ function donutSlice(cx, cy, rInner, rOuter, startDeg, endDeg){
   const largeArc = (endDeg - startDeg) > 180 ? 1 : 0;
   return `M ${p1.x} ${p1.y} A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${p2.x} ${p2.y} L ${p3.x} ${p3.y} A ${rInner} ${rInner} 0 ${largeArc} 0 ${p4.x} ${p4.y} Z`;
 }
-
 function moonLon(date){
-  const l = Astronomy.EclipticGeoMoon(date).lon;
-  return ((l % 360) + 360) % 360;
+  return ((Astronomy.EclipticGeoMoon(date).lon % 360)+360)%360;
+}
+function planetLon(body, date){
+  const vec = Astronomy.GeoVector(body, date, true);
+  return ((Astronomy.Ecliptic(vec).elon % 360)+360)%360;
+}
+function angDist(a,b){
+  let d = Math.abs(a-b) % 360;
+  return d>180 ? 360-d : d;
+}
+function toIstanbul(date){ return new Date(date.getTime() + TZ_OFFSET_MS); }
+
+function lastFullMoon(now){
+  let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(new Date(now.getTime() - 40*24*60*60*1000)));
+  let lastFull = null;
+  while(q.time.date.getTime() < now.getTime()){
+    if(q.quarter === 2) lastFull = q.time.date;
+    q = Astronomy.NextMoonQuarter(q);
+  }
+  return lastFull;
+}
+function fmtDegree(deg){
+  let d = Math.floor(deg);
+  let m = Math.round((deg - d) * 60);
+  if(m === 60){ m = 0; d += 1; }
+  return `${d}°${String(m).padStart(2,'0')}′`;
+}
+function fmtSaat(d){
+  return `${String(d.getUTCHours()).padStart(2,'0')}:${String(d.getUTCMinutes()).padStart(2,'0')}`;
+}
+function fmtTarihSaat(d){
+  return `${String(d.getUTCDate()).padStart(2,'0')} ${AY_TR_KISA[d.getUTCMonth()]}, ${fmtSaat(d)}`;
 }
 
+// --- Ay Boşluğu (Void of Course) hesaplama ---
+function findCrossing(t1, t2, target){
+  let lo=t1.getTime(), hi=t2.getTime();
+  const loDiff = ((moonLon(new Date(lo))-target+180)%360+360)%360-180;
+  for(let i=0;i<40;i++){
+    const mid=(lo+hi)/2;
+    const diff=((moonLon(new Date(mid))-target+180)%360+360)%360-180;
+    if((diff<0)===(loDiff<0)) lo=mid; else hi=mid;
+  }
+  return new Date((lo+hi)/2);
+}
+function findSignWindow(now){
+  const stepMs = 4*3600*1000;
+  const curSign = Math.floor(moonLon(now)/30);
+  let t = now.getTime(), prevT = t, nextCross=null;
+  while(!nextCross){
+    t += stepMs;
+    const s = Math.floor(moonLon(new Date(t))/30);
+    if(s!==curSign) nextCross = findCrossing(new Date(prevT), new Date(t), (s*30)%360);
+    prevT = t;
+  }
+  t = now.getTime(); prevT = t;
+  let prevCross = null;
+  while(!prevCross){
+    t -= stepMs;
+    const s = Math.floor(moonLon(new Date(t))/30);
+    if(s!==curSign) prevCross = findCrossing(new Date(t), new Date(prevT), (curSign*30)%360);
+    prevT = t;
+  }
+  return { start: prevCross, end: nextCross, sign: curSign };
+}
+const VOC_PLANETS = [Astronomy.Body.Sun, Astronomy.Body.Mercury, Astronomy.Body.Venus, Astronomy.Body.Mars, Astronomy.Body.Jupiter, Astronomy.Body.Saturn];
+const VOC_ASPECTS = [0,60,90,120,180];
+function bisectAspect(body, aspectAngle, t1, t2){
+  function f(t){ return angDist(moonLon(t), planetLon(body,t)) - aspectAngle; }
+  let lo=t1.getTime(), hi=t2.getTime();
+  let loVal = f(new Date(lo));
+  for(let i=0;i<30;i++){
+    const mid=(lo+hi)/2;
+    const midVal = f(new Date(mid));
+    if((midVal<0)===(loVal<0)){ lo=mid; loVal=midVal; } else hi=mid;
+  }
+  return new Date((lo+hi)/2);
+}
+function findVoc(now){
+  const win = findSignWindow(now);
+  const stepMs = 20*60*1000;
+  const times=[];
+  for(let t=win.start.getTime(); t<=win.end.getTime(); t+=stepMs) times.push(new Date(t));
+  const moonVals = times.map(moonLon);
+  let found=[];
+  for(const body of VOC_PLANETS){
+    const planetVals = times.map(t=>planetLon(body,t));
+    let prevDist = angDist(moonVals[0], planetVals[0]);
+    for(let i=1;i<times.length;i++){
+      const dist = angDist(moonVals[i], planetVals[i]);
+      for(const asp of VOC_ASPECTS){
+        const prevDiff = prevDist-asp, curDiff = dist-asp;
+        if((prevDiff<0)!==(curDiff<0)) found.push(bisectAspect(body, asp, times[i-1], times[i]));
+      }
+      prevDist = dist;
+    }
+  }
+  const voidStart = found.length ? new Date(Math.max(...found.map(d=>d.getTime()))) : win.start;
+  return { voidStart, voidEnd: win.end, nextSign: win.sign };
+}
+
+// --- Hesaplamalar ---
 const now = new Date();
 const lon = moonLon(now);
 const activeSignIndex = Math.floor(lon / 30);
+const degreeInSign = lon - activeSignIndex * 30;
 const moonAngleDeg = lon;
 const phaseAngle = Astronomy.MoonPhase(now);
-const durum = phaseAngle < 180 ? "BÜYÜYOR" : "KÜÇÜLÜYOR";
+const durum = phaseAngle < 180 ? "büyüyor" : "küçülüyor";
+const illumPct = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, now).phase_fraction * 100);
+const lastFull = toIstanbul(lastFullMoon(now));
 
+// --- Çember çizimi ---
 let html = "";
-
-// dış dekoratif noktalı halka (yavaşça dönen)
 html += `<g class="ring-rotator"><circle class="ring-decorative" cx="${cx}" cy="${cy}" r="${rDeco}"/></g>`;
-
-// aktif burç dilimi vurgusu (donut segment)
 html += `<path class="sign-arc-active" d="${donutSlice(cx, cy, rOuter-60, rOuter, activeSignIndex*30, activeSignIndex*30+30)}"/>`;
-
 html += `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter}"/>`;
 html += `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter-60}" style="opacity:0.4"/>`;
-
-// major/minor tick'ler
 for(let deg=0; deg<360; deg+=10){
   const isMajor = deg % 30 === 0;
   const p1 = polar(cx, cy, rOuter, deg);
   const p2 = polar(cx, cy, isMajor ? rOuter-16 : rOuter-8, deg);
   html += `<line class="${isMajor?'tick-major':'tick-minor'}" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}"/>`;
 }
-
-// burç kavşak noktaları (her 30 derecede küçük daire)
 for(let deg=0; deg<360; deg+=30){
   const p = polar(cx, cy, rOuter+7, deg);
   html += `<circle class="cusp-dot major" cx="${p.x}" cy="${p.y}" r="2"/>`;
 }
-
-// burç isimleri (semboller buradan çıkarıldı, sadece isimler çember etrafında kalıyor)
 signs.forEach((s, i)=>{
   const midAngle = i*30 + 15;
-  const pLabel = polar(cx, cy, rLabel, midAngle);
+  const p = polar(cx, cy, rLabel, midAngle);
   const isActive = i === activeSignIndex;
-  
-  html += `<text class="sign-label${isActive?' active':''}" x="${pLabel.x}" y="${pLabel.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
+  html += `<text class="sign-label${isActive?' active':''}" x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
 });
-
-// ay işareti (dokunulmadı — aynı stil, aynı animasyon)
 const moonPos = polar(cx, cy, rOuter-30, moonAngleDeg);
 html += `<circle class="moon-marker" cx="${moonPos.x}" cy="${moonPos.y}" r="7"/>`;
-
-// --- MERKEZ METIN BÖLGESİ (Sembol, İsim ve Durum) ---
-// Aktif burcun sembolünü alıyoruz
 const activeSymbol = symbols[activeSignIndex];
-
-// Y koordinatlarını (y) elemanlar üst üste binmesin diye hizaladık:
-// 1. Sembol (En üstte - Örn: cy - 22)
 html += `<text class="center-symbol" x="${cx}" y="${cy - 22}" text-anchor="middle" dominant-baseline="middle">${activeSymbol}</text>`;
-
-// 2. Burç İsmi (Ortada - Örn: cy + 2)
 html += `<text class="center-label" x="${cx}" y="${cy + 2}" text-anchor="middle" dominant-baseline="middle">${signs[activeSignIndex]}</text>`;
-
-// 3. Durum Metni (En altta - Örn: cy + 22)
-html += `<text class="center-sub" x="${cx}" y="${cy + 22}" text-anchor="middle" dominant-baseline="middle">${durum}</text>`;
+html += `<text class="center-sub" x="${cx}" y="${cy + 22}" text-anchor="middle" dominant-baseline="middle">${durum.toUpperCase()}</text>`;
 svg.innerHTML = html;
 
-  // --- Hero bölümü verileri ---
+// --- Hero verileri ---
 const nowIst = toIstanbul(now);
 document.getElementById("eyebrow-date").textContent =
   `${String(nowIst.getUTCDate()).padStart(2,"0")} ${AY_TR_TAM[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} · İstanbul UTC+3`;
- 
 document.getElementById("hero-sign").textContent = signs[activeSignIndex];
 document.getElementById("hero-durum").textContent = durum;
- 
 document.getElementById("stat-lon").textContent = fmtDegree(degreeInSign);
 document.getElementById("stat-illum").textContent = "%" + illumPct;
 document.getElementById("stat-last-full").textContent =
   `${String(lastFull.getUTCDate()).padStart(2,"0")} ${AY_TR_KISA[lastFull.getUTCMonth()]}`;
-  
-  // --- Ay Boşluğu (VOC) banner ---
+
+// --- Ay Boşluğu (VOC) banner ---
 const voc = findVoc(now);
+const nextSignIndex = (voc.nextSign + 1) % 12;
 const vocStartIst = toIstanbul(voc.voidStart);
 const vocEndIst = toIstanbul(voc.voidEnd);
 const banner = document.getElementById("voc-banner");
 const label = document.getElementById("voc-label");
 const text = document.getElementById("voc-text");
 const isVoidNow = now >= voc.voidStart && now < voc.voidEnd;
- 
+
 if(isVoidNow){
   banner.classList.remove("not-void");
   banner.classList.add("is-void");
   label.textContent = "Ay Boşlukta";
-  text.textContent = `${signs[voc.nextSign]} burcuna geçene kadar (${fmtSaat(vocEndIst)}) yeni başlangıçlar için uygun değil.`;
+  text.textContent = `${signs[nextSignIndex]} burcuna geçene kadar (${fmtSaat(vocEndIst)}) yeni başlangıçlar için uygun değil.`;
 } else {
   banner.classList.remove("is-void");
   banner.classList.add("not-void");
   label.textContent = "Ay Boşluğu Değil";
-  text.textContent = `Sıradaki boşluk: ${fmtTarihSaat(vocStartIst)} – ${fmtSaat(vocEndIst)} (${signs[voc.nextSign]}'a geçişte)`;
+  text.textContent = `Sıradaki boşluk: ${fmtTarihSaat(vocStartIst)} – ${fmtSaat(vocEndIst)} (${signs[nextSignIndex]}'a geçişte)`;
 }
 </script>
 
