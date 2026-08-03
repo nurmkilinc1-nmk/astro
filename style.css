@@ -1,169 +1,232 @@
-  :root{
-    --bg: #111729;
-    --panel: #1A2338;
-    --panel-border: #333F5E;
-    --ink: #E9E5D8;
-    --ink-muted: #A6ADC7;:root{
-    --bg: #111729;
-    --panel: #1A2338;
-    --panel-border: #333F5E;
-    --ink: #E9E5D8;
-    --ink-muted: #A6ADC7;
-    --brass: #C7A253;
-    --brass-dim: #8C763F;
-    --ember: #B4502E;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(199,162,83,0.08), transparent),
-      var(--bg);
-    color: var(--ink);
-    font-family: 'Inter', sans-serif;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
-  .mono{ font-family: 'IBM Plex Mono', monospace; }
-  .display{ font-family: 'Fraunces', serif; }
+/* Cleaned style.css
+   - Fixed duplicated/broken :root blocks
+   - Removed repeated rule blocks
+   - Added VOC banner styles
+   - Preserved original layout, wheel, and responsive rules
+*/
+:root{
+  --bg: #111729;
+  --panel: #1A2338;
+  --panel-border: #333F5E;
+  --ink: #E9E5D8;
+  --ink-muted: #A6ADC7;
+  --brass: #C7A253;
+  --brass-dim: #8C763F;
+  --ember: #B4502E;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(199,162,83,0.08), transparent),
+    var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.mono{ font-family: 'IBM Plex Mono', monospace; }
+.display{ font-family: 'Fraunces', serif; }
 
-  header{
-    display:flex; justify-content:space-between; align-items:center;
-    padding: 28px 6vw;
-    border-bottom: 1px solid var(--panel-border);
-  }
-  .logo{
-    font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem;
-    letter-spacing: 0.02em;
-  }
-  .logo span{ color: var(--brass); }
-  nav{ display:flex; gap:32px; }
-  nav a{
-    color: var(--ink-muted); text-decoration:none; font-size:0.88rem;
-    letter-spacing:0.03em; transition: color 0.2s;
-  }
-  nav a:hover{ color: var(--ink); }
+header{
+  display:flex; justify-content:space-between; align-items:center;
+  padding: 28px 6vw;
+  border-bottom: 1px solid var(--panel-border);
+}
+.logo{
+  font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+.logo span{ color: var(--brass); }
+nav{ display:flex; gap:32px; }
+nav a{
+  color: var(--ink-muted); text-decoration:none; font-size:0.88rem;
+  letter-spacing:0.03em; transition: color 0.2s;
+}
+nav a:hover{ color: var(--ink); }
 
-  .hero{
-    display:grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    align-items:center;
-    gap: 4vw;
-    padding: 6vw 6vw 4vw;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 0.78rem;
-    color: var(--brass);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 22px;
-    display:flex; align-items:center; gap:10px;
-  }
-  .eyebrow::before{
-    content:''; width:6px; height:6px; border-radius:50%;
-    background: var(--brass); display:inline-block;
-    box-shadow: 0 0 8px var(--brass);
-  }
-  h1{
-    font-family:'Fraunces', serif;
-    font-weight: 400;
-    font-size: clamp(2.4rem, 4.2vw, 3.6rem);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-  }
-  h1 em{ font-style: italic; font-weight:300; color: var(--brass); }
-  .hero-sub{
-    margin-top: 22px;
-    color: var(--ink-muted);
-    font-size: 1.02rem;
-    max-width: 480px;
-  }
-  .hero-data{
-    display:flex; gap: 28px; margin-top: 36px;
-  }
-  .data-item{ border-left: 2px solid var(--brass-dim); padding-left: 14px; }
-  .data-item .num{ font-family:'IBM Plex Mono'; font-size:1.4rem; color: var(--ink); }
-  .data-item .label{ font-size:0.72rem; color: var(--ink-muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:2px;}
+/* VOC (Ay Boşlukta) banner styles */
+.voc-banner{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 6vw;
+  border-top: 1px solid var(--panel-border);
+  border-bottom: 1px solid var(--panel-border);
+  color: var(--ink);
+  background: linear-gradient(90deg, rgba(26,35,56,0.4), rgba(17,23,41,0.35));
+  font-family: 'Inter', sans-serif;
+  transition: background .18s ease, border-color .18s ease, color .18s ease;
+}
+.voc-banner .voc-inner{
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.voc-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: rgba(199,162,83,0.08);
+  color: var(--brass);
+  flex-shrink: 0;
+}
+.voc-icon svg{ width:18px; height:18px; fill: currentColor; }
+.voc-copy{ display:flex; gap:8px; align-items:baseline; }
+.voc-label{
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--brass);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.voc-text{
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+  line-height: 1.1;
+}
+.voc-banner.not-void{
+  border-left: 6px solid rgba(199,162,83,0.08);
+  background: linear-gradient(90deg, rgba(26,35,56,0.12), rgba(17,23,41,0.06));
+}
+.voc-banner.not-void .voc-label{ color: var(--brass); }
+.voc-banner.is-void{
+  border-left: 6px solid var(--ember);
+  background: linear-gradient(90deg, rgba(180,80,46,0.07), rgba(17,23,41,0.06));
+}
+.voc-banner.is-void .voc-label{ color: var(--ember); }
+.voc-banner.is-void .voc-text{ color: #ffd9cc; }
+@media (max-width:720px){
+  .voc-inner{ flex-direction: column; align-items:flex-start; gap:6px; }
+  .voc-icon{ width: 30px; height:30px; }
+  .voc-text{ font-size:0.88rem; }
+}
 
-  .cta-row{ display:flex; gap:14px; margin-top:38px; }
-  .btn{
-    font-family:'Inter'; font-size:0.9rem; font-weight:500;
-    padding: 13px 26px; border-radius: 2px; text-decoration:none;
-    display:inline-block; transition: all 0.2s;
-    border: 1px solid transparent;
-  }
-  .btn-primary{ background: var(--brass); color: #16130B; }
-  .btn-primary:hover{ background: #d9b567; }
-  .btn-ghost{ border-color: var(--panel-border); color: var(--ink); }
-  .btn-ghost:hover{ border-color: var(--brass-dim); }
+.hero{
+  display:grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items:center;
+  gap: 4vw;
+  padding: 6vw 6vw 4vw;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.eyebrow{
+  font-family:'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--brass);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+  display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{
+  content:''; width:6px; height:6px; border-radius:50%;
+  background: var(--brass); display:inline-block;
+  box-shadow: 0 0 8px var(--brass);
+}
+h1{
+  font-family:'Fraunces', serif;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 4.2vw, 3.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+h1 em{ font-style: italic; font-weight:300; color: var(--brass); }
+.hero-sub{
+  margin-top: 22px;
+  color: var(--ink-muted);
+  font-size: 1.02rem;
+  max-width: 480px;
+}
+.hero-data{
+  display:flex; gap: 28px; margin-top: 36px;
+}
+.data-item{ border-left: 2px solid var(--brass-dim); padding-left: 14px; }
+.data-item .num{ font-family:'IBM Plex Mono'; font-size:1.4rem; color: var(--ink); }
+.data-item .label{ font-size:0.72rem; color: var(--ink-muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:2px;}
 
-  /* --- Zodiac wheel --- */
-  .wheel-wrap{ display:flex; justify-content:center; align-items:center; }
-  .wheel-frame{ position:relative; width: 100%; max-width: 440px; aspect-ratio:1; }
-  svg{ width:100%; height:100%; overflow: visible; }
-  .ring-outer{ fill:none; stroke: var(--panel-border); stroke-width: 1; }
-  .tick-major{ stroke: var(--brass-dim); stroke-width:1; }
-  .tick-minor{ stroke: var(--panel-border); stroke-width:1; }
-  .sign-label{
-    font-family:'IBM Plex Mono'; font-size: 9px; fill: var(--ink-muted);
-    letter-spacing: 0.05em;
-  }
-  .sign-label.active{ fill: var(--brass); }
-  .moon-marker{
-    fill: var(--ink); filter: drop-shadow(0 0 9px rgba(233,229,216,0.55));
-  }
-  .center-label{
-    font-family:'Fraunces'; font-weight:500; font-size: 21px; fill: var(--ink); text-anchor:middle;
-  }
-  .center-sub{
-    font-family:'IBM Plex Mono'; font-size: 11px; fill: var(--brass); text-anchor:middle;
-    letter-spacing:0.12em;
-  }
-  .center-symbol{
-    font-family: 'Noto Sans Symbols 2', sans-serif;
-    font-size: 30px; fill: var(--brass); text-anchor:middle;
-  }
-  @keyframes pulse{
-    0%,100%{ opacity:1; } 50%{ opacity:0.55; }
-  }
-  .moon-marker{ animation: pulse 3.5s ease-in-out infinite; }
+.cta-row{ display:flex; gap:14px; margin-top:38px; }
+.btn{
+  font-family:'Inter'; font-size:0.9rem; font-weight:500;
+  padding: 13px 26px; border-radius: 2px; text-decoration:none;
+  display:inline-block; transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.btn-primary{ background: var(--brass); color: #16130B; }
+.btn-primary:hover{ background: #d9b567; }
+.btn-ghost{ border-color: var(--panel-border); color: var(--ink); }
+.btn-ghost:hover{ border-color: var(--brass-dim); }
 
-  /* --- Panels section --- */
-  .panels{
-    padding: 4vw 6vw 8vw;
-    max-width: 1400px; margin:0 auto;
-    display:grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
-  }
-  .panel{
-    background: var(--panel);
-    border: 1px solid var(--panel-border);
-    padding: 30px 26px;
-    border-radius: 3px;
-  }
-  .panel .idx{
-    font-family:'IBM Plex Mono'; font-size:0.75rem; color: var(--brass-dim);
-    margin-bottom: 16px; letter-spacing:0.1em;
-  }
-  .panel h3{
-    font-family:'Fraunces'; font-weight:500; font-size:1.25rem; margin-bottom:10px;
-  }
-  .panel p{ color: var(--ink-muted); font-size:0.92rem; }
+/* --- Zodiac wheel --- */
+.wheel-wrap{ display:flex; justify-content:center; align-items:center; }
+.wheel-frame{ position:relative; width: 100%; max-width: 440px; aspect-ratio:1; }
+svg{ width:100%; height:100%; overflow: visible; }
+.ring-outer{ fill:none; stroke: var(--panel-border); stroke-width: 1; }
+.tick-major{ stroke: var(--brass-dim); stroke-width:1; }
+.tick-minor{ stroke: var(--panel-border); stroke-width:1; }
+.sign-label{
+  font-family:'IBM Plex Mono'; font-size: 9px; fill: var(--ink-muted);
+  letter-spacing: 0.05em;
+}
+.sign-label.active{ fill: var(--brass); }
+.moon-marker{
+  fill: var(--ink); filter: drop-shadow(0 0 9px rgba(233,229,216,0.55));
+}
+.center-label{
+  font-family:'Fraunces'; font-weight:500; font-size: 21px; fill: var(--ink); text-anchor:middle;
+}
+.center-sub{
+  font-family:'IBM Plex Mono'; font-size: 11px; fill: var(--brass); text-anchor:middle;
+  letter-spacing:0.12em;
+}
+.center-symbol{
+  font-family: 'Noto Sans Symbols 2', sans-serif;
+  font-size: 30px; fill: var(--brass); text-anchor:middle;
+}
+@keyframes pulse{
+  0%,100%{ opacity:1; } 50%{ opacity:0.55; }
+}
+.moon-marker{ animation: pulse 3.5s ease-in-out infinite; }
 
-  footer{
-    border-top: 1px solid var(--panel-border);
-    padding: 26px 6vw;
-    display:flex; justify-content:space-between;
-    color: var(--ink-muted); font-size:0.8rem;
-  }
+/* --- Panels section --- */
+.panels{
+  padding: 4vw 6vw 8vw;
+  max-width: 1400px; margin:0 auto;
+  display:grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+}
+.panel{
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  padding: 30px 26px;
+  border-radius: 3px;
+}
+.panel .idx{
+  font-family:'IBM Plex Mono'; font-size:0.75rem; color: var(--brass-dim);
+  margin-bottom: 16px; letter-spacing:0.1em;
+}
+.panel h3{
+  font-family:'Fraunces'; font-weight:500; font-size:1.25rem; margin-bottom:10px;
+}
+.panel p{ color: var(--ink-muted); font-size:0.92rem; }
 
-  @media (max-width: 860px){
-    .hero{ grid-template-columns: 1fr; }
-    .wheel-wrap{ order:-1; margin-bottom: 20px; }
-    .panels{ grid-template-columns: 1fr; }
-    nav{ display:none; }
-  }
+footer{
+  border-top: 1px solid var(--panel-border);
+  padding: 26px 6vw;
+  display:flex; justify-content:space-between;
+  color: var(--ink-muted); font-size:0.8rem;
+}
+
+@media (max-width: 860px){
+  .hero{ grid-template-columns: 1fr; }
+  .wheel-wrap{ order:-1; margin-bottom: 20px; }
+  .panels{ grid-template-columns: 1fr; }
+  nav{ display:none; }
+}
 
 /* --- İç sayfalar için ek stiller --- */
 .page-wrap{
@@ -261,457 +324,39 @@ nav a::after{
 }
 nav a:hover::after{ width:100%; }
 
-/* --- Ana sayfa çemberi: geliştirilmiş katmanlar --- */
-.wheel-frame{ position:relative; }
-.wheel-frame::before{
-  content:''; position:absolute; inset:-8%; border-radius:50%;
-  background: radial-gradient(circle, rgba(199,162,83,0.12), transparent 70%);
-  z-index:-1;
-}
-.ring-decorative{
-  fill:none; stroke: var(--panel-border); stroke-width:1;
-  stroke-dasharray: 1 7; opacity:0.8;
-}
-.ring-rotator{
-  transform-origin: 200px 200px;
-  animation: wheel-spin 160s linear infinite;
-}
-@keyframes wheel-spin{
-  from{ transform: rotate(0deg); }
-  to{ transform: rotate(360deg); }
-}
-.sign-arc-active{ fill: var(--brass); opacity: 0.09; }
-.cusp-dot{ fill: var(--brass); opacity:0.7; }
-.cusp-dot.major{ opacity:1; }
-    --brass: #C7A253;
-    --brass-dim: #8C763F;
-    --ember: #B4502E;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(199,162,83,0.08), transparent),
-      var(--bg);
-    color: var(--ink);
-    font-family: 'Inter', sans-serif;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
-  .mono{ font-family: 'IBM Plex Mono', monospace; }
-  .display{ font-family: 'Fraunces', serif; }
-
-  header{
-    display:flex; justify-content:space-between; align-items:center;
-    padding: 28px 6vw;
-    border-bottom: 1px solid var(--panel-border);
-  }
-  .logo{
-    font-family:'Fraunces', serif; font-weight:500; font-size:1.15rem;
-    letter-spacing: 0.02em;
-    color: var(--ink);
-  }
-  .logo span{ color: var(--brass); }
-  nav{ display:flex; gap:32px; }
-  nav a{
-    color: var(--ink-muted); text-decoration:none; font-size:0.88rem;
-    letter-spacing:0.03em; transition: color 0.2s;
-  }
-  nav a:hover{ color: var(--ink); }
-
-  .hero{
-    display:grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    align-items:center;
-    gap: 4vw;
-    padding: 6vw 6vw 4vw;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 0.78rem;
-    color: var(--brass);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 22px;
-    display:flex; align-items:center; gap:10px;
-  }
-  .eyebrow::before{
-    content:''; width:6px; height:6px; border-radius:50%;
-    background: var(--brass); display:inline-block;
-    box-shadow: 0 0 8px var(--brass);
-  }
-  h1{
-    font-family:'Fraunces', serif;
-    font-weight: 400;
-    font-size: clamp(2.4rem, 4.2vw, 3.6rem);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-  }
-  h1 em{ font-style: italic; font-weight:300; color: var(--brass); }
-  .hero-sub{
-    margin-top: 22px;
-    color: var(--ink-muted);
-    font-size: 1.02rem;
-    max-width: 480px;
-  }
-  .hero-data{
-    display:flex; gap: 28px; margin-top: 36px;
-  }
-  .data-item{ border-left: 2px solid var(--brass-dim); padding-left: 14px; }
-  .data-item .num{ font-family:'IBM Plex Mono'; font-size:1.4rem; color: var(--ink); }
-  .data-item .label{ font-size:0.72rem; color: var(--ink-muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:2px;}
-
-  .cta-row{ display:flex; gap:14px; margin-top:38px; }
-  .btn{
-    font-family:'Inter'; font-size:0.9rem; font-weight:500;
-    padding: 13px 26px; border-radius: 2px; text-decoration:none;
-    display:inline-block; transition: all 0.2s;
-    border: 1px solid transparent;
-  }
-  .btn-primary{ background: var(--brass); color: #16130B; }
-  .btn-primary:hover{ background: #d9b567; }
-  .btn-ghost{ border-color: var(--panel-border); color: var(--ink); }
-  .btn-ghost:hover{ border-color: var(--brass-dim); }
-
-  /* --- Zodiac wheel --- */
-  .wheel-wrap{ display:flex; justify-content:center; align-items:center; }
-  .wheel-frame{ position:relative; width: 100%; max-width: 440px; aspect-ratio:1; }
-  svg{ width:100%; height:100%; overflow: visible; }
-  .ring-outer{ fill:none; stroke: var(--panel-border); stroke-width: 1; }
-  .tick-major{ stroke: var(--brass-dim); stroke-width:1; }
-  .tick-minor{ stroke: var(--panel-border); stroke-width:1; }
-  .sign-label{
-    font-family:'IBM Plex Mono'; font-size: 9px; fill: var(--ink-muted);
-    letter-spacing: 0.05em;
-  }
-  .sign-label.active{ fill: var(--brass); }
-  .moon-marker{
-    fill: var(--ink); filter: drop-shadow(0 0 9px rgba(233,229,216,0.55));
-  }
-  .center-label{
-    font-family:'Fraunces'; font-size: 15px; fill: var(--ink); text-anchor:middle;
-  }
-  .center-sub{
-    font-family:'IBM Plex Mono'; font-size: 9px; fill: var(--brass); text-anchor:middle;
-    letter-spacing:0.1em;
-  }
-  @keyframes pulse{
-    0%,100%{ opacity:1; } 50%{ opacity:0.55; }
-  }
-  .moon-marker{ animation: pulse 3.5s ease-in-out infinite; }
-
-  /* --- Panels section --- */
-  .panels{
-    padding: 4vw 6vw 8vw;
-    max-width: 1400px; margin:0 auto;
-    display:grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
-  }
-  .panel{
-    background: var(--panel);
-    border: 1px solid var(--panel-border);
-    padding: 30px 26px;
-    border-radius: 3px;
-  }
-  .panel .idx{
-    font-family:'IBM Plex Mono'; font-size:0.75rem; color: var(--brass-dim);
-    margin-bottom: 16px; letter-spacing:0.1em;
-  }
-  .panel h3{
-    font-family:'Fraunces'; font-weight:500; font-size:1.25rem; margin-bottom:10px;
-  }
-  .panel p{ color: var(--ink-muted); font-size:0.92rem; }
-
-  footer{
-    border-top: 1px solid var(--panel-border);
-    padding: 26px 6vw;
-    display:flex; justify-content:space-between;
-    color: var(--ink-muted); font-size:0.8rem;
-  }
-
-  @media (max-width: 860px){
-    .hero{ grid-template-columns: 1fr; }
-    .wheel-wrap{ order:-1; margin-bottom: 20px; }
-    .panels{ grid-template-columns: 1fr; }
-    nav{ display:none; }
-  }
-
-/* --- İç sayfalar için ek stiller --- */
-.page-wrap{
-  max-width: 1000px; margin: 0 auto; padding: 5vw 6vw 8vw;
-}
-.page-header{ margin-bottom: 40px; }
-.page-header h1{
-  font-family:'Fraunces', serif; font-weight:400;
-  font-size: clamp(2rem, 3.2vw, 2.8rem); margin-bottom: 14px;
-}
-.page-header p{ color: var(--ink-muted); max-width: 560px; }
-
-table.data-table{
-  width:100%; border-collapse: collapse; margin-top: 10px;
-  font-family:'IBM Plex Mono'; font-size: 0.85rem;
-}
-table.data-table th{
-  text-align:left; color: var(--brass); text-transform:uppercase;
-  font-size:0.72rem; letter-spacing:0.08em; padding: 10px 14px;
-  border-bottom: 1px solid var(--panel-border);
-}
-table.data-table td{
-  padding: 10px 14px; border-bottom: 1px solid var(--panel-border);
-  color: var(--ink);
-}
-table.data-table tr.month-row td{
-  color: var(--brass); font-family:'Fraunces'; font-size:1rem; font-style:italic;
-  border-bottom: 1px solid var(--brass-dim); padding-top: 22px;
-}
-table.data-table tr:hover td{ background: var(--panel); }
-
-.info-card{
-  background: var(--panel); border:1px solid var(--panel-border);
-  padding: 26px; border-radius:3px; margin-bottom:16px;
-}
-.info-card h3{ font-family:'Fraunces'; font-weight:500; margin-bottom:8px; }
-.info-card p{ color: var(--ink-muted); font-size:0.92rem; }
-
-.placeholder-note{
-  margin-top: 30px; padding: 16px 20px; border:1px dashed var(--panel-border);
-  color: var(--ink-muted); font-size: 0.85rem; border-radius:3px;
-}
-
-/* --- Profil bloğu (Hakkında sayfası) --- */
-.profile-block{
-  display:flex; align-items:center; gap:26px;
-  margin-bottom: 36px;
-}
-.avatar{
-  width:112px; height:112px; border-radius:50%;
-  background: var(--panel); border:2px solid var(--brass-dim);
-  display:flex; align-items:center; justify-content:center;
-  overflow:hidden; flex-shrink:0;
-}
-.avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
-.avatar .avatar-fallback{
-  font-family:'Fraunces'; font-size:1.8rem; color: var(--brass);
-}
-.profile-name{
-  font-family:'Fraunces'; font-weight:500; font-size:1.3rem; color: var(--ink);
-}
-.profile-tag{ color: var(--ink-muted); font-size:0.88rem; margin-top:4px; }
- 
-.social-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
-.social-link{
-  display:inline-flex; align-items:center; gap:7px;
-  padding: 8px 16px; border:1px solid var(--panel-border); border-radius:2px;
-  color: var(--ink); text-decoration:none; font-size:0.83rem;
-  transition: all 0.2s;
-}
-.social-link:hover{ border-color: var(--brass-dim); color: var(--brass); }
-.social-link svg{ width:14px; height:14px; fill: currentColor; }
-
+/* site header / brand additions */
 .site-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   padding: 18px 24px;
-  background: transparent; /* isteğe göre renk ekle */
-  color: var(--ink); /* ensure header text is readable on dark bg */
+  background: transparent;
+  color: var(--ink);
 }
+.brand-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.logo-mark { width: 44px; height: 44px; flex-shrink: 0; transition: transform 0.18s ease; }
+.brand-link:hover .logo-mark { transform: scale(1.03); }
+.logo { font-weight: 700; font-size: 1.15rem; line-height: 1; letter-spacing: 0.2px; color: var(--ink); }
+.logo .dot { color: var(--brass); }
+.main-nav { display: flex; gap: 14px; align-items: center; }
+.main-nav a { text-decoration: none; color: var(--ink-muted); font-weight: 600; padding: 6px 8px; border-radius: 6px; transition: background .15s, color .15s; }
+.main-nav a:hover, .main-nav a:focus { background: rgba(199,162,83,0.08); color: var(--ink); outline: none; }
+.home-btn { border: 1px solid transparent; border-radius: 8px; color: var(--ink); }
+@media (max-width: 720px) { .main-nav { display: none; } }
 
-/* Brand (logo + yazı) */
-.brand-link {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* logo ile yazı arası mesafe (küçükçe yakınlaştırıldı) */
-  text-decoration: none;
-  color: inherit;
-}
-
-.logo-mark {
-  width: 44px;   /* biraz daha büyük */
-  height: 44px;
-  flex-shrink: 0;
-  transition: transform 0.18s ease;
-}
-
-.brand-link:hover .logo-mark {
-  transform: scale(1.03);
-}
-
-.logo {
-  font-weight: 700;
-  font-size: 1.15rem;
-  line-height: 1;
-  letter-spacing: 0.2px;
-  color: var(--ink); /* make logo text readable */
-}
-
-.logo .dot {
-  color: #C7A253; /* logo noktasına vurgu */
-}
-
-/* Navigasyon */
-.main-nav {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
-
-.main-nav a {
-  text-decoration: none;
-  color: var(--ink-muted); /* use muted ink for nav links on dark bg */
-  font-weight: 600;
-  padding: 6px 8px;
-  border-radius: 6px;
-  transition: background .15s, color .15s;
-}
-
-.main-nav a:hover,
-.main-nav a:focus {
-  background: rgba(199,162,83,0.08);
-  color: var(--ink); /* highlight on hover for readability */
-  outline: none;
-}
-
-/* Buton */
-.home-btn {
-  border: 1px solid transparent;
-  border-radius: 8px;
-  color: var(--ink); /* ensure home button text is visible */
-}
-
-/* Responsive: küçük ekranlarda nav'i bir hamburger ile değiştirilebilir yap */
-@media (max-width: 720px) {
-  .main-nav { display: none; }
-  /* İstersen burada bir hamburger buton ekleyebilirim */
-}
-
-
-/* --- Ana sayfa çemberi: geliştirilmiş katmanlar --- */
-.wheel-frame{ position:relative; }
-.wheel-frame::before{
-  content:''; position:absolute; inset:-8%; border-radius:50%;
-  background: radial-gradient(circle, rgba(199,162,83,0.12), transparent 70%);
-  z-index:-1;
-}
-.ring-decorative{
-  fill:none; stroke: var(--panel-border); stroke-width:2.5;
-  stroke-dasharray: 1 7; opacity:1;
-}
-.ring-rotator{
-  transform-origin: 200px 200px;
-  animation: wheel-spin 160s linear infinite;
-}
-@keyframes wheel-spin{
-  from{ transform: rotate(0deg); }
-  to{ transform: rotate(360deg); }
-}
+/* --- Ring decorative adjustments --- */
+.ring-decorative{ fill:none; stroke: var(--panel-border); stroke-width:2.5; stroke-dasharray: 1 7; opacity:1; }
+.ring-rotator{ transform-origin: 200px 200px; animation: wheel-spin 160s linear infinite; }
+@keyframes wheel-spin{ from{ transform: rotate(0deg); } to{ transform: rotate(360deg); } }
 .sign-arc-active{ fill: var(--brass); opacity: 0.09; }
 .cusp-dot{ fill: var(--brass); opacity:0.7; }
 .cusp-dot.major{ opacity:1; }
 
-/* --- Ay Boşluğu (Void of Course) uyarı şeridi --- */
-.voc-banner{
-  border-bottom: 1px solid var(--panel-border);
-  overflow: hidden;
-}
-.voc-inner{
-  max-width: 1400px; margin: 0 auto;
-  display:flex; align-items:center; gap:16px;
-  padding: 14px 6vw;
-  flex-wrap: wrap;
-}
-.voc-icon{
-  width:36px; height:36px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  flex-shrink:0; position:relative;
-}
-.voc-icon svg{ width:18px; height:18px; display:block; }
-.voc-icon::after{
-  content:''; position:absolute; inset:-4px; border-radius:50%;
-  border:1px solid currentColor; opacity:0.35;
-}
-.voc-divider{
-  width:1px; height:22px; background: var(--panel-border); flex-shrink:0;
-}
-.voc-copy{
-  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-}
-.voc-label{
-  font-family:'IBM Plex Mono'; font-size:0.7rem; font-weight:600;
-  letter-spacing:0.08em; text-transform:uppercase;
-  padding:5px 12px; border-radius:20px; border:1px solid currentColor;
-  flex-shrink:0;
-}
-.voc-text{
-  font-family:'Inter'; font-size:0.88rem; color: var(--ink);
-}
- 
-.voc-banner.is-void{
-  background: linear-gradient(90deg, rgba(180,80,46,0.16), rgba(180,80,46,0.03) 70%);
-  border-bottom-color: rgba(180,80,46,0.4);
-}
-.voc-banner.is-void .voc-icon{
-  background: rgba(180,80,46,0.14); color: var(--ember);
-}
-.voc-banner.is-void .voc-icon::after{
-  animation: voc-ring-pulse 2.2s ease-in-out infinite;
-}
-.voc-banner.is-void .voc-label{ color: var(--ember); }
- 
-.voc-banner.not-void{
-  background: linear-gradient(90deg, rgba(199,162,83,0.09), rgba(199,162,83,0.01) 70%);
-}
-.voc-banner.not-void .voc-icon{
-  background: rgba(199,162,83,0.12); color: var(--brass);
-}
-.voc-banner.not-void .voc-label{ color: var(--brass); }
- 
-@keyframes voc-ring-pulse{
-  0%,100%{ transform: scale(1); opacity:0.35; }
-  50%{ transform: scale(1.25); opacity:0; }
-}
- 
-@media (max-width: 640px){
-  .voc-divider{ display:none; }
-  .voc-inner{ gap:12px; }
-}
-
 /* burç sembolleri */
-.sign-symbol {
-  fill: #C7A253;             /* altın ton, ihtiyaca göre değiştir */
-  font-size: 28px;           /* sembol boyutu */
-  font-family: "Segoe UI Symbol", "Arial Unicode MS", "Noto Color Emoji", sans-serif;
-  pointer-events: none;
-  transition: transform .18s ease, fill .18s ease;
-}
-
-/* aktif burç için biraz vurgulama */
-.sign-symbol.active {
-  fill: #E9E5D8;
-  font-size: 34px;
-  transform: scale(1.05);
-}
-
-/* gerekirse mobilde küçült */
-@media (max-width:600px){
-  .sign-symbol { font-size:20px; }
-  .sign-symbol.active { font-size:24px; }
-}
-
-.center-symbol {
-  font-size: 1.8rem; /* Sembolün büyüklüğü */
-  fill: var(--brass); /* Çember konseptine uygun pirinç/altın rengi veya istediğin renk */
-  font-weight: normal;
-}
-
-.center-label {
-  font-size: 1rem;
-  font-weight: 600;
-  fill: #ffffff; /* Ana yazı rengin */
-}
-
-.center-sub {
-  font-size: 0.8rem;
-  fill: rgba(255, 255, 255, 0.6);
-}
+.sign-symbol { fill: #C7A253; font-size: 28px; font-family: "Segoe UI Symbol", "Arial Unicode MS", "Noto Color Emoji", sans-serif; pointer-events: none; transition: transform .18s ease, fill .18s ease; }
+.sign-symbol.active { fill: #E9E5D8; font-size: 34px; transform: scale(1.05); }
+@media (max-width:600px){ .sign-symbol { font-size:20px; } .sign-symbol.active { font-size:24px; } }
+.center-symbol { font-size: 1.8rem; fill: var(--brass); font-weight: normal; }
+.center-label { font-size: 1rem; font-weight: 600; fill: #ffffff; }
+.center-sub { font-size: 0.8rem; fill: rgba(255, 255, 255, 0.6); }
