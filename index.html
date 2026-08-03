@@ -36,6 +36,12 @@
   <a href="index.html" class="btn btn-ghost home-btn" style="padding:10px 18px; font-size:0.82rem;">Anasayfa</a>
 </header>
 
+<div class="voc-banner not-void" id="voc-banner">
+  <span class="voc-dot"></span>
+  <span class="voc-label" id="voc-label">—</span>
+  <span id="voc-text">Hesaplanıyor...</span>
+</div>
+
 <section class="hero">
   <div>
     <div class="eyebrow" id="eyebrow-date">Hesaplanıyor...</div>
@@ -179,7 +185,7 @@ html += `<text class="center-label" x="${cx}" y="${cy + 2}" text-anchor="middle"
 html += `<text class="center-sub" x="${cx}" y="${cy + 22}" text-anchor="middle" dominant-baseline="middle">${durum}</text>`;
 svg.innerHTML = html;
 
-  // --- Hero bölümü verileri (yeni eklendi) ---
+  // --- Hero bölümü verileri ---
 const nowIst = toIstanbul(now);
 document.getElementById("eyebrow-date").textContent =
   `${String(nowIst.getUTCDate()).padStart(2,"0")} ${AY_TR_TAM[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} · İstanbul UTC+3`;
@@ -191,6 +197,27 @@ document.getElementById("stat-lon").textContent = fmtDegree(degreeInSign);
 document.getElementById("stat-illum").textContent = "%" + illumPct;
 document.getElementById("stat-last-full").textContent =
   `${String(lastFull.getUTCDate()).padStart(2,"0")} ${AY_TR_KISA[lastFull.getUTCMonth()]}`;
+  
+  // --- Ay Boşluğu (VOC) banner ---
+const voc = findVoc(now);
+const vocStartIst = toIstanbul(voc.voidStart);
+const vocEndIst = toIstanbul(voc.voidEnd);
+const banner = document.getElementById("voc-banner");
+const label = document.getElementById("voc-label");
+const text = document.getElementById("voc-text");
+const isVoidNow = now >= voc.voidStart && now < voc.voidEnd;
+ 
+if(isVoidNow){
+  banner.classList.remove("not-void");
+  banner.classList.add("is-void");
+  label.textContent = "Ay Boşlukta";
+  text.textContent = `${signs[voc.nextSign]} burcuna geçene kadar (${fmtSaat(vocEndIst)}) yeni başlangıçlar için uygun değil.`;
+} else {
+  banner.classList.remove("is-void");
+  banner.classList.add("not-void");
+  label.textContent = "Ay Boşluğu Değil";
+  text.textContent = `Sıradaki boşluk: ${fmtTarihSaat(vocStartIst)} – ${fmtSaat(vocEndIst)} (${signs[voc.nextSign]}'a geçişte)`;
+}
 </script>
 
 </body>
