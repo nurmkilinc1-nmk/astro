@@ -1,1 +1,289 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum | Kozmik Rehber</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0d17;
+            --card-bg: rgba(23, 27, 48, 0.7);
+            --card-border: rgba(212, 175, 55, 0.15);
+            --accent-gold: #f3ca68;
+            --accent-purple: #9d4edd;
+            --accent-purple-glow: rgba(157, 78, 221, 0.3);
+            --text-main: #f8f9fa;
+            --text-muted: #a0aab8;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(157, 78, 221, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(243, 202, 104, 0.05) 0%, transparent 40%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Top Nav */
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--text-main);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent-gold);
+        }
+
+        /* Forum Header Bar */
+        .forum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .forum-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple) 0%, #7b2cbf 100%);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--accent-purple-glow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
+        }
+
+        /* Filter Tabs */
+        .forum-tabs {
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .tab.active, .tab:hover {
+            color: var(--accent-gold);
+            background: rgba(243, 202, 104, 0.08);
+        }
+
+        /* Empty State Component */
+        .empty-state {
+            background: var(--card-bg);
+            border: 1px dashed var(--card-border);
+            border-radius: 20px;
+            padding: 60px 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .empty-icon-wrapper {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .empty-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .empty-description {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 460px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        /* Quick Suggestions */
+        .suggestions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .suggestion-chip {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion-chip:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Top Navigation -->
+        <header>
+            <a href="index.html" class="logo">🌙 Kozmik Rehber</a>
+            <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
+        </header>
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="#">Forum</a>
+            <span>/</span>
+            <a href="#">Güzellik & Bakım</a>
+            <span>/</span>
+            <span style="color: var(--text-main);">Saç Bakımı</span>
+        </div>
+
+        <!-- Forum Header -->
+        <div class="forum-header">
+            <h1 class="forum-title">💬 Saç Bakımı Tartışmaları</h1>
+            <a href="#" class="btn-primary">
+                <span>✨</span> Yeni Konu Başlat
+            </a>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="forum-tabs">
+            <a href="#" class="tab active">Tüm Konular (0)</a>
+            <a href="#" class="tab">Popüler</a>
+            <a href="#" class="tab">Cevapsız</a>
+        </div>
+
+        <!-- EMPTY STATE CARD -->
+        <div class="empty-state">
+            <div class="empty-icon-wrapper">
+                📜
+            </div>
+            <h2 class="empty-title">Henüz Burada Bir Konu Açılmamış</h2>
+            <p class="empty-description">
+                Bu kategorideki ilk kozmik sohbeti başlatan sen ol! Sormak istediğin bir soru veya paylaşmak istediğin bir deneyim varsa hemen paylaş.
+            </p>
+            <a href="#" class="btn-primary">
+                <span>🚀</span> İlk Konuyu Sen Aç
+            </a>
+
+            <!-- Quick Starter Tags (Optional) -->
+            <div class="suggestions">
+                <span class="suggestion-chip">#SaçKestirmeGünü</span>
+                <span class="suggestion-chip">#DolunayMaskesi</span>
+                <span class="suggestion-chip">#AslanBurcuEtkisi</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
