@@ -360,3 +360,21 @@ nav a:hover::after{ width:100%; }
 .center-symbol { font-size: 1.8rem; fill: var(--brass); font-weight: normal; }
 .center-label { font-size: 1rem; font-weight: 600; fill: #ffffff; }
 .center-sub { font-size: 0.8rem; fill: rgba(255, 255, 255, 0.6); }
+
+/* --- Aylık takvim: bugünün satırı vurgusu --- */
+table.data-table tr.today-row td{
+  background: rgba(199,162,83,0.10);
+  border-left: 3px solid var(--brass);
+  font-weight: 600;
+  color: var(--ink);
+}
+table.data-table tr.today-row:hover td{
+  background: rgba(199,162,83,0.17);
+}
+.today-badge{
+  font-family:'IBM Plex Mono'; font-size:0.62rem; color: var(--brass);
+  border:1px solid var(--brass-dim); border-radius:10px;
+  padding: 2px 8px; margin-left:8px; letter-spacing:0.06em;
+  text-transform:uppercase; vertical-align:middle;
+}
+
