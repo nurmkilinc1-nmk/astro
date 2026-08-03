@@ -154,27 +154,32 @@ for(let deg=0; deg<360; deg+=30){
   html += `<circle class="cusp-dot major" cx="${p.x}" cy="${p.y}" r="2"/>`;
 }
 
-// burç isimleri ve semboller
+// burç isimleri (semboller buradan çıkarıldı, sadece isimler çember etrafında kalıyor)
 signs.forEach((s, i)=>{
   const midAngle = i*30 + 15;
-  // isim (mevcut davranış)
   const pLabel = polar(cx, cy, rLabel, midAngle);
   const isActive = i === activeSignIndex;
+  
   html += `<text class="sign-label${isActive?' active':''}" x="${pLabel.x}" y="${pLabel.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
-
-  // sembol (isimden daha içte)
-  const pSym = polar(cx, cy, rSymbol, midAngle);
-  html += `<text class="sign-symbol${isActive?' active':''}" x="${pSym.x}" y="${pSym.y}" text-anchor="middle" dominant-baseline="middle">${symbols[i]}</text>`;
 });
 
 // ay işareti (dokunulmadı — aynı stil, aynı animasyon)
 const moonPos = polar(cx, cy, rOuter-30, moonAngleDeg);
 html += `<circle class="moon-marker" cx="${moonPos.x}" cy="${moonPos.y}" r="7"/>`;
 
-// merkez metin — artık canlı veri
-html += `<text class="center-label" x="${cx}" y="${cy-6}">${signs[activeSignIndex]}</text>`;
-html += `<text class="center-sub" x="${cx}" y="${cy+12}">${durum}</text>`;
+// --- MERKEZ METIN BÖLGESİ (Sembol, İsim ve Durum) ---
+// Aktif burcun sembolünü alıyoruz
+const activeSymbol = symbols[activeSignIndex];
 
+// Y koordinatlarını (y) elemanlar üst üste binmesin diye hizaladık:
+// 1. Sembol (En üstte - Örn: cy - 22)
+html += `<text class="center-symbol" x="${cx}" y="${cy - 22}" text-anchor="middle" dominant-baseline="middle">${activeSymbol}</text>`;
+
+// 2. Burç İsmi (Ortada - Örn: cy + 2)
+html += `<text class="center-label" x="${cx}" y="${cy + 2}" text-anchor="middle" dominant-baseline="middle">${signs[activeSignIndex]}</text>`;
+
+// 3. Durum Metni (En altta - Örn: cy + 22)
+html += `<text class="center-sub" x="${cx}" y="${cy + 22}" text-anchor="middle" dominant-baseline="middle">${durum}</text>`;
 svg.innerHTML = html;
 </script>
 
