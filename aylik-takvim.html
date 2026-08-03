@@ -5,12 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aylık Takvim — ay.defteri</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>
-  <div class="logo">ay<span>.</span>defteri</div>
+  <a href="index.html" class="logo-link">
+    <svg class="logo-mark" width="30" height="30" viewBox="0 0 100 100">
+      <circle class="ring" cx="50" cy="50" r="42" fill="none" stroke="#8C763F" stroke-width="3"/>
+      <line x1="50" y1="4" x2="50" y2="15" stroke="#C7A253" stroke-width="3"/>
+      <line x1="50" y1="85" x2="50" y2="96" stroke="#C7A253" stroke-width="3"/>
+      <line x1="4" y1="50" x2="15" y2="50" stroke="#C7A253" stroke-width="3"/>
+      <line x1="85" y1="50" x2="96" y2="50" stroke="#C7A253" stroke-width="3"/>
+      <circle cx="50" cy="50" r="21" fill="#E9E5D8"/>
+      <circle cx="59" cy="45" r="19" fill="#111729"/>
+    </svg>
+    <div class="logo">ay<span>.</span>defteri</div>
+  </a>
   <nav>
     <a href="gunluk.html">Günlük</a>
     <a href="aylik-takvim.html">Aylık Takvim</a>
@@ -23,7 +34,7 @@
 <div class="page-wrap">
   <div class="page-header">
     <h1>Aylık Ay Takvimi</h1>
-    <p>Önümüzdeki 60 güne ait burç geçişleri ve Yeniay/Dolunay anları. Bu tablo sayfa her açıldığında gerçek zamanlı hesaplanır — elle güncelleme gerekmez.</p>
+    <p>Son 6 gün ve önümüzdeki 30 güne ait burç geçişleri ve Yeniay/Dolunay anları. Bu tablo sayfa her açıldığında gerçek zamanlı hesaplanır — elle güncelleme gerekmez.</p>
   </div>
 
   <table class="data-table">
@@ -50,6 +61,8 @@
 const SIGNS = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
 const AY_TR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
 const TZ_OFFSET_MS = 3 * 60 * 60 * 1000; // İstanbul UTC+3 (DST yok)
+const GUN_ONCESI = 6;
+const GUN_SONRASI = 30;
 
 function moonLon(date) {
   const l = Astronomy.EclipticGeoMoon(date).lon;
@@ -67,12 +80,13 @@ function findCrossing(t1, t2, target) {
   return new Date((lo + hi) / 2);
 }
 
-function computeCalendar(startDate, days) {
+function computeCalendar(startDate, endDate) {
   const stepMs = 4 * 60 * 60 * 1000;
-  const endMs = startDate.getTime() + days * 24 * 60 * 60 * 1000;
+  const startMs = startDate.getTime();
+  const endMs = endDate.getTime();
 
   const times = [];
-  for (let t = startDate.getTime(); t < endMs; t += stepMs) times.push(new Date(t));
+  for (let t = startMs; t < endMs; t += stepMs) times.push(new Date(t));
 
   const transitions = [];
   let prevSign = Math.floor(moonLon(times[0]) / 30);
@@ -115,9 +129,18 @@ function fmt(d) {
   return `${dd}.${mm} ${hh}:${mi}`;
 }
 
+function sameIstanbulDay(d1, d2) {
+  return d1.getUTCFullYear() === d2.getUTCFullYear()
+    && d1.getUTCMonth() === d2.getUTCMonth()
+    && d1.getUTCDate() === d2.getUTCDate();
+}
+
 function render() {
-  const startDate = new Date();
-  const { transitions, phases } = computeCalendar(startDate, 60);
+  const now = new Date();
+  const startDate = new Date(now.getTime() - GUN_ONCESI * 24 * 60 * 60 * 1000);
+  const endDate = new Date(now.getTime() + GUN_SONRASI * 24 * 60 * 60 * 1000);
+  const { transitions, phases } = computeCalendar(startDate, endDate);
+  const nowIst = toIstanbul(now);
 
   const rows = [];
   for (let i = 0; i < transitions.length; i++) {
@@ -126,10 +149,13 @@ function render() {
       ? toIstanbul(transitions[i + 1].time)
       : new Date(sd.getTime() + 2.5 * 24 * 60 * 60 * 1000);
     const durum = phaseAt(transitions[i].time, phases);
-    rows.push({ sd, ed, label: "Ay " + SIGNS[transitions[i].sign] + " Burcunda", durum, kind: "burc" });
+    // "bugün" satırı: şu anki an bu burç aralığının içindeyse
+    const isToday = now >= transitions[i].time && now < (i + 1 < transitions.length ? transitions[i + 1].time : new Date(transitions[i].time.getTime() + 2.5 * 24 * 60 * 60 * 1000));
+    rows.push({ sd, ed, label: "Ay " + SIGNS[transitions[i].sign] + " Burcunda", durum, kind: "burc", isToday });
   }
   for (const p of phases) {
-    rows.push({ sd: toIstanbul(p.time), ed: null, label: p.label, durum: "", kind: "faz" });
+    const sd = toIstanbul(p.time);
+    rows.push({ sd, ed: null, label: p.label, durum: "", kind: "faz", isToday: sameIstanbulDay(sd, nowIst) });
   }
   rows.sort((a, b) => a.sd - b.sd);
 
@@ -141,11 +167,13 @@ function render() {
       curKey = key;
       html += `<tr class="month-row"><td colspan="4">${AY_TR[r.sd.getUTCMonth()]} ${r.sd.getUTCFullYear()}</td></tr>`;
     }
+    const rowClass = r.isToday ? ' class="today-row"' : "";
+    const badge = r.isToday ? '<span class="today-badge">Bugün</span>' : "";
     if (r.kind === "burc") {
-      html += `<tr><td>${fmt(r.sd)}</td><td>${fmt(r.ed)}</td><td>${r.label}</td><td>${r.durum}</td></tr>`;
+      html += `<tr${rowClass}><td>${fmt(r.sd)}</td><td>${fmt(r.ed)}</td><td>${r.label}${badge}</td><td>${r.durum}</td></tr>`;
     } else {
       const emoji = r.label === "Yeniay" ? "🌑" : "🌕";
-      html += `<tr><td>${fmt(r.sd)}</td><td>—</td><td>${emoji} <strong>${r.label}</strong></td><td></td></tr>`;
+      html += `<tr${rowClass}><td>${fmt(r.sd)}</td><td>—</td><td>${emoji} <strong>${r.label}</strong>${badge}</td><td></td></tr>`;
     }
   }
   document.getElementById("calendar-body").innerHTML = html;
