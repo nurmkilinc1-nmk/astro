@@ -352,3 +352,20 @@ table.data-table tr:hover td{ background: var(--panel); }
   .sign-symbol { font-size:20px; }
   .sign-symbol.active { font-size:24px; }
 }
+
+.center-symbol {
+  font-size: 1.8rem; /* Sembolün büyüklüğü */
+  fill: var(--brass); /* Çember konseptine uygun pirinç/altın rengi veya istediğin renk */
+  font-weight: normal;
+}
+
+.center-label {
+  font-size: 1rem;
+  font-weight: 600;
+  fill: #ffffff; /* Ana yazı rengin */
+}
+
+.center-sub {
+  font-size: 0.8rem;
+  fill: rgba(255, 255, 255, 0.6);
+}
