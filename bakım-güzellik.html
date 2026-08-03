@@ -1,1 +1,418 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kişisel Bakım & Güzellik | Kozmik Ay Takvimi</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0d17;
+            --card-bg: rgba(23, 27, 48, 0.7);
+            --card-border: rgba(212, 175, 55, 0.15);
+            --accent-gold: #f3ca68;
+            --accent-purple: #9d4edd;
+            --accent-green: #2ec4b6;
+            --accent-red: #e63946;
+            --text-main: #f8f9fa;
+            --text-muted: #a0aab8;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(157, 78, 221, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(243, 202, 104, 0.05) 0%, transparent 40%);
+            color: var(--text-main);
+            padding-bottom: 50px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Top Nav */
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--text-main);
+        }
+
+        /* Hero & Astro Status */
+        .hero {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Today's Astro Status Bar */
+        .astro-bar {
+            background: rgba(157, 78, 221, 0.1);
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .astro-stat {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .astro-stat .icon {
+            font-size: 1.8rem;
+        }
+
+        .astro-stat .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .astro-stat .val {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        /* Filter Tabs */
+        .date-picker-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .date-picker-bar input[type="date"] {
+            background: #0b0d17;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        /* Cards Grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .card-header .icon-box {
+            width: 42px;
+            height: 42px;
+            background: rgba(243, 202, 104, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .item-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .item-list li {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .item-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .badge.success { background: rgba(46, 196, 182, 0.15); color: var(--accent-green); }
+        .badge.warning { background: rgba(230, 57, 70, 0.15); color: var(--accent-red); }
+        .badge.neutral { background: rgba(255, 255, 255, 0.1); color: var(--text-muted); }
+
+        .item-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer Note */
+        .disclaimer {
+            text-align: center;
+            margin-top: 50px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Top Navigation -->
+        <header>
+            <a href="index.html" class="logo">🌙 Kozmik Rehber</a>
+            <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
+        </header>
+
+        <!-- Hero -->
+        <div class="hero">
+            <h1>💅 Kişisel Bakım & Güzellik</h1>
+            <p>Ay'ın evreleri ve zodyak enerjilerine göre hazırlanmış günlük bakım rehberi.</p>
+        </div>
+
+        <!-- Today's Astro Status -->
+        <div class="astro-bar">
+            <div class="astro-stat">
+                <span class="icon">🌓</span>
+                <div>
+                    <div class="label">Ay Evresi</div>
+                    <div class="val">Büyüyen Ay</div>
+                </div>
+            </div>
+            <div class="astro-stat">
+                <span class="icon">♌</span>
+                <div>
+                    <div class="label">Burç Konumu</div>
+                    <div class="val">Aslan Günleri</div>
+                </div>
+            </div>
+            <div class="astro-stat">
+                <span class="icon">✨</span>
+                <div>
+                    <div class="label">Günün Teması</div>
+                    <div class="val">Besleme & Hacim</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Date Filter Bar -->
+        <div class="date-picker-bar">
+            <span>Tarih Seçin:</span>
+            <input type="date" value="2026-08-03">
+        </div>
+
+        <!-- Main Cards Grid -->
+        <div class="grid-container">
+
+            <!-- Card 1: Saç Bakımı -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box">✂️</div>
+                    <h2>Saç Bakımı</h2>
+                </div>
+                <ul class="item-list">
+                    <li>
+                        <div class="item-title">
+                            <span>Saç Kesimi (Gürleşme)</span>
+                            <span class="badge success">İdeal Gün</span>
+                        </div>
+                        <div class="item-desc">Aslan günlerinde yapılan kesim saçın gür ve canlı uzamasını destekler.</div>
+                    </li>
+                    <li>
+                        <div class="item-title">
+                            <span>Saç Boyatma</span>
+                            <span class="badge success">Uygun</span>
+                        </div>
+                        <div class="item-desc">Büyüyen Ay evresi renk pgmentlerinin saça daha iyi nüfuz etmesini sağlar.</div>
+                    </li>
+                    <li>
+                        <div class="item-title">
+                            <span>Nem & Keratin Maskesi</span>
+                            <span class="badge success">Mükemmel</span>
+                        </div>
+                        <div class="item-desc">Vücut ve saç hücreleri besini ve nemi emmeye son derece açıktır.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Card 2: Cilt Bakımı & Epilasyon -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box">✨</div>
+                    <h2>Cilt Bakımı & Ağda</h2>
+                </div>
+                <ul class="item-list">
+                    <li>
+                        <div class="item-title">
+                            <span>Tüy Alma / Epilasyon</span>
+                            <span class="badge warning">Önerilmez</span>
+                        </div>
+                        <div class="item-desc">Büyüyen Ay evresinde epilasyon yapılırsa tüyler daha hızlı uzayabilir.</div>
+                    </li>
+                    <li>
+                        <div class="item-title">
+                            <span>Nem Yükleme & Serum</span>
+                            <span class="badge success">İdeal Gün</span>
+                        </div>
+                        <div class="item-desc">Anti-aging ürünleri ve yoğun nem maskeleri için en verimli dönem.</div>
+                    </li>
+                    <li>
+                        <div class="item-title">
+                            <span>Derin Peeling & Temizlik</span>
+                            <span class="badge neutral">Orta Verim</span>
+                        </div>
+                        <div class="item-desc">Gözenek temizliği için Küçülen Ay dönemi daha yüksek etki gösterir.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Card 3: Tırnak & El-Ayak Bakımı -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box">💅</div>
+                    <h2>Tırnak & El Bakımı</h2>
+                </div>
+                <ul class="item-list">
+                    <li>
+                        <div class="item-title">
+                            <span>Tırnak Kesimi & Şekillendirme</span>
+                            <span class="badge success">Uygun</span>
+                        </div>
+                        <div class="item-desc">Kırılmaya meyilli tırnakları güçlendirmek için kesim yapılabilir.</div>
+                    </li>
+                    <li>
+                        <div class="item-title">
+                            <span>Tırnak Güçlendirici Kürler</span>
+                            <span class="badge success">İdeal Gün</span>
+                        </div>
+                        <div class="item-desc">Besleyici yağlar ve keratin bakımları tırnak plağı tarafından emilir.</div>
+                    </li>
+                    <li>
+                        <div class="item-title">
+                            <span>Nasır & Mantar Bakımı</span>
+                            <span class="badge neutral">Bekleyin</span>
+                        </div>
+                        <div class="item-desc">Arındırma ve nasır tedavisi için Küçülen Ay fazını tercih edin.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Card 4: Estetik & Diş -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon-box">🩺</div>
+                    <h2>Estetik & Diş</h2>
+                </div>
+                <ul class="item-list">
+                    <li>
+                        <div class="item-title">
+                            <span>Diş Hekimi Randevusu</span>
+                            <span class="badge success">Güvenli</span>
+                        </div>
+                        <div class="item-desc">Dolunay yaklaşmadığı için kanama ve hassasiyet riski normal seviyededir.</div>
+                    </li>
+                    <li>
+                        <div class="item-title">
+                            <span>Ödem Atıcı Medikal Bakım</span>
+                            <span class="badge warning">Dikkat</span>
+                        </div>
+                        <div class="item-desc">Vücut bu evrede su tutmaya meyillidir; işlemler sonrası hafif ödem oluşabilir.</div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="disclaimer">
+            <p>* Bu takvim astrolojik gelenekler ve biyodinamik Ay ritimleri temel alınarak hazırlanmıştır. Tıbbi tavsiye yerine geçmez.</p>
+        </div>
+    </div>
+
+</body>
+</html>
