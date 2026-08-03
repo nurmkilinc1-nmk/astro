@@ -1,9 +1,3 @@
-/* Cleaned style.css
-   - Fixed duplicated/broken :root blocks
-   - Removed repeated rule blocks
-   - Added VOC banner styles
-   - Preserved original layout, wheel, and responsive rules
-*/
 :root{
   --bg: #111729;
   --panel: #1A2338;
@@ -378,3 +372,69 @@ table.data-table tr.today-row:hover td{
   text-transform:uppercase; vertical-align:middle;
 }
 
+/* CTA Konteyner Alanı */
+.cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap; /* Mobil ekranlarda alt alta düşebilmesi için */
+}
+
+/* Genel Buton Tabanı */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 1. Birincil Buton (Primary) - Parlak ve Dikkat Çekici */
+.btn-primary {
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe); /* Gradyan geçişi */
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.35);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px); /* Yukarı hafif yükselme */
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.5);
+  background: linear-gradient(135deg, #5b4bc4, #8c7ae6);
+}
+
+/* Hover esnasında ok ikonunun sağa kayması */
+.btn-primary:hover .btn-icon {
+  transform: translateX(4px);
+}
+
+/* 2. İkincil Buton (Ghost) - Şeffaf ve Cam Efektli (Glassmorphism) */
+.btn-ghost {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-color, #2c3e50); /* Koyu/Açık tema ile uyumlu */
+  border: 1px solid rgba(108, 92, 231, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.btn-ghost:hover {
+  background-color: rgba(108, 92, 231, 0.1);
+  border-color: #6c5ce7;
+  color: #6c5ce7;
+  transform: translateY(-2px);
+}
+
+/* İkon Ölçüleri ve Geçişleri */
+.btn-icon, 
+.btn-icon-left {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.25s ease;
+}
