@@ -90,6 +90,12 @@ function computeCalendar(startDate, endDate) {
 
   const transitions = [];
   let prevSign = Math.floor(moonLon(times[0]) / 30);
+
+  // ---- EKLENECEK: aralığın ilk işaretçisi (başlangıç) ----
+  // Eğer burç değişimi aralığın dışarısında başlamışsa, şu anki burcu temsil eden
+  // bir başlangıç satırı koymazsak "bugün" satırı eksik kalabiliyor.
+  transitions.push({ time: times[0], sign: prevSign });
+  // --------------------------------------------------------
   for (let i = 1; i < times.length; i++) {
     const sign = Math.floor(moonLon(times[i]) / 30);
     if (sign !== prevSign) {
@@ -150,7 +156,8 @@ function render() {
       : new Date(sd.getTime() + 2.5 * 24 * 60 * 60 * 1000);
     const durum = phaseAt(transitions[i].time, phases);
     // "bugün" satırı: şu anki an bu burç aralığının içindeyse
-    const isToday = now >= transitions[i].time && now < (i + 1 < transitions.length ? transitions[i + 1].time : new Date(transitions[i].time.getTime() + 2.5 * 24 * 60 * 60 * 1000));
+            const nowIst = toIstanbul(now);
+    const isToday = nowIst.getTime() >= sd.getTime() && nowIst.getTime() < ed.getTime();
     rows.push({ sd, ed, label: "Ay " + SIGNS[transitions[i].sign] + " Burcunda", durum, kind: "burc", isToday });
   }
   for (const p of phases) {
