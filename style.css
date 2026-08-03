@@ -187,39 +187,112 @@ svg{ width:100%; height:100%; overflow: visible; }
 }
 .moon-marker{ animation: pulse 3.5s ease-in-out infinite; }
 
-/* --- Panels section --- */
-.panels{
+/* --- Panels Section --- */
+.panels {
   padding: 4vw 6vw 8vw;
-  max-width: 1400px; margin:0 auto;
-  display:grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
 }
-.panel{
+
+/* Panel Tıklanabilir Kart Stili */
+.panel {
   background: var(--panel);
   border: 1px solid var(--panel-border);
   padding: 30px 26px;
-  border-radius: 3px;
+  border-radius: 8px; /* Çok hafif modern yuvarlatma */
+  text-decoration: none; /* Link çizgisini kaldır */
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+  overflow: hidden;
 }
-.panel .idx{
-  font-family:'IBM Plex Mono'; font-size:0.75rem; color: var(--brass-dim);
-  margin-bottom: 16px; letter-spacing:0.1em;
-}
-.panel h3{
-  font-family:'Fraunces'; font-weight:500; font-size:1.25rem; margin-bottom:10px;
-}
-.panel p{ color: var(--ink-muted); font-size:0.92rem; }
 
-footer{
+/* Üzerine Gelindiğinde (Hover) */
+.panel:hover {
+  transform: translateY(-5px);
+  border-color: var(--brass, #c7a253);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Kart Header Hizalaması */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.panel .idx {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--brass-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 0; /* Header flex olduğu için sıfırlandı */
+}
+
+/* Yönlendirme İkonu Stili */
+.panel-arrow {
+  width: 18px;
+  height: 18px;
+  color: var(--brass-dim);
+  opacity: 0.6;
+  transition: transform 0.3s ease, opacity 0.3s ease, color 0.3s ease;
+}
+
+.panel-arrow svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Hover Sırasında Ok İkonunun Sağ Üste Kayma Animasyonu */
+.panel:hover .panel-arrow {
+  opacity: 1;
+  color: var(--brass, #c7a253);
+  transform: translate(3px, -3px);
+}
+
+/* Tipografi */
+.panel h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  color: var(--ink, #ffffff);
+  transition: color 0.3s ease;
+}
+
+.panel:hover h3 {
+  color: var(--brass, #c7a253);
+}
+
+.panel p {
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+/* Footer ve Responsive Kodları (Mevcut yapın korundu) */
+footer {
   border-top: 1px solid var(--panel-border);
   padding: 26px 6vw;
-  display:flex; justify-content:space-between;
-  color: var(--ink-muted); font-size:0.8rem;
+  display: flex;
+  justify-content: space-between;
+  color: var(--ink-muted);
+  font-size: 0.8rem;
 }
 
-@media (max-width: 860px){
-  .hero{ grid-template-columns: 1fr; }
-  .wheel-wrap{ order:-1; margin-bottom: 20px; }
-  .panels{ grid-template-columns: 1fr; }
-  nav{ display:none; }
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; }
+  .wheel-wrap { order: -1; margin-bottom: 20px; }
+  .panels { grid-template-columns: 1fr; }
+  nav { display: none; }
 }
 
 /* --- İç sayfalar için ek stiller --- */
