@@ -38,31 +38,28 @@
 
 <section class="hero">
   <div>
-    <div class="eyebrow">02 Ağustos 2026 · İstanbul UTC+3</div>
-    <h1>Ay şu an <em>Balık</em><br>burcunda, küçülüyor.</h1>
+    <div class="eyebrow" id="eyebrow-date">Hesaplanıyor...</div>
+    <h1>Ay şu an <em id="hero-sign">—</em><br>burcunda, <span id="hero-durum">—</span>.</h1>
     <p class="hero-sub">Gerçek ekliptik konuma dayalı, dakikası dakikasına hesaplanmış burç ve faz verileri. Yorum değil, ölçüm.</p>
-
     <div class="hero-data">
       <div class="data-item">
-        <div class="num">23°42′</div>
+        <div class="num" id="stat-lon">—</div>
         <div class="label">Ekliptik Boylam</div>
       </div>
       <div class="data-item">
-        <div class="num">%38</div>
+        <div class="num" id="stat-illum">—</div>
         <div class="label">Aydınlanma</div>
       </div>
       <div class="data-item">
-        <div class="num">29 Tem</div>
+        <div class="num" id="stat-last-full">—</div>
         <div class="label">Son Dolunay</div>
       </div>
     </div>
-
     <div class="cta-row">
       <a href="gunluk.html" class="btn btn-primary">Bugünün Detayını Gör</a>
       <a href="aylik-takvim.html" class="btn btn-ghost">Aylık Takvime Bak</a>
     </div>
   </div>
-
   <div class="wheel-wrap">
     <div class="wheel-frame">
       <svg viewBox="0 0 400 400" id="wheel"></svg>
@@ -181,6 +178,19 @@ html += `<text class="center-label" x="${cx}" y="${cy + 2}" text-anchor="middle"
 // 3. Durum Metni (En altta - Örn: cy + 22)
 html += `<text class="center-sub" x="${cx}" y="${cy + 22}" text-anchor="middle" dominant-baseline="middle">${durum}</text>`;
 svg.innerHTML = html;
+
+  // --- Hero bölümü verileri (yeni eklendi) ---
+const nowIst = toIstanbul(now);
+document.getElementById("eyebrow-date").textContent =
+  `${String(nowIst.getUTCDate()).padStart(2,"0")} ${AY_TR_TAM[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} · İstanbul UTC+3`;
+ 
+document.getElementById("hero-sign").textContent = signs[activeSignIndex];
+document.getElementById("hero-durum").textContent = durum;
+ 
+document.getElementById("stat-lon").textContent = fmtDegree(degreeInSign);
+document.getElementById("stat-illum").textContent = "%" + illumPct;
+document.getElementById("stat-last-full").textContent =
+  `${String(lastFull.getUTCDate()).padStart(2,"0")} ${AY_TR_KISA[lastFull.getUTCMonth()]}`;
 </script>
 
 </body>
