@@ -511,3 +511,41 @@ table.data-table tr.today-row:hover td{
   height: 18px;
   transition: transform 0.25s ease;
 }
+
+/* --- Özel Takvimler vitrin sayfası: kart grid --- */
+.cal-grid{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap:18px;
+}
+.cal-card{
+  background: var(--panel); border:1px solid var(--panel-border);
+  padding: 28px 24px; border-radius:3px;
+  text-decoration:none; display:block;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.cal-card:hover{
+  border-color: var(--brass-dim); transform: translateY(-2px);
+}
+.cal-card .idx{
+  font-family:'IBM Plex Mono'; font-size:0.72rem; color: var(--brass-dim);
+  margin-bottom:14px; letter-spacing:0.1em; text-transform:uppercase;
+}
+.cal-card h3{
+  font-family:'Fraunces'; font-weight:500; font-size:1.12rem; color: var(--ink);
+  margin-bottom:8px;
+}
+.cal-card p{ color: var(--ink-muted); font-size:0.85rem; }
+.cal-card .arrow{
+  margin-top:16px; font-family:'IBM Plex Mono'; font-size:0.76rem; color: var(--brass);
+}
+ 
+.back-link{
+  display:inline-block; margin-bottom:22px;
+  font-family:'IBM Plex Mono'; font-size:0.82rem; color: var(--ink-muted);
+  text-decoration:none; transition: color 0.2s;
+}
+.back-link:hover{ color: var(--brass); }
+ 
+@media (max-width: 860px){
+  .cal-grid{ grid-template-columns: 1fr; }
+}
+ 
