@@ -42,20 +42,53 @@
       letter-spacing: -0.01em;
     }
 
-    /* ===== HEADER ===== */
+    /* ===== SABİT HEADER (full-width) ===== */
     header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(251, 249, 244, 0.92);
+      backdrop-filter: blur(14px) saturate(1.2);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: box-shadow 0.2s;
+      width: 100%;
+      padding: 0 24px; /* sadece yan boşluk */
+    }
+
+    header .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      padding: 28px 0 12px;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      margin-bottom: 20px;
+      padding: 18px 0 14px;
     }
 
+    header.scrolled {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+    .ring {
+      stroke: #8C763F;
+    }
     .logo {
       font-family: 'Fraunces', serif;
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       font-weight: 500;
       letter-spacing: -0.02em;
       color: #1c1b1a;
@@ -78,6 +111,10 @@
       transition: 0.2s;
     }
     nav a:hover {
+      border-bottom-color: #b87c5e;
+      color: #000;
+    }
+    nav a.active {
       border-bottom-color: #b87c5e;
       color: #000;
     }
@@ -351,16 +388,21 @@
 </head>
 <body>
 
-<header>
-  <div class="logo">ay<span>.</span>defteri</div>
-  <nav>
-    <a href="gunluk.html">Günlük</a>
-    <a href="aylik-takvim.html">Aylık Takvim</a>
-    <a href="ozel-takvimler.html">Özel Takvimler</a>
-    <a href="danismanlik.html">Danışmanlık</a>
-  </nav>
-  <a href="index.html" class="btn-ghost">Anasayfa</a>
-</header>
+<!-- SABİT HEADER (full-width) -->
+<header id="mainHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo-link">
+      <div class="logo">ay<span>.</span>defteri</div>
+    </a>
+    <nav>
+      <a href="gunluk.html">Günlük</a>
+      <a href="aylik-takvim.html">Aylık Takvim</a>
+      <a href="ozel-takvimler.html">Özel Takvimler</a>
+      <a href="danismanlik.html">Danışmanlık</a>
+    </nav>
+    <a href="index.html" class="btn-ghost">Anasayfa</a>
+  </div>
+</header>>
 
 <div class="page-wrap">
 
@@ -425,8 +467,23 @@
 
 <footer>
   <div>© 2026 ay.defteri</div>
-  <div class="mono">İstanbul · UTC+3</div>
+  <div class="mono">İstanbul</div>
 </footer>
 
+<!-- JS: scroll'da header'a gölge ekle -->
+<script>
+  (function() {
+    const header = document.getElementById('mainHeader');
+    window.addEventListener('scroll', function() {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      if (currentScroll > 12) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  })();
+</script>
+  
 </body>
 </html>
