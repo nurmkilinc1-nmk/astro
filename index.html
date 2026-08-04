@@ -1,38 +1,325 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ay.defteri — Anasayfa</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>astro.takvim — Anasayfa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ===== HEADER OVERRIDE (anasayfa özel) ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(17, 23, 41, 0.85);
+      backdrop-filter: blur(14px) saturate(1.2);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
+      border-bottom: 1px solid var(--panel-border);
+      width: 100%;
+      padding: 0 6vw;
+    }
+
+    header .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 16px 0 14px;
+    }
+
+    header.scrolled {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    .logo-mark .ring {
+      stroke: var(--brass-dim);
+    }
+
+    .logo {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      transition: color 0.2s;
+    }
+    .logo span {
+      color: var(--brass);
+    }
+    .logo-link:hover .logo {
+      color: var(--brass);
+    }
+
+    /* ===== NAVIGATION ===== */
+    nav {
+      display: flex;
+      gap: 28px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      align-items: center;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--ink-muted);
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+      transition: 0.2s;
+    }
+    nav a:hover {
+      border-bottom-color: var(--brass);
+      color: var(--ink);
+    }
+    nav a.active {
+      border-bottom-color: var(--brass);
+      color: var(--ink);
+    }
+
+    /* ===== HAMBURGER ===== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 2.5px;
+      background: var(--ink);
+      border-radius: 4px;
+      transition: 0.3s;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--panel-border);
+      border-radius: 40px;
+      padding: 8px 20px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--ink);
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+    .btn-ghost:hover {
+      border-color: var(--brass-dim);
+      color: var(--brass);
+    }
+
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    /* ===== YENİ BÖLÜM: HIZLI ERİŞİM KARTLARI (paneller yerine) ===== */
+    .quick-access {
+      padding: 2vw 6vw 6vw;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .quick-access .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 28px;
+      letter-spacing: -0.02em;
+      text-align: center;
+    }
+    .quick-access .section-title span {
+      color: var(--brass);
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .quick-card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      padding: 28px 24px;
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.3s ease,
+                  box-shadow 0.3s ease;
+    }
+    .quick-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--brass);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .quick-card .icon {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .quick-card h3 {
+      font-family: 'Fraunces', serif;
+      font-weight: 500;
+      font-size: 1.05rem;
+      color: var(--ink);
+      margin-bottom: 6px;
+      transition: color 0.3s ease;
+    }
+    .quick-card:hover h3 {
+      color: var(--brass);
+    }
+    .quick-card p {
+      color: var(--ink-muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+    .quick-card .arrow-mini {
+      margin-top: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--brass-dim);
+      transition: color 0.2s;
+    }
+    .quick-card:hover .arrow-mini {
+      color: var(--brass);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .quick-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 820px) {
+      .hamburger {
+        display: flex;
+      }
+
+      nav {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        padding: 16px 0 12px;
+        border-top: 1px solid var(--panel-border);
+        margin-top: 8px;
+      }
+      nav.open {
+        display: flex;
+      }
+
+      .nav-wrapper {
+        gap: 16px;
+      }
+
+      .btn-ghost {
+        padding: 6px 16px;
+        font-size: 0.75rem;
+      }
+
+      .quick-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .quick-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .quick-card {
+        padding: 20px 18px;
+      }
+      .quick-access .section-title {
+        font-size: 1.4rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 1.2rem;
+      }
+      .logo-mark {
+        width: 26px;
+        height: 26px;
+      }
+      .btn-ghost {
+        padding: 5px 12px;
+        font-size: 0.7rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <a href="index.html" class="logo-link">
-    <svg class="logo-mark" width="30" height="30" viewBox="0 0 100 100">
-      <circle class="ring" cx="50" cy="50" r="42" fill="none" stroke="#8C763F" stroke-width="3"/>
-      <line x1="50" y1="4" x2="50" y2="15" stroke="#C7A253" stroke-width="3"/>
-      <line x1="50" y1="85" x2="50" y2="96" stroke="#C7A253" stroke-width="3"/>
-      <line x1="4" y1="50" x2="15" y2="50" stroke="#C7A253" stroke-width="3"/>
-      <line x1="85" y1="50" x2="96" y2="50" stroke="#C7A253" stroke-width="3"/>
-      <circle cx="50" cy="50" r="21" fill="#E9E5D8"/>
-      <circle cx="59" cy="45" r="19" fill="#111729"/>
-    </svg>
-    <div class="logo">ay<span>.</span>defteri</div>
-  </a>
-  <nav>
-    <a href="gunluk.html">Günlük</a>
-    <a href="aylik-takvim.html">Aylık Takvim</a>
-    <a href="ozel-takvimler.html">Özel Takvimler</a>
-    <a href="hakkimda.html">Hakkımda</a>
-    <a href="danismanlik.html">Danışmanlık</a>
-  </nav>
-  <a href="aylik-takvim.html" class="btn btn-ghost" style="padding:10px 18px; font-size:0.82rem;">Takvime Ekle</a>
+<!-- SABİT HEADER (full-width) -->
+<header id="mainHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo-link">
+      <div class="logo">astro<span>.</span>takvim</div>
+    </a>
+
+    <div class="nav-wrapper">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav id="mainNav">
+        <a href="gunluk.html">Günlük</a>
+        <a href="aylik-takvim.html">Aylık Takvim</a>
+        <a href="ozel-takvimler.html">Özel Takvimler</a>
+        <a href="danismanlik.html">Danışmanlık</a>
+        <a href="hakkimda.html">Hakkımda</a>
+      </nav>
+
+      <a href="kayit.html" class="btn-ghost">KAYDOL</a>
+    </div>
+  </div>
 </header>
 
+<!-- VOC BANNER -->
 <div class="voc-banner not-void" id="voc-banner">
   <div class="voc-inner">
     <div class="voc-icon">
@@ -48,12 +335,13 @@
   </div>
 </div>
 
+<!-- HERO -->
 <section class="hero">
   <div>
     <div class="eyebrow" id="eyebrow-date">Hesaplanıyor...</div>
     <h1>Ay şu an <em id="hero-sign">—</em><br>burcunda, <span id="hero-durum">—</span>.</h1>
     <p class="hero-sub">Gerçek ekliptik konuma dayalı, dakikası dakikasına hesaplanmış burç ve faz verileri. Yorum değil, ölçüm.</p>
-    
+
     <div class="hero-data">
       <div class="data-item">
         <div class="num" id="stat-lon">—</div>
@@ -68,31 +356,28 @@
         <div class="label">Son Dolunay</div>
       </div>
     </div>
-    
-    <div class="cta-row">
-  <!-- Birincil Buton (Primary) -->
-  <a href="gunluk.html" class="btn btn-primary">
-    <span>Bugünün Detayını Gör</span>
-    <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-      <polyline points="12 5 19 12 12 19"></polyline>
-    </svg>
-  </a>
 
-  <!-- İkincil Buton (Ghost) -->
-  <a href="aylik-takvim.html" class="btn btn-ghost">
-    <svg class="btn-icon-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-      <line x1="16" y1="2" x2="16" y2="6"></line>
-      <line x1="8" y1="2" x2="8" y2="6"></line>
-      <line x1="3" y1="10" x2="21" y2="10"></line>
-    </svg>
-    <span>Aylık Takvime Bak</span>
-  </a>
-</div>
-    
+    <div class="cta-row">
+      <a href="gunluk.html" class="btn btn-primary">
+        <span>Bugünün Detayını Gör</span>
+        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+
+      <a href="aylik-takvim.html" class="btn btn-ghost">
+        <svg class="btn-icon-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span>Aylık Takvime Bak</span>
+      </a>
+    </div>
   </div>
-  
+
   <div class="wheel-wrap">
     <div class="wheel-frame">
       <svg viewBox="0 0 400 400" id="wheel"></svg>
@@ -100,102 +385,109 @@
   </div>
 </section>
 
-<section class="panels">
-  <!-- 1. Panel: Bakım - güzellik -->
-  <a href="bakim-guzellik.html" class="panel">
-    <div class="panel-header">
-      <div class="idx">Kişisel Bakım & Güzellik</div>
-      <div class="panel-arrow">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="7" y1="17" x2="17" y2="7"></line>
-          <polyline points="7 7 17 7 17 17"></polyline>
-        </svg>
-      </div>
+<!-- YENİ BÖLÜM: BUGÜNÜN ÖNE ÇIKANLARI -->
+<section class="today-highlights">
+  <div class="highlights-inner">
+    <div class="highlights-header">
+      <div class="highlights-eyebrow">☽ Bugünün Öne Çıkanları</div>
+      <h2 class="highlights-title">Ay <span id="highlight-sign">—</span> burcunda</h2>
+      <p class="highlights-sub" id="highlight-desc">Hesaplanıyor...</p>
     </div>
-    <h3>Saç Bakımı</h3>
-    <p>Astrolojik Temel: Büyüyen/Küçülen Ay, Venüs açıları, Yengeç/Aslan/Oğlak günleri.</p>
-  </a>
 
-  <!-- 2. Panel: Mutfak-biyodinamik -->
-  <a href="mutfak-biyodinamik.html" class="panel">
-    <div class="panel-header">
-      <div class="idx">Mutfak & Biyodinamik Gastronomi</div>
-      <div class="panel-arrow">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="7" y1="17" x2="17" y2="7"></line>
-          <polyline points="7 7 17 7 17 17"></polyline>
-        </svg>
+    <div class="highlights-grid">
+      <!-- 1. Kart: Burç Geçişi -->
+      <div class="highlight-card">
+        <div class="hc-icon">♃</div>
+        <div class="hc-content">
+          <div class="hc-label">Sonraki Geçiş</div>
+          <div class="hc-value" id="hc-next-sign">—</div>
+          <div class="hc-time" id="hc-next-time">—</div>
+        </div>
       </div>
-    </div>
-    <h3>Tam Takvim Görünümü</h3>
-    <p>Burç geçişleri, yeniay/dolunay anları tek tabloda; takvimine tek tıkla aktarılabilir.</p>
-  </a>
 
-  <!-- 3. Panel: Ev-yaşam -->
-  <a href="ev-yasam.html" class="panel">
-    <div class="panel-header">
-      <div class="idx">Ev, Temizlik & Yaşam</div>
-      <div class="panel-arrow">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="7" y1="17" x2="17" y2="7"></line>
-          <polyline points="7 7 17 7 17 17"></polyline>
-        </svg>
+      <!-- 2. Kart: Faz -->
+      <div class="highlight-card">
+        <div class="hc-icon">🌓</div>
+        <div class="hc-content">
+          <div class="hc-label">Ay Fazı</div>
+          <div class="hc-value" id="hc-phase">—</div>
+          <div class="hc-time" id="hc-illum">—</div>
+        </div>
+      </div>
+
+      <!-- 3. Kart: Uygun Aktivite -->
+      <div class="highlight-card">
+        <div class="hc-icon">✦</div>
+        <div class="hc-content">
+          <div class="hc-label">Bugün İçin Uygun</div>
+          <div class="hc-value" id="hc-suitable">—</div>
+          <div class="hc-time" id="hc-suitable-detail">—</div>
+        </div>
+      </div>
+
+      <!-- 4. Kart: Ay Boşluğu -->
+      <div class="highlight-card" id="hc-voc">
+        <div class="hc-icon">◎</div>
+        <div class="hc-content">
+          <div class="hc-label">Ay Boşluğu</div>
+          <div class="hc-value" id="hc-voc-status">—</div>
+          <div class="hc-time" id="hc-voc-time">—</div>
+        </div>
       </div>
     </div>
-    <h3>Bakım Takvimleri</h3>
-    <p>Saç, kaş, epilasyon gibi uygulamalar için ayrı hassasiyetle hazırlanmış, kendine özgü tarihler.</p>
-  </a>
-  <!-- 4. Panel: Bahçe-bitki -->
-  <a href="bahce-bitki.html" class="panel">
-    <div class="panel-header">
-      <div class="idx">Bahçe & Bitki Bakımı (Biyodinamik Tarım)</div>
-      <div class="panel-arrow">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="7" y1="17" x2="17" y2="7"></line>
-          <polyline points="7 7 17 7 17 17"></polyline>
+
+    <!-- Hızlı Erişim Butonları -->
+    <div class="highlights-cta">
+      <a href="gunluk.html" class="btn btn-primary">
+        <span>Detaylı Günlük</span>
+        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
         </svg>
-      </div>
+      </a>
+      <a href="ozel-takvimler.html" class="btn btn-ghost">
+        <span>Özel Takvimler</span>
+      </a>
     </div>
-    <h3>Bahçe & Bitki Bakımı </h3>
-    <p>Saç, kaş, epilasyon gibi uygulamalar için ayrı hassasiyetle hazırlanmış, kendine özgü tarihler.</p>
-  </a>
-  <!-- 5. Panel: Beden-sağlık -->
-  <a href="beden-saglik.html" class="panel">
-    <div class="panel-header">
-      <div class="idx">Beden, Sağlık & Detoks</div>
-      <div class="panel-arrow">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="7" y1="17" x2="17" y2="7"></line>
-          <polyline points="7 7 17 7 17 17"></polyline>
-        </svg>
-      </div>
-    </div>
-    <h3>Beden, Sağlık & Detoks</h3>
-    <p>Saç, kaş, epilasyon gibi uygulamalar için ayrı hassasiyetle hazırlanmış, kendine özgü tarihler.</p>
-  </a>
-  <!-- 6. Panel: zihin-niyet -->
-  <a href="zihin-niyet.html" class="panel">
-    <div class="panel-header">
-      <div class="idx">Zihin, Niyet & Ritüeller</div>
-      <div class="panel-arrow">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="7" y1="17" x2="17" y2="7"></line>
-          <polyline points="7 7 17 7 17 17"></polyline>
-        </svg>
-      </div>
-    </div>
-    <h3>Zihin, Niyet & Ritüeller</h3>
-    <p>Saç, kaş, epilasyon gibi uygulamalar için ayrı hassasiyetle hazırlanmış, kendine özgü tarihler.</p>
-  </a>
+  </div>
 </section>
 
 <footer>
-  <div>© 2026 ay.defteri</div>
-  <div class="mono">İstanbul </div>
+  <div>© 2026 astro.takvim</div>
+  <div class="mono">İstanbul</div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
 <script>
+// ===== HEADER + HAMBURGER =====
+(function() {
+  const header = document.getElementById('mainHeader');
+  const hamburger = document.getElementById('hamburgerBtn');
+  const nav = document.getElementById('mainNav');
+
+  window.addEventListener('scroll', function() {
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    if (currentScroll > 12) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+
+  hamburger.addEventListener('click', function() {
+    this.classList.toggle('active');
+    nav.classList.toggle('open');
+  });
+
+  nav.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      hamburger.classList.remove('active');
+      nav.classList.remove('open');
+    });
+  });
+})();
+
+// ===== ASTRONOMİ HESAPLAMALARI =====
 const signs = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
 const symbols = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
 const AY_TR_TAM = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
@@ -252,7 +544,7 @@ function fmtTarihSaat(d){
   return `${String(d.getUTCDate()).padStart(2,'0')} ${AY_TR_KISA[d.getUTCMonth()]}, ${fmtSaat(d)}`;
 }
 
-// --- Ay Boşluğu (Void of Course) hesaplama ---
+// --- Ay Boşluğu (Void of Course) ---
 function findCrossing(t1, t2, target){
   let lo=t1.getTime(), hi=t2.getTime();
   const loDiff = ((moonLon(new Date(lo))-target+180)%360+360)%360-180;
@@ -360,6 +652,87 @@ html += `<text class="center-label" x="${cx}" y="${cy + 2}" text-anchor="middle"
 html += `<text class="center-sub" x="${cx}" y="${cy + 22}" text-anchor="middle" dominant-baseline="middle">${durum.toUpperCase()}</text>`;
 svg.innerHTML = html;
 
+  // ===== BUGÜNÜN ÖNE ÇIKANLARI =====
+function updateHighlights() {
+  const now = new Date();
+  const lon = moonLon(now);
+  const signIdx = Math.floor(lon / 30);
+  const signName = signs[signIdx];
+  const phaseAngle = Astronomy.MoonPhase(now);
+  const durum = phaseAngle < 180 ? "Büyüyor" : "Küçülüyor";
+  const illumPct = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, now).phase_fraction * 100);
+
+  // 1. Başlık
+  document.getElementById('highlight-sign').textContent = signName;
+  document.getElementById('highlight-desc').textContent = 
+    `Ay ${signName} burcunda ve şu an ${durum.toLowerCase()}. Bugünün enerjisini keşfet.`;
+
+  // 2. Sonraki geçiş
+  const stepMs = 4 * 60 * 60 * 1000;
+  let t1 = now, sign1 = signIdx, nextTransition = null;
+  for (let t = now.getTime(); t < now.getTime() + 15 * 24 * 60 * 60 * 1000; t += stepMs) {
+    const cur = new Date(t);
+    const s = Math.floor(moonLon(cur) / 30);
+    if (s !== sign1) {
+      const cross = findCrossing(t1, cur, (s * 30) % 360);
+      nextTransition = { time: cross, sign: s };
+      break;
+    }
+    t1 = cur;
+  }
+  if (nextTransition) {
+    const tIst = toIstanbul(nextTransition.time);
+    document.getElementById('hc-next-sign').textContent = signs[nextTransition.sign];
+    document.getElementById('hc-next-time').textContent = fmtTarihSaat(tIst);
+  } else {
+    document.getElementById('hc-next-sign').textContent = '—';
+    document.getElementById('hc-next-time').textContent = '';
+  }
+
+  // 3. Faz
+  const phaseEmoji = durum === 'Büyüyor' ? '🌙' : '🌘';
+  document.getElementById('hc-phase').textContent = `${phaseEmoji} ${durum}`;
+  document.getElementById('hc-illum').textContent = `%${illumPct} aydınlanma`;
+
+  // 4. Uygun aktivite
+  const suitableMap = {
+    0: 'Yeni başlangıçlar, kariyer planı',
+    1: 'Finans, değerler, keyif',
+    2: 'İletişim, yazışmalar, seyahat',
+    3: 'Ev, aile, duygusal bağlar',
+    4: 'Yaratıcılık, aşk, eğlence',
+    5: 'Sağlık, düzen, detaylar',
+    6: 'İlişkiler, iş birlikleri',
+    7: 'Dönüşüm, araştırma, derinlik',
+    8: 'Keşif, seyahat, felsefe',
+    9: 'Kariyer, otorite, hedefler',
+    10: 'Yenilik, topluluk, gelecek',
+    11: 'Ruhsallık, sanat, hayaller'
+  };
+  document.getElementById('hc-suitable').textContent = suitableMap[signIdx] || 'Günü gözlemle';
+  document.getElementById('hc-suitable-detail').textContent = `${signName} burcu enerjisi`;
+
+  // 5. Ay Boşluğu
+  const voc = findVoc(now);
+  const isVoidNow = now >= voc.voidStart && now < voc.voidEnd;
+  const vocCard = document.getElementById('hc-voc');
+  const vocStatus = document.getElementById('hc-voc-status');
+  const vocTime = document.getElementById('hc-voc-time');
+
+  if (isVoidNow) {
+    vocCard.classList.add('voc-active');
+    vocStatus.textContent = '🔴 Aktif';
+    vocTime.textContent = `${fmtSaat(toIstanbul(voc.voidEnd))}'e kadar`;
+  } else {
+    vocCard.classList.remove('voc-active');
+    vocStatus.textContent = '✅ Değil';
+    vocTime.textContent = `Sıradaki: ${fmtTarihSaat(toIstanbul(voc.voidStart))}`;
+  }
+}
+
+// Highlights'ı güncelle
+updateHighlights();
+
 // --- Hero verileri ---
 const nowIst = toIstanbul(now);
 document.getElementById("eyebrow-date").textContent =
@@ -393,6 +766,5 @@ if(isVoidNow){
   text.textContent = `Sıradaki boşluk: ${fmtTarihSaat(vocStartIst)} – ${fmtSaat(vocEndIst)} (${signs[nextSignIndex]}'a geçişte)`;
 }
 </script>
-
 </body>
 </html>
