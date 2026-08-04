@@ -549,3 +549,139 @@ table.data-table tr.today-row:hover td{
   .cal-grid{ grid-template-columns: 1fr; }
 }
  
+/* ============================================
+   style.css — astro.takvim Ana Tema
+   ============================================ */
+
+/* ===== RESET & BASE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #fbf9f4;
+  color: #1c1b1a;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+}
+
+/* ===== HEADER ===== */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 28px 24px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  margin-bottom: 8px;
+  background: rgba(251, 249, 244, 0.92);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo {
+  font-family: 'Fraunces', serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: #1c1b1a;
+}
+.logo span {
+  color: #b87c5e;
+}
+
+nav {
+  display: flex;
+  gap: 28px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+nav a {
+  text-decoration: none;
+  color: #2d2a27;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 4px;
+  transition: 0.2s;
+}
+nav a:hover {
+  border-bottom-color: #b87c5e;
+  color: #000;
+}
+nav a.active {
+  border-bottom-color: #b87c5e;
+  color: #000;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #d6cfc6;
+  border-radius: 40px;
+  padding: 8px 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #1c1b1a;
+  transition: 0.2s;
+}
+.btn-ghost:hover {
+  background: #1c1b1a;
+  color: #fbf9f4;
+  border-color: #1c1b1a;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 28px;
+  border-top: 1px solid #e3dbd2;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: #5e554d;
+  font-weight: 400;
+}
+footer .mono {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  color: #7d7165;
+}
+
+/* ===== RESPONSIVE HEADER ===== */
+@media (max-width: 700px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 16px 12px;
+  }
+  nav {
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 1.5rem;
+  }
+  .btn-ghost {
+    padding: 6px 14px;
+    font-size: 0.75rem;
+  }
+}
