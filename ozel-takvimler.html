@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Özel Takvimler — ay.defteri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo-link">
+    <svg class="logo-mark" width="30" height="30" viewBox="0 0 100 100">
+      <circle class="ring" cx="50" cy="50" r="42" fill="none" stroke="#8C763F" stroke-width="3"/>
+      <line x1="50" y1="4" x2="50" y2="15" stroke="#C7A253" stroke-width="3"/>
+      <line x1="50" y1="85" x2="50" y2="96" stroke="#C7A253" stroke-width="3"/>
+      <line x1="4" y1="50" x2="15" y2="50" stroke="#C7A253" stroke-width="3"/>
+      <line x1="85" y1="50" x2="96" y2="50" stroke="#C7A253" stroke-width="3"/>
+      <circle cx="50" cy="50" r="21" fill="#E9E5D8"/>
+      <circle cx="59" cy="45" r="19" fill="#111729"/>
+    </svg>
+    <div class="logo">ay<span>.</span>defteri</div>
+  </a>
+  <nav>
+    <a href="gunluk.html">Günlük</a>
+    <a href="aylik-takvim.html">Aylık Takvim</a>
+    <a href="ozel-takvimler.html">Özel Takvimler</a>
+    <a href="bakim-takvimleri.html">Bakım Takvimleri</a>
+    <a href="hakkinda.html">Hakkında</a>
+  </nav>
+  <a href="index.html" class="btn btn-ghost" style="padding:10px 18px; font-size:0.82rem;">Anasayfa</a>
+</header>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>Özel Takvimler</h1>
+    <p>Belirli aktiviteler için astrolojik olarak uygun gün aralıkları. Önümüzdeki 30 gün için, aynı canlı sistemle hesaplanır.</p>
+  </div>
+
+  <div id="categories-root">
+    <p class="placeholder-note">Hesaplanıyor...</p>
+  </div>
+</div>
+
+<footer>
+  <div>© 2026 ay.defteri</div>
+  <div class="mono">İstanbul · UTC+3</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
+<script>
+const SIGNS = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
+const AY_TR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const TZ_OFFSET_MS = 3 * 60 * 60 * 1000;
+const GUN_SONRASI = 30;
+
+function moonLon(date){ return ((Astronomy.EclipticGeoMoon(date).lon % 360)+360)%360; }
+function planetLon(body, date){
+  const vec = Astronomy.GeoVector(body, date, true);
+  return ((Astronomy.Ecliptic(vec).elon % 360)+360)%360;
+}
+function angDist(a,b){ let d=Math.abs(a-b)%360; return d>180?360-d:d; }
+function toIstanbul(date){ return new Date(date.getTime() + TZ_OFFSET_MS); }
+
+function findCrossing(t1,t2,target){
+  let lo=t1.getTime(), hi=t2.getTime();
+  const loDiff=((moonLon(new Date(lo))-target+180)%360+360)%360-180;
+  for(let i=0;i<40;i++){
+    const mid=(lo+hi)/2;
+    const diff=((moonLon(new Date(mid))-target+180)%360+360)%360-180;
+    if((diff<0)===(loDiff<0)) lo=mid; else hi=mid;
+  }
+  return new Date((lo+hi)/2);
+}
+
+function computePeriods(startDate, endDate){
+  const stepMs = 4*3600*1000;
+  const times=[];
+  for(let t=startDate.getTime(); t<endDate.getTime(); t+=stepMs) times.push(new Date(t));
+  const transitions=[];
+  let prevSign = Math.floor(moonLon(times[0])/30);
+  for(let i=1;i<times.length;i++){
+    const s = Math.floor(moonLon(times[i])/30);
+    if(s!==prevSign){
+      const cross = findCrossing(times[i-1], times[i], (s*30)%360);
+      transitions.push({time:cross, sign:s});
+      prevSign = s;
+    }
+  }
+  const periods=[];
+  for(let i=0;i<transitions.length-1;i++){
+    periods.push({ start: transitions[i].time, end: transitions[i+1].time, sign: transitions[i].sign });
+  }
+  return periods;
+}
+
+const VOC_PLANETS = [Astronomy.Body.Sun, Astronomy.Body.Mercury, Astronomy.Body.Venus, Astronomy.Body.Mars, Astronomy.Body.Jupiter, Astronomy.Body.Saturn];
+const VOC_ASPECTS = [0,60,90,120,180];
+function bisectAspect(body, aspectAngle, t1, t2){
+  function f(t){ return angDist(moonLon(t), planetLon(body,t)) - aspectAngle; }
+  let lo=t1.getTime(), hi=t2.getTime();
+  let loVal = f(new Date(lo));
+  for(let i=0;i<30;i++){
+    const mid=(lo+hi)/2;
+    const midVal = f(new Date(mid));
+    if((midVal<0)===(loVal<0)){ lo=mid; loVal=midVal; } else hi=mid;
+  }
+  return new Date((lo+hi)/2);
+}
+function voidStartOf(period){
+  const stepMs = 20*60*1000;
+  const times=[];
+  for(let t=period.start.getTime(); t<=period.end.getTime(); t+=stepMs) times.push(new Date(t));
+  const moonVals = times.map(moonLon);
+  let found=[];
+  for(const body of VOC_PLANETS){
+    const planetVals = times.map(t=>planetLon(body,t));
+    let prevDist = angDist(moonVals[0], planetVals[0]);
+    for(let i=1;i<times.length;i++){
+      const dist = angDist(moonVals[i], planetVals[i]);
+      for(const asp of VOC_ASPECTS){
+        const pd = prevDist-asp, cd = dist-asp;
+        if((pd<0)!==(cd<0)) found.push(bisectAspect(body, asp, times[i-1], times[i]));
+      }
+      prevDist = dist;
+    }
+  }
+  return found.length ? new Date(Math.max(...found.map(d=>d.getTime()))) : period.start;
+}
+
+function lastNewMoonBefore(date){
+  let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(new Date(date.getTime()-40*24*3600*1000)));
+  let last = null;
+  while(q.time.date.getTime() < date.getTime()){
+    if(q.quarter===0) last = q.time.date;
+    q = Astronomy.NextMoonQuarter(q);
+  }
+  return last;
+}
+function phaseDurum(date){
+  return Astronomy.MoonPhase(date) < 180 ? "büyüyor" : "küçülüyor";
+}
+
+function fmt(d){
+  const dd = String(d.getUTCDate()).padStart(2,"0");
+  const mm = AY_TR[d.getUTCMonth()].slice(0,3);
+  const hh = String(d.getUTCHours()).padStart(2,"0");
+  const mi = String(d.getUTCMinutes()).padStart(2,"0");
+  return `${dd} ${mm}, ${hh}:${mi}`;
+}
+
+// --- Takvim türü tanımları ---
+const CATEGORIES = [
+  {
+    key: "bahce", title: "Bahçıvanlık & Ekim-Dikim",
+    desc: "Ay su burçlarındayken (Yengeç, Akrep, Balık) ekim ve dikim için en verimli dönem kabul edilir.",
+    goodSigns: [3,7,11], avoidVOC: true
+  },
+  {
+    key: "baslangic", title: "Yeni Başlangıçlar",
+    desc: "Yeniay'dan sonraki ilk 7 gün, iş, proje veya taşınma gibi yeni girişimler için en uygun pencere sayılır.",
+    timeRule: "afterNewMoon7", avoidVOC: true
+  },
+  {
+    key: "detoks", title: "Detoks & Düzen-Temizlik",
+    desc: "Küçülen Ay döneminde bırakma ve arındırma enerjisi güçlüdür; Başak burcunda bu etki en belirgin halini alır. Ay Boşluğu bu tür bitirme işleri için sorun teşkil etmez.",
+    phasePref: "küçülüyor", bestSign: 5, avoidVOC: false
+  },
+  {
+    key: "sosyal", title: "Sosyal & İlk Buluşma",
+    desc: "Terazi, Boğa ve Aslan burçlarında Ay varken sosyal enerji ve keyif ön plana çıkar.",
+    goodSigns: [1,4,6], avoidVOC: true
+  },
+  {
+    key: "seyahat", title: "Seyahat",
+    desc: "Yay, klasik seyahat burcudur. Ay Yay'dayken yola çıkmak astrolojik olarak tercih edilir.",
+    goodSigns: [8], avoidVOC: true
+  },
+  {
+    key: "imza", title: "Önemli İmza & Sözleşme",
+    desc: "Ay Boşlukta değilken imzalanan anlaşmaların daha sağlam olduğuna inanılır. Boğa, Yengeç ve Oğlak burçlarında bu güven daha da artar.",
+    bonusSigns: [1,3,9], avoidVOC: true
+  }
+];
+
+function evaluate(cat, period, voidStart, daysSinceNM){
+  if(cat.timeRule === "afterNewMoon7" && daysSinceNM > 7) return null;
+  if(cat.phasePref && phaseDurum(period.start) !== cat.phasePref) return null;
+  if(cat.goodSigns && !cat.goodSigns.includes(period.sign)) return null;
+
+  const windowEnd = cat.avoidVOC ? voidStart : period.end;
+  if(windowEnd <= period.start) return null;
+
+  let label = "Uygun";
+  if(cat.bestSign !== undefined && period.sign === cat.bestSign) label = "En Uygun";
+  if(cat.bonusSigns && cat.bonusSigns.includes(period.sign)) label = "İdeal";
+
+  return { start: period.start, end: windowEnd, label };
+}
+
+function render(){
+  const now = new Date();
+  const end = new Date(now.getTime() + GUN_SONRASI*24*3600*1000);
+  const periods = computePeriods(now, end);
+
+  // her dönem için VOC ve yeniay-günü bir kez hesaplanır, kategoriler arasında paylaşılır
+  const enriched = periods.map(p => ({
+    ...p,
+    voidStart: voidStartOf(p),
+    daysSinceNM: (p.start - lastNewMoonBefore(p.start)) / (24*3600*1000)
+  }));
+
+  let html = "";
+  for(const cat of CATEGORIES){
+    const windows = [];
+    for(const p of enriched){
+      const r = evaluate(cat, p, p.voidStart, p.daysSinceNM);
+      if(r) windows.push(r);
+    }
+
+    html += `<div class="cal-category">
+      <div class="cal-category-head"><h2>${cat.title}</h2></div>
+      <p class="cal-category-desc">${cat.desc}</p>
+      <div class="cal-window-list">`;
+
+    if(windows.length === 0){
+      html += `<p class="cal-empty">Önümüzdeki ${GUN_SONRASI} gün içinde uygun bir aralık bulunmuyor.</p>`;
+    } else {
+      for(const w of windows){
+        const sIst = toIstanbul(w.start);
+        const eIst = toIstanbul(w.end);
+        const badgeClass = w.label !== "Uygun" ? "badge ideal" : "badge";
+        html += `<div class="cal-window">
+          <span class="range">${fmt(sIst)} — ${fmt(eIst)}</span>
+          <span class="${badgeClass}">${w.label}</span>
+        </div>`;
+      }
+    }
+    html += `</div></div>`;
+  }
+
+  document.getElementById("categories-root").innerHTML = html;
+}
+
+render();
+</script>
+</body>
+</html>
