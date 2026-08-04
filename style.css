@@ -48,24 +48,18 @@ header {
   border-bottom: 1px solid var(--panel-border);
 }
 
-.logo-link {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  text-decoration: none;
-  color: inherit;
-}
 
 .logo {
   font-family: 'Fraunces', serif;
+  font-size: 1.7rem;
   font-weight: 500;
-  font-size: 1.15rem;
-  letter-spacing: 0.02em;
-  color: var(--ink);
-  transition: color 0.2s;
+  letter-spacing: -0.02em;
+  color: #1c1b1a;
+  text-decoration: none;
 }
-.logo span { color: var(--brass); }
-.logo-link:hover .logo { color: var(--brass); }
+.logo span {
+  color: #b87c5e;
+}
 
 nav {
   display: flex;
