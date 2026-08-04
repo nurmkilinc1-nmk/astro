@@ -1,34 +1,263 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aylık Takvim — ay.defteri</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aylık Takvim — astro.takvim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ===== SAYFA ÖZEL STILLER ===== */
+    .page-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+    }
+
+    .page-header {
+      margin: 32px 0 44px;
+      border-left: 4px solid #b87c5e;
+      padding-left: 28px;
+    }
+    .page-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 3.2rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      color: #1c1b1a;
+    }
+    .page-header p {
+      font-size: 1.15rem;
+      color: #4b4440;
+      max-width: 660px;
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    /* ===== TABLO ===== */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 20px;
+      border: 1px solid #ede8e0;
+      background: #ffffffec;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.02);
+      margin-top: 8px;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      min-width: 600px;
+    }
+
+    table.data-table thead {
+      background: #f4efe9;
+      border-bottom: 2px solid #ede8e0;
+    }
+
+    table.data-table th {
+      text-align: left;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8a7b6d;
+      padding: 16px 20px;
+      border-bottom: 1px solid #ede8e0;
+    }
+
+    table.data-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid #f0ebe4;
+      color: #2d2824;
+      transition: background 0.15s;
+    }
+
+    table.data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.data-table tr:hover td {
+      background: #f8f5f0;
+    }
+
+    /* Ay başlığı (month row) */
+    table.data-table tr.month-row td {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #b87c5e;
+      padding: 20px 20px 10px;
+      border-bottom: 2px solid #e6ddd4;
+      background: transparent;
+      letter-spacing: 0.02em;
+    }
+
+    /* Bugün satırı */
+    table.data-table tr.today-row td {
+      background: rgba(184, 124, 94, 0.07);
+      border-left: 4px solid #b87c5e;
+      font-weight: 500;
+    }
+    table.data-table tr.today-row:hover td {
+      background: rgba(184, 124, 94, 0.12);
+    }
+
+    .today-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      color: #b87c5e;
+      background: rgba(184, 124, 94, 0.12);
+      border: 1px solid rgba(184, 124, 94, 0.2);
+      border-radius: 40px;
+      padding: 2px 12px;
+      margin-left: 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* Faz etiketleri */
+    .phase-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+    .phase-label .emoji {
+      font-size: 1.2rem;
+    }
+
+    /* Burç etiketi */
+    .sign-badge {
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 40px;
+      background: #f4efe9;
+      color: #5e554d;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border: 1px solid #e6ddd4;
+    }
+
+    /* Durum etiketi (büyüyor/küçülüyor) */
+    .status-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      padding: 3px 12px;
+      border-radius: 40px;
+      display: inline-block;
+      letter-spacing: 0.04em;
+    }
+    .status-badge.waxing {
+      background: rgba(184, 124, 94, 0.1);
+      color: #b87c5e;
+      border: 1px solid rgba(184, 124, 94, 0.15);
+    }
+    .status-badge.waning {
+      background: rgba(74, 74, 74, 0.06);
+      color: #7d7165;
+      border: 1px solid rgba(74, 74, 74, 0.08);
+    }
+
+    /* ===== PLACEHOLDER ===== */
+    .placeholder-note {
+      margin-top: 30px;
+      padding: 18px 28px;
+      background: #f4efe9;
+      border-radius: 40px;
+      border: 1px solid #e6ddd4;
+      text-align: center;
+      color: #6f6256;
+      font-size: 0.92rem;
+    }
+    .placeholder-note strong {
+      color: #4b4440;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      .page-header h1 {
+        font-size: 2.4rem;
+      }
+      .page-header {
+        padding-left: 18px;
+        margin: 20px 0 32px;
+      }
+      table.data-table {
+        font-size: 0.82rem;
+        min-width: 500px;
+      }
+      table.data-table th,
+      table.data-table td {
+        padding: 12px 14px;
+      }
+      .today-badge {
+        font-size: 0.55rem;
+        padding: 1px 10px;
+        margin-left: 6px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-header h1 {
+        font-size: 2rem;
+      }
+      table.data-table {
+        font-size: 0.75rem;
+        min-width: 400px;
+      }
+      table.data-table th,
+      table.data-table td {
+        padding: 10px 10px;
+      }
+      .sign-badge {
+        font-size: 0.7rem;
+        padding: 2px 10px;
+      }
+      .status-badge {
+        font-size: 0.6rem;
+        padding: 2px 8px;
+      }
+      .placeholder-note {
+        padding: 14px 18px;
+        font-size: 0.82rem;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>
-  <a href="index.html" class="logo-link">
-    <svg class="logo-mark" width="30" height="30" viewBox="0 0 100 100">
-      <circle class="ring" cx="50" cy="50" r="42" fill="none" stroke="#8C763F" stroke-width="3"/>
-      <line x1="50" y1="4" x2="50" y2="15" stroke="#C7A253" stroke-width="3"/>
-      <line x1="50" y1="85" x2="50" y2="96" stroke="#C7A253" stroke-width="3"/>
-      <line x1="4" y1="50" x2="15" y2="50" stroke="#C7A253" stroke-width="3"/>
-      <line x1="85" y1="50" x2="96" y2="50" stroke="#C7A253" stroke-width="3"/>
-      <circle cx="50" cy="50" r="21" fill="#E9E5D8"/>
-      <circle cx="59" cy="45" r="19" fill="#111729"/>
-    </svg>
-    <div class="logo">ay<span>.</span>defteri</div>
-  </a>
-  <nav>
-    <a href="gunluk.html">Günlük</a>
-    <a href="aylik-takvim.html">Aylık Takvim</a>
-    <a href="bakim-takvimleri.html">Bakım Takvimleri</a>
-    <a href="hakkinda.html">Hakkında</a>
-  </nav>
-  <a href="index.html" class="btn btn-ghost" style="padding:10px 18px; font-size:0.82rem;">Anasayfa</a>
+
+<!-- SABİT HEADER (full-width) -->
+<header id="mainHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo">astro<span>.</span>takvim</a>
+
+    <div class="nav-wrapper">
+      <!-- Hamburger Butonu -->
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav id="mainNav">
+        <a href="gunluk.html">Günlük</a>
+        <a href="aylik-takvim.html" class="active">Aylık Takvim</a>
+        <a href="ozel-takvimler.html">Özel Takvimler</a>
+        <a href="danismanlik.html">Danışmanlık</a>
+        <a href="hakkimda.html">Hakkımda</a>
+      </nav>
+
+      <a href="index.html" class="btn-ghost">Anasayfa</a>
+    </div>
+  </div>
 </header>
 
 <div class="page-wrap">
@@ -37,30 +266,70 @@
     <p>Son 6 gün ve önümüzdeki 30 güne ait burç geçişleri ve Yeniay/Dolunay anları. Bu tablo sayfa her açıldığında gerçek zamanlı hesaplanır — elle güncelleme gerekmez.</p>
   </div>
 
-  <table class="data-table">
-    <thead>
-      <tr><th>Başlangıç</th><th>Bitiş</th><th>Burç / Faz</th><th>Durum</th></tr>
-    </thead>
-    <tbody id="calendar-body">
-      <tr><td colspan="4">Hesaplanıyor...</td></tr>
-    </tbody>
-  </table>
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Başlangıç</th>
+          <th>Bitiş</th>
+          <th>Burç / Faz</th>
+          <th>Durum</th>
+        </tr>
+      </thead>
+      <tbody id="calendar-body">
+        <tr><td colspan="4" style="text-align:center; padding:40px; color:#8a7b6d;">Hesaplanıyor...</td></tr>
+      </tbody>
+    </table>
+  </div>
 
   <div class="placeholder-note">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.8rem; letter-spacing:0.04em; color:#8a7b6d;">☽</span>
     Tarihler İstanbul saatine (UTC+3) göre, gerçek Ay konumu esas alınarak hesaplanır.
   </div>
 </div>
 
 <footer>
-  <div>© 2026 ay.defteri</div>
-  <div class="mono">İstanbul · UTC+3</div>
+  <div>© 2026 astro.takvim</div>
+  <div class="mono">İstanbul</div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
 <script>
+// ===== HEADER + HAMBURGER =====
+(function() {
+  const header = document.getElementById('mainHeader');
+  const hamburger = document.getElementById('hamburgerBtn');
+  const nav = document.getElementById('mainNav');
+
+  // Scroll'da gölge
+  window.addEventListener('scroll', function() {
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    if (currentScroll > 12) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+
+  // Hamburger menü toggle
+  hamburger.addEventListener('click', function() {
+    this.classList.toggle('active');
+    nav.classList.toggle('open');
+  });
+
+  // Menü linkine tıklayınca kapat
+  nav.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      hamburger.classList.remove('active');
+      nav.classList.remove('open');
+    });
+  });
+})();
+
+// ===== ASTRONOMİ HESAPLAMALARI =====
 const SIGNS = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
 const AY_TR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
-const TZ_OFFSET_MS = 3 * 60 * 60 * 1000; // İstanbul UTC+3 (DST yok)
+const TZ_OFFSET_MS = 3 * 60 * 60 * 1000;
 const GUN_ONCESI = 6;
 const GUN_SONRASI = 30;
 
@@ -90,12 +359,8 @@ function computeCalendar(startDate, endDate) {
 
   const transitions = [];
   let prevSign = Math.floor(moonLon(times[0]) / 30);
-
-  // ---- EKLENECEK: aralığın ilk işaretçisi (başlangıç) ----
-  // Eğer burç değişimi aralığın dışarısında başlamışsa, şu anki burcu temsil eden
-  // bir başlangıç satırı koymazsak "bugün" satırı eksik kalabiliyor.
   transitions.push({ time: times[0], sign: prevSign });
-  // --------------------------------------------------------
+
   for (let i = 1; i < times.length; i++) {
     const sign = Math.floor(moonLon(times[i]) / 30);
     if (sign !== prevSign) {
@@ -119,13 +384,18 @@ function computeCalendar(startDate, endDate) {
 
 function phaseAt(t, phases) {
   let prev = null;
-  for (const p of phases) { if (p.time <= t) prev = p.label; else break; }
+  for (const p of phases) {
+    if (p.time <= t) prev = p.label;
+    else break;
+  }
   if (prev === "Yeniay") return "büyüyor";
   if (prev === "Dolunay") return "küçülüyor";
   return "";
 }
 
-function toIstanbul(date) { return new Date(date.getTime() + TZ_OFFSET_MS); }
+function toIstanbul(date) {
+  return new Date(date.getTime() + TZ_OFFSET_MS);
+}
 
 function fmt(d) {
   const dd = String(d.getUTCDate()).padStart(2, "0");
@@ -136,9 +406,9 @@ function fmt(d) {
 }
 
 function sameIstanbulDay(d1, d2) {
-  return d1.getUTCFullYear() === d2.getUTCFullYear()
-    && d1.getUTCMonth() === d2.getUTCMonth()
-    && d1.getUTCDate() === d2.getUTCDate();
+  return d1.getUTCFullYear() === d2.getUTCFullYear() &&
+         d1.getUTCMonth() === d2.getUTCMonth() &&
+         d1.getUTCDate() === d2.getUTCDate();
 }
 
 function render() {
@@ -155,15 +425,16 @@ function render() {
       ? toIstanbul(transitions[i + 1].time)
       : new Date(sd.getTime() + 2.5 * 24 * 60 * 60 * 1000);
     const durum = phaseAt(transitions[i].time, phases);
-    // "bugün" satırı: şu anki an bu burç aralığının içindeyse
-            const nowIst = toIstanbul(now);
     const isToday = nowIst.getTime() >= sd.getTime() && nowIst.getTime() < ed.getTime();
     rows.push({ sd, ed, label: "Ay " + SIGNS[transitions[i].sign] + " Burcunda", durum, kind: "burc", isToday });
   }
+
   for (const p of phases) {
     const sd = toIstanbul(p.time);
-    rows.push({ sd, ed: null, label: p.label, durum: "", kind: "faz", isToday: sameIstanbulDay(sd, nowIst) });
+    const isToday = sameIstanbulDay(sd, nowIst);
+    rows.push({ sd, ed: null, label: p.label, durum: "", kind: "faz", isToday });
   }
+
   rows.sort((a, b) => a.sd - b.sd);
 
   let curKey = null;
@@ -174,15 +445,32 @@ function render() {
       curKey = key;
       html += `<tr class="month-row"><td colspan="4">${AY_TR[r.sd.getUTCMonth()]} ${r.sd.getUTCFullYear()}</td></tr>`;
     }
+
     const rowClass = r.isToday ? ' class="today-row"' : "";
     const badge = r.isToday ? '<span class="today-badge">Bugün</span>' : "";
+
     if (r.kind === "burc") {
-      html += `<tr${rowClass}><td>${fmt(r.sd)}</td><td>${fmt(r.ed)}</td><td>${r.label}${badge}</td><td>${r.durum}</td></tr>`;
+      const statusClass = r.durum === "büyüyor" ? 'status-badge waxing' : 
+                          r.durum === "küçülüyor" ? 'status-badge waning' : '';
+      const statusText = r.durum ? `<span class="${statusClass}">${r.durum}</span>` : '—';
+      
+      html += `<tr${rowClass}>
+        <td>${fmt(r.sd)}</td>
+        <td>${fmt(r.ed)}</td>
+        <td><span class="sign-badge">${r.label}</span> ${badge}</td>
+        <td>${statusText}</td>
+      </tr>`;
     } else {
       const emoji = r.label === "Yeniay" ? "🌑" : "🌕";
-      html += `<tr${rowClass}><td>${fmt(r.sd)}</td><td>—</td><td>${emoji} <strong>${r.label}</strong>${badge}</td><td></td></tr>`;
+      html += `<tr${rowClass}>
+        <td>${fmt(r.sd)}</td>
+        <td>—</td>
+        <td><span class="phase-label"><span class="emoji">${emoji}</span> <strong>${r.label}</strong></span> ${badge}</td>
+        <td></td>
+      </tr>`;
     }
   }
+
   document.getElementById("calendar-body").innerHTML = html;
 }
 
