@@ -19,28 +19,34 @@
       color: #1c1b1a;
       font-family: 'Inter', sans-serif;
       line-height: 1.6;
-      padding: 0 24px;
     }
 
-    /* ===== SABİT HEADER (sticky) ===== */
+    /* ===== SABİT HEADER (full-width) ===== */
     header {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(251, 249, 244, 0.88);
+      background: rgba(251, 249, 244, 0.92);
       backdrop-filter: blur(14px) saturate(1.2);
       -webkit-backdrop-filter: blur(14px) saturate(1.2);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: box-shadow 0.2s;
+      width: 100%;
+      padding: 0 24px; /* sadece yan boşluk */
+    }
+
+    header .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       padding: 18px 0 14px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      margin-bottom: 12px;
-      transition: box-shadow 0.2s;
     }
+
     header.scrolled {
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
 
     .logo-link {
@@ -136,7 +142,7 @@
       font-weight: 400;
     }
 
-    /* ===== KART IZGARASI (gelişmiş) ===== */
+    /* ===== KART IZGARASI ===== */
     .cal-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -249,15 +255,14 @@
     }
 
     @media (max-width: 700px) {
-      body {
+      header {
         padding: 0 16px;
       }
-      header {
+      header .header-inner {
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
         padding: 14px 0 12px;
-        background: rgba(251, 249, 244, 0.96);
       }
       nav {
         gap: 18px;
@@ -296,28 +301,33 @@
         font-size: 0.78rem;
       }
     }
-
-    /* ===== HEADER shadow toggle (JS ile) ===== */
-    .header-shadow {
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
-    }
   </style>
 </head>
 <body>
 
-<!-- SABİT HEADER -->
+<!-- SABİT HEADER (full-width) -->
 <header id="mainHeader">
-  <a href="index.html" class="logo-link">
-    <div class="logo">ay<span>.</span>defteri</div>
-  </a>
-  <nav>
-    <a href="gunluk.html">Günlük</a>
-    <a href="aylik-takvim.html">Aylık Takvim</a>
-    <a href="ozel-takvimler.html" class="active">Özel Takvimler</a>
-    <a href="hakkinda.html">Hakkında</a>
-    <a href="danismanlik.html">Danışmanlık</a>
-  </nav>
-  <a href="index.html" class="btn-ghost">Anasayfa</a>
+  <div class="header-inner">
+    <a href="index.html" class="logo-link">
+      <svg class="logo-mark" width="30" height="30" viewBox="0 0 100 100">
+        <circle class="ring" cx="50" cy="50" r="42" fill="none" stroke="#8C763F" stroke-width="3"/>
+        <line x1="50" y1="4" x2="50" y2="15" stroke="#C7A253" stroke-width="3"/>
+        <line x1="50" y1="85" x2="50" y2="96" stroke="#C7A253" stroke-width="3"/>
+        <line x1="4" y1="50" x2="15" y2="50" stroke="#C7A253" stroke-width="3"/>
+        <line x1="85" y1="50" x2="96" y2="50" stroke="#C7A253" stroke-width="3"/>
+        <circle cx="50" cy="50" r="21" fill="#E9E5D8"/>
+        <circle cx="59" cy="45" r="19" fill="#111729"/>
+      </svg>
+      <div class="logo">ay<span>.</span>defteri</div>
+    </a>
+    <nav>
+      <a href="gunluk.html">Günlük</a>
+      <a href="aylik-takvim.html">Aylık Takvim</a>
+      <a href="hakkimda.html">Hakkımda</a>
+      <a href="danismanlik.html">Danışmanlık</a>
+    </nav>
+    <a href="index.html" class="btn-ghost">Anasayfa</a>
+  </div>
 </header>
 
 <!-- SAYFA İÇERİĞİ -->
@@ -366,7 +376,7 @@
     </a>
   </div>
 
-  <!-- Ek bilgi / not alanı (profesyonel dokunuş) -->
+  <!-- Ek bilgi -->
   <div style="margin-top: 48px; padding: 24px 32px; background: #f4efe9; border-radius: 40px; border: 1px solid #e6ddd4; text-align: center; color: #4b4440; font-size: 0.95rem;">
     <span style="font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.04em; color: #8a7b6d;">☽</span>
     Tüm takvimler, Ay'ın gerçek konumuna göre <strong>canlı olarak hesaplanır</strong>. Gösterilen günler yaklaşık 1–3 günlük pencerelerdir.
@@ -378,19 +388,17 @@
   <div class="mono">İstanbul</div>
 </footer>
 
-<!-- Küçük JS: scroll'da header'a gölge ekle -->
+<!-- JS: scroll'da header'a gölge ekle -->
 <script>
   (function() {
     const header = document.getElementById('mainHeader');
-    let lastScroll = 0;
     window.addEventListener('scroll', function() {
       const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
       if (currentScroll > 12) {
-        header.classList.add('header-shadow');
+        header.classList.add('scrolled');
       } else {
-        header.classList.remove('header-shadow');
+        header.classList.remove('scrolled');
       }
-      lastScroll = currentScroll;
     });
   })();
 </script>
