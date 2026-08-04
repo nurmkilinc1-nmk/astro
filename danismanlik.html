@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Danışmanlık — ay.defteri</title>
+  <title>Danışmanlık — astro.takvim</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    /* ===== RESET & BASE (ay.defteri teması) ===== */
+    
     * {
       margin: 0;
       padding: 0;
@@ -20,7 +20,6 @@
       color: #1c1b1a;
       font-family: 'Inter', sans-serif;
       line-height: 1.6;
-      padding: 0 24px;
     }
 
     .page-wrap {
@@ -42,33 +41,53 @@
       letter-spacing: -0.01em;
     }
 
-    /* ===== HEADER (aynı) ===== */
+    /* ===== SABİT HEADER (full-width) ===== */
     header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(251, 249, 244, 0.95);
+      backdrop-filter: blur(14px) saturate(1.2);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: box-shadow 0.2s;
+      width: 100%;
+      padding: 0 24px;
+    }
+
+    header .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      padding: 28px 0 12px;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      margin-bottom: 20px;
+      padding: 18px 0 14px;
+    }
+
+    header.scrolled {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
 
     .logo {
       font-family: 'Fraunces', serif;
-      font-size: 1.8rem;
+      font-size: 1.7rem;
       font-weight: 500;
       letter-spacing: -0.02em;
       color: #1c1b1a;
+      text-decoration: none;
     }
     .logo span {
       color: #b87c5e;
     }
 
+    /* ===== NAVIGATION ===== */
     nav {
       display: flex;
       gap: 28px;
       font-size: 0.95rem;
       font-weight: 500;
+      align-items: center;
     }
     nav a {
       text-decoration: none;
@@ -86,6 +105,34 @@
       color: #000;
     }
 
+    /* ===== HAMBURGER MENU ===== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 2.5px;
+      background: #1c1b1a;
+      border-radius: 4px;
+      transition: 0.3s;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
     .btn-ghost {
       background: transparent;
       border: 1px solid #d6cfc6;
@@ -96,11 +143,19 @@
       text-decoration: none;
       color: #1c1b1a;
       transition: 0.2s;
+      white-space: nowrap;
     }
     .btn-ghost:hover {
       background: #1c1b1a;
       color: #fbf9f4;
       border-color: #1c1b1a;
+    }
+
+    /* ===== MOBILE MENU ===== */
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 28px;
     }
 
     /* ===== PAGE HEADER ===== */
@@ -328,21 +383,38 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 820px) {
+      .hamburger {
+        display: flex;
+      }
+
+      nav {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        padding: 16px 0 12px;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+        margin-top: 8px;
+      }
+      nav.open {
+        display: flex;
+      }
+
+      .nav-wrapper {
+        gap: 16px;
+      }
+
+      .btn-ghost {
+        padding: 6px 16px;
+        font-size: 0.8rem;
+      }
+
       .service-grid {
         grid-template-columns: 1fr 1fr;
       }
     }
 
     @media (max-width: 700px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 14px;
-      }
-      nav {
-        gap: 18px;
-        flex-wrap: wrap;
-      }
       .consulting-intro {
         flex-direction: column;
         align-items: center;
@@ -382,20 +454,42 @@
         font-size: 1.6rem;
         min-width: 28px;
       }
+      .page-header h1 {
+        font-size: 2rem;
+      }
+      .page-header {
+        padding-left: 18px;
+        margin: 24px 0 32px;
+      }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">ay<span>.</span>defteri</div>
-  <nav>
-    <a href="gunluk.html">Günlük</a>
-    <a href="aylik-takvim.html">Aylık Takvim</a>
-    <a href="ozel-takvimler.html">Özel Takvimler</a>
-    <a href="hakkimda.html">Hakkımda</a>
-  </nav>
-  <a href="index.html" class="btn-ghost">Anasayfa</a>
+<!-- SABİT HEADER (full-width) -->
+<header id="mainHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo">astro<span>.</span>takvim</a>
+
+    <div class="nav-wrapper">
+      <!-- Hamburger Butonu -->
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav id="mainNav">
+        <a href="gunluk.html">Günlük</a>
+        <a href="aylik-takvim.html">Aylık Takvim</a>
+        <a href="ozel-takvimler.html">Özel Takvimler</a>
+        <a href="danismanlik.html" class="active">Danışmanlık</a>
+        <a href="hakkimda.html">Hakkımda</a>
+      </nav>
+
+      <a href="index.html" class="btn-ghost">Anasayfa</a>
+    </div>
+  </div>
 </header>
 
 <div class="page-wrap">
@@ -420,28 +514,6 @@
     </div>
   </div>
 
-  <!-- HİZMET KARTLARI -->
-  <div class="service-grid">
-    <div class="service-card">
-      <span class="emoji-big">🌙</span>
-      <h3>Ay Takvimi Analizi</h3>
-      <p>Kişisel doğum haritan ve mevcut Ay geçişleri ışığında, önümüzdeki 3 ay için ritim planı.</p>
-      <span class="price-tag">1.500 ₺</span>
-    </div>
-    <div class="service-card">
-      <span class="emoji-big">🗓️</span>
-      <h3>Döngü Stratejisi</h3>
-      <p>Yeni ay & dolunay odaklı, karar alma, yaratıcılık ve dinlenme dönemlerini belirleme.</p>
-      <span class="price-tag">2.200 ₺</span>
-    </div>
-    <div class="service-card">
-      <span class="emoji-big">✨</span>
-      <h3>Özel Burç Geçişi</h3>
-      <p>Bir sonraki önemli burç geçişine (ör. Jüpiter, Satürn) özel hazırlık ve niyet çalışması.</p>
-      <span class="price-tag">1.800 ₺</span>
-    </div>
-  </div>
-
   <!-- SÜREÇ BLOĞU -->
   <div class="process-block">
     <h2>
@@ -453,7 +525,7 @@
         <div class="num">01</div>
         <div class="step-text">
           <strong>Ön görüşme</strong>
-          20 dakikalık ücretsiz çağrı ile ihtiyaçlarını ve beklentilerini konuşuyoruz.
+          10 dakikalık ücretsiz çağrı ile ihtiyaçlarını ve beklentilerini konuşuyoruz.
         </div>
       </div>
       <div class="step">
@@ -467,16 +539,38 @@
         <div class="num">03</div>
         <div class="step-text">
           <strong>Strateji oturumu</strong>
-          60–75 dakikalık online toplantıda harita, takvim ve uygulama planı paylaşılıyor.
+          35–40 dakikalık online toplantıda harita, takvim ve uygulama planı paylaşılıyor.
         </div>
       </div>
       <div class="step">
         <div class="num">04</div>
         <div class="step-text">
           <strong>Destek takibi</strong>
-          2 hafta boyunca mesaj ile sorularını yanıtlıyor, ilerlemeni destekliyorum.
+          1 hafta boyunca mesaj ile sorularını yanıtlıyor, ilerlemeni destekliyorum.
         </div>
       </div>
+    </div>
+  </div>
+  
+  <!-- HİZMET KARTLARI -->
+  <div class="service-grid">
+    <div class="service-card">
+      <span class="emoji-big">🌙</span>
+      <h3>Ay Takvimi Analizi</h3>
+      <p>Kişisel doğum haritan ve mevcut Ay geçişleri ışığında, önümüzdeki 3 ay için ritim planı.</p>
+      <span class="price-tag">-.--- ₺</span>
+    </div>
+    <div class="service-card">
+      <span class="emoji-big">🗓️</span>
+      <h3>Döngü Stratejisi</h3>
+      <p>Yeni ay & dolunay odaklı, karar alma, yaratıcılık ve dinlenme dönemlerini belirleme.</p>
+      <span class="price-tag">-.--- ₺</span>
+    </div>
+    <div class="service-card">
+      <span class="emoji-big">✨</span>
+      <h3>Özel Burç Geçişi</h3>
+      <p>Bir sonraki önemli burç geçişine (ör. Jüpiter, Satürn) özel hazırlık ve niyet çalışması.</p>
+      <span class="price-tag">-.--- ₺</span>
     </div>
   </div>
 
@@ -486,10 +580,10 @@
       <h3>Randevu almak ister misin?</h3>
       <p>Ön görüşme için uygun bir zaman ayarlayalım.</p>
     </div>
-    <a href="mailto:danismanlik@aydefteri.com" class="cta-btn">İletişime geç →</a>
+    <a href="#" class="cta-btn">İletişime geç →</a>
   </div>
 
-  <!-- KÜÇÜK NOT (isteğe bağlı) -->
+  <!-- KÜÇÜK NOT -->
   <div style="text-align: center; margin-top: 28px; font-size: 0.85rem; color: #7d7165; border-top: 1px solid #e3dbd2; padding-top: 28px;">
     <span class="mono">☽ Tüm danışmanlık seansları gizlilik ilkesine tabidir. ☾</span>
   </div>
@@ -497,9 +591,42 @@
 </div>
 
 <footer>
-  <div>© 2026 ay.defteri</div>
-  <div class="mono">İstanbul · UTC+3</div>
+  <div>© 2026 astro.takvim</div>
+  <div class="mono">İstanbul</div>
 </footer>
+
+<!-- JS: Header gölge + Hamburger menü -->
+<script>
+  (function() {
+    const header = document.getElementById('mainHeader');
+    const hamburger = document.getElementById('hamburgerBtn');
+    const nav = document.getElementById('mainNav');
+
+    // Scroll'da gölge
+    window.addEventListener('scroll', function() {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      if (currentScroll > 12) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Hamburger menü toggle
+    hamburger.addEventListener('click', function() {
+      this.classList.toggle('active');
+      nav.classList.toggle('open');
+    });
+
+    // Menü linkine tıklayınca kapat
+    nav.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('active');
+        nav.classList.remove('open');
+      });
+    });
+  })();
+</script>
 
 </body>
 </html>
