@@ -651,3 +651,60 @@ footer {
   }
 }
 
+/* --- Günlük sayfası: "Bugün ne için uygun?" listesi --- */
+.fit-list{ display:flex; flex-direction:column; gap:8px; margin-top:10px; }
+.fit-row{
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 13px 18px; background: var(--panel); border:1px solid var(--panel-border);
+  border-radius:3px; text-decoration:none; transition: border-color 0.2s;
+}
+.fit-row:hover{ border-color: var(--brass-dim); }
+.fit-left{ display:flex; align-items:center; gap:13px; }
+.fit-icon{
+  width:22px; height:22px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono'; font-size:0.75rem;
+}
+.fit-icon.ok{ background: rgba(199,162,83,0.18); color: var(--brass); }
+.fit-icon.no{ background: rgba(180,80,46,0.13); color: var(--ember); }
+.fit-name{ font-family:'Inter'; font-size:0.9rem; color: var(--ink); }
+.fit-status{
+  font-family:'IBM Plex Mono'; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.05em;
+  flex-shrink:0;
+}
+.fit-status.ok{ color: var(--brass); }
+.fit-status.no{ color: var(--ink-muted); }
+ 
+/* --- Günlük sayfası: bugün özet grid --- */
+.today-cats-title{
+  font-family:'Fraunces'; font-weight:500; font-size:1.2rem; color: var(--ink);
+  margin: 40px 0 16px;
+}
+.today-cats-grid{
+  display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;
+}
+.today-cat{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding: 14px 18px; background: var(--panel); border:1px solid var(--panel-border);
+  border-radius:3px; text-decoration:none;
+  transition: border-color 0.2s;
+}
+.today-cat:hover{ border-color: var(--brass-dim); }
+.today-cat .name{
+  font-family:'Inter'; font-size:0.88rem; color: var(--ink); font-weight:500;
+}
+.today-cat .reason{
+  font-family:'IBM Plex Mono'; font-size:0.72rem; color: var(--ink-muted); margin-top:3px;
+}
+.today-cat .badge{
+  font-family:'IBM Plex Mono'; font-size:0.66rem; padding:3px 11px; border-radius:12px;
+  border:1px solid var(--brass-dim); color: var(--brass); text-transform:uppercase;
+  letter-spacing:0.05em; flex-shrink:0;
+}
+.today-cat .badge.ideal{ border-color: var(--brass); background: rgba(199,162,83,0.13); }
+.today-cat .badge.no{
+  border-color: rgba(180,80,46,0.5); color: var(--ember);
+}
+@media (max-width: 640px){
+  .today-cats-grid{ grid-template-columns: 1fr; }
+}
