@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hakkında — ay.defteri</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #fbf9f4;
+      color: #1c1b1a;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      padding: 0 24px;
+    }
+
+    .page-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* ===== TİPOGRAFİ ===== */
+    h1, h2, h3 {
+      font-family: 'Fraunces', serif;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    .mono {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 28px 0 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-family: 'Fraunces', serif;
+      font-size: 1.8rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: #1c1b1a;
+    }
+    .logo span {
+      color: #b87c5e;
+    }
+
+    nav {
+      display: flex;
+      gap: 28px;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    nav a {
+      text-decoration: none;
+      color: #2d2a27;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+      transition: 0.2s;
+    }
+    nav a:hover {
+      border-bottom-color: #b87c5e;
+      color: #000;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #d6cfc6;
+      border-radius: 40px;
+      padding: 8px 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: #1c1b1a;
+      transition: 0.2s;
+    }
+    .btn-ghost:hover {
+      background: #1c1b1a;
+      color: #fbf9f4;
+      border-color: #1c1b1a;
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      margin: 40px 0 48px;
+      border-left: 4px solid #b87c5e;
+      padding-left: 28px;
+    }
+    .page-header h1 {
+      font-size: 3.2rem;
+      font-weight: 500;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    .page-header p {
+      font-size: 1.15rem;
+      color: #4b4440;
+      max-width: 600px;
+      font-weight: 400;
+    }
+
+    /* ===== PROFİL BLOĞU (gelişmiş) ===== */
+    .profile-block {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      background: #ffffffec;
+      padding: 32px 36px;
+      border-radius: 32px;
+      box-shadow: 0 12px 32px -12px rgba(0,0,0,0.08);
+      margin-bottom: 48px;
+      backdrop-filter: blur(2px);
+      border: 1px solid #f0ebe4;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #e5ddd4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .avatar-fallback {
+      font-family: 'Fraunces', serif;
+      font-size: 2.6rem;
+      font-weight: 400;
+      color: #4b4440;
+      letter-spacing: 0.02em;
+    }
+
+    .profile-name {
+      font-family: 'Fraunces', serif;
+      font-size: 1.9rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .profile-tag {
+      font-size: 1rem;
+      color: #5e554d;
+      margin: 6px 0 14px;
+      font-weight: 400;
+      border-left: 3px solid #b87c5e;
+      padding-left: 14px;
+    }
+
+    .social-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      margin-top: 6px;
+    }
+    .social-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #2d2a27;
+      text-decoration: none;
+      border-bottom: 1.5px dotted #cbc1b5;
+      padding-bottom: 2px;
+      transition: 0.2s;
+      letter-spacing: -0.01em;
+    }
+    .social-link:hover {
+      border-bottom-color: #b87c5e;
+      color: #000;
+    }
+
+    /* ===== INFO CARD (yeni) ===== */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin: 48px 0 40px;
+    }
+
+    .info-card {
+      background: #fffcf9;
+      padding: 28px 30px;
+      border-radius: 28px;
+      border: 1px solid #ede8e0;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.02);
+      transition: 0.2s;
+    }
+    .info-card:hover {
+      border-color: #dacfc2;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    }
+    .info-card h3 {
+      font-size: 1.4rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .info-card h3::before {
+      content: "✦";
+      font-size: 1.4rem;
+      color: #b87c5e;
+      font-weight: 300;
+    }
+    .info-card p {
+      color: #3c3631;
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+
+    /* ===== METİN BLOĞU (hikaye) ===== */
+    .story-block {
+      background: #f4efe9;
+      padding: 40px 44px;
+      border-radius: 32px;
+      margin: 32px 0 48px;
+      border: 1px solid #e6ddd4;
+    }
+    .story-block h2 {
+      font-size: 1.8rem;
+      font-weight: 400;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .story-block p {
+      font-size: 1.02rem;
+      color: #2d2824;
+      max-width: 720px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .story-block p:last-child {
+      margin-bottom: 0;
+    }
+    .story-block .signature {
+      font-family: 'Fraunces', serif;
+      font-size: 1.2rem;
+      font-weight: 300;
+      margin-top: 24px;
+      color: #6f6256;
+      border-top: 1px solid #d6cbc0;
+      padding-top: 20px;
+    }
+
+    /* ===== PLACEHOLDER (artık daha stilize) ===== */
+    .placeholder-note {
+      background: #fcf9f5;
+      border: 1px dashed #cdc0b2;
+      border-radius: 60px;
+      padding: 18px 32px;
+      text-align: center;
+      color: #6f6256;
+      font-size: 0.95rem;
+      margin: 28px 0 20px;
+      letter-spacing: 0.01em;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 20px 28px;
+      border-top: 1px solid #e3dbd2;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      color: #5e554d;
+      font-weight: 400;
+    }
+    footer .mono {
+      font-size: 0.8rem;
+      color: #7d7165;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      nav {
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+      .profile-block {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 28px 20px;
+      }
+      .profile-tag {
+        border-left: none;
+        padding-left: 0;
+      }
+      .social-row {
+        justify-content: center;
+      }
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .page-header h1 {
+        font-size: 2.5rem;
+      }
+      .story-block {
+        padding: 28px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .avatar {
+        width: 80px;
+        height: 80px;
+      }
+      .avatar-fallback {
+        font-size: 2rem;
+      }
+      .profile-name {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">ay<span>.</span>defteri</div>
+  <nav>
+    <a href="gunluk.html">Günlük</a>
+    <a href="aylik-takvim.html">Aylık Takvim</a>
+    <a href="bakim-takvimleri.html">Bakım Takvimleri</a>
+    <a href="hakkinda.html">Hakkında</a>
+  </nav>
+  <a href="index.html" class="btn-ghost">Anasayfa</a>
+</header>
+
+<div class="page-wrap">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>Hakkında</h1>
+    <p>ay.defteri, yorum değil ölçüm ilkesiyle hazırlanan bir Ay takvimi projesidir.</p>
+  </div>
+
+  <!-- PROFİL BLOĞU (gelişmiş) -->
+  <div class="profile-block">
+    <div class="avatar">
+      <!-- Fotoğrafını eklemek için aşağıdaki satırı aktif et ve 'profil.jpg' yolunu düzenle -->
+      <!-- <img src="profil.jpg" alt="Profil fotoğrafı" /> -->
+      <span class="avatar-fallback">AD</span>
+    </div>
+    <div>
+      <div class="profile-name">İsim Soyisim</div>
+      <div class="profile-tag">Ay takipçisi · veri tutkunu · minimal</div>
+
+      <div class="social-row">
+        <a href="#" class="social-link">Instagram</a>
+        <a href="#" class="social-link">X (Twitter)</a>
+        <a href="#" class="social-link">TikTok</a>
+        <a href="mailto:#" class="social-link">E-posta</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO GRID (yeni) -->
+  <div class="info-grid">
+    <div class="info-card">
+      <h3>Gerçek veri</h3>
+      <p>Buradaki tüm burç geçişi ve evre tarihleri, güncel astronomik hesaplamalara dayanır. Tahmin veya kopya içerik kullanılmaz.</p>
+    </div>
+    <div class="info-card">
+      <h3>Neden ay.defteri?</h3>
+      <p>Ay döngüsünü kişisel bir pratiğe dönüştürmek, gözlemi yorumdan ayırmak ve sadeliği merkeze almak için.</p>
+    </div>
+  </div>
+
+  <!-- HİKAYE BLOĞU (kişisel metin) -->
+  <div class="story-block">
+    <h2>Bu projenin hikâyesi</h2>
+    <p>
+      ay.defteri, yıllarca süren Ay gözlemlerinin ve notların birikimiyle doğdu. 
+      Amacım, Ay'ın evrelerini ve burç geçişlerini herkesin anlayabileceği, sade ve güvenilir bir dille sunmaktı. 
+      Çoğu takvim ya fazlasıyla mistik ya da tamamen teknik; burada ikisinin arasında, yalın bir köprü kurmaya çalışıyorum.
+    </p>
+    <p>
+      Her geçiş ve evre, gökyüzündeki gerçek konuma göre işlenir. 
+      Bu sayede ay.defteri, hem günlük pratiğine rehberlik etmek isteyenler hem de astronomik veriye meraklı olanlar için bir referans noktası olabiliyor.
+    </p>
+    <div class="signature">— ay.defteri</div>
+  </div>
+
+  <!-- İLETİŞİM / NOT (eski placeholder artık daha anlamlı) -->
+  <div class="placeholder-note">
+    ✦ İletişim, iş birliği veya geri bildirim için <strong>mail@aydefteri.com</strong> adresine yazabilirsiniz.
+  </div>
+
+</div>
+
+<footer>
+  <div>© 2026 ay.defteri</div>
+  <div class="mono">İstanbul · UTC+3</div>
+</footer>
+
+</body>
+</html>
