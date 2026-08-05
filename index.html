@@ -3,12 +3,638 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>astro.takvim — Anasayfa</title>
+  <title>Anasayfa — astro.takvim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+San..." rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #fbf9f4;
+      color: #1c1b1a;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+    }
+
+    /* ===== SABİT HEADER (full-width) ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(251, 249, 244, 0.95);
+      backdrop-filter: blur(14px) saturate(1.2);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: box-shadow 0.2s;
+      width: 100%;
+      padding: 0 24px;
+    }
+
+    header .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 18px 0 14px;
+    }
+
+    header.scrolled {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .logo {
+      font-family: 'Fraunces', serif;
+      font-size: 1.7rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: #1c1b1a;
+      text-decoration: none;
+    }
+    .logo span {
+      color: #b87c5e;
+    }
+
+    /* ===== NAVIGATION ===== */
+    nav {
+      display: flex;
+      gap: 28px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      align-items: center;
+    }
+    nav a {
+      text-decoration: none;
+      color: #2d2a27;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+      transition: 0.2s;
+    }
+    nav a:hover {
+      border-bottom-color: #b87c5e;
+      color: #000;
+    }
+    nav a.active {
+      border-bottom-color: #b87c5e;
+      color: #000;
+    }
+
+    /* ===== HAMBURGER MENU ===== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 2.5px;
+      background: #1c1b1a;
+      border-radius: 4px;
+      transition: 0.3s;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #d6cfc6;
+      border-radius: 40px;
+      padding: 8px 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: #1c1b1a;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+    .btn-ghost:hover {
+      background: #1c1b1a;
+      color: #fbf9f4;
+      border-color: #1c1b1a;
+    }
+    .btn-ghost.highlight {
+      border-color: #b87c5e;
+      color: #b87c5e;
+    }
+    .btn-ghost.highlight:hover {
+      background: #b87c5e;
+      color: #fbf9f4;
+    }
+
+    /* ===== MOBILE MENU ===== */
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    /* ===== VOC BANNER (açık tema) ===== */
+    .voc-banner {
+      width: 100%;
+      padding: 10px 24px;
+      background: #f4efe9;
+      border-bottom: 1px solid #e6ddd4;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .voc-banner .voc-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .voc-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(184, 124, 94, 0.1);
+      color: #b87c5e;
+      flex-shrink: 0;
+    }
+    .voc-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+    .voc-copy {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+    .voc-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: #b87c5e;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .voc-text {
+      color: #5e554d;
+      font-size: 0.9rem;
+    }
+    .voc-banner.is-void {
+      background: #f5ede8;
+      border-left: 6px solid #b4502e;
+    }
+    .voc-banner.is-void .voc-label {
+      color: #b4502e;
+    }
+    .voc-banner.is-void .voc-text {
+      color: #8a3d24;
+    }
+    .voc-banner.not-void {
+      background: #f4efe9;
+      border-left: 6px solid rgba(184, 124, 94, 0.15);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 4vw;
+      padding: 4vw 24px 3vw;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      color: #b87c5e;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #b87c5e;
+      display: inline-block;
+    }
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 400;
+      font-size: clamp(2.4rem, 4vw, 3.4rem);
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      color: #1c1b1a;
+    }
+    h1 em {
+      font-style: italic;
+      font-weight: 300;
+      color: #b87c5e;
+    }
+    h1 span {
+      color: #b87c5e;
+    }
+    .hero-sub {
+      margin-top: 20px;
+      color: #5e554d;
+      font-size: 1.02rem;
+      max-width: 480px;
+    }
+    .hero-data {
+      display: flex;
+      gap: 28px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .data-item {
+      border-left: 2px solid #e6ddd4;
+      padding-left: 14px;
+    }
+    .data-item:first-child {
+      border-left: none;
+      padding-left: 0;
+    }
+    .data-item .num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1.3rem;
+      color: #1c1b1a;
+      font-weight: 500;
+    }
+    .data-item .label {
+      font-size: 0.7rem;
+      color: #8a7b6d;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    /* ===== BUTONLAR ===== */
+    .cta-row {
+      display: flex;
+      gap: 14px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 12px 26px;
+      border-radius: 40px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .btn-primary {
+      background: #b87c5e;
+      color: #fbf9f4;
+    }
+    .btn-primary:hover {
+      background: #a06b4f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(184, 124, 94, 0.3);
+    }
+    .btn-ghost-light {
+      border-color: #d6cfc6;
+      color: #1c1b1a;
+      background: transparent;
+    }
+    .btn-ghost-light:hover {
+      border-color: #b87c5e;
+      color: #b87c5e;
+      background: rgba(184, 124, 94, 0.04);
+    }
+    .btn-icon, .btn-icon-left {
+      width: 18px;
+      height: 18px;
+    }
+    .btn-primary .btn-icon {
+      stroke: #fbf9f4;
+    }
+
+    /* ===== ZODIAC WHEEL (açık tema) ===== */
+    .wheel-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .wheel-frame {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      aspect-ratio: 1;
+    }
+    svg { width: 100%; height: 100%; overflow: visible; }
+    .ring-outer { fill: none; stroke: #e6ddd4; stroke-width: 1.5; }
+    .tick-major { stroke: #d6cbc0; stroke-width: 1.5; }
+    .tick-minor { stroke: #ede8e0; stroke-width: 1; }
+    .sign-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      fill: #8a7b6d;
+      letter-spacing: 0.05em;
+    }
+    .sign-label.active { fill: #b87c5e; font-weight: 600; }
+    .moon-marker {
+      fill: #1c1b1a;
+      filter: drop-shadow(0 0 12px rgba(184, 124, 94, 0.3));
+      animation: pulse 3.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+    .center-label {
+      font-family: 'Fraunces', serif;
+      font-weight: 500;
+      font-size: 20px;
+      fill: #1c1b1a;
+      text-anchor: middle;
+    }
+    .center-sub {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      fill: #b87c5e;
+      text-anchor: middle;
+      letter-spacing: 0.12em;
+    }
+    .center-symbol {
+      font-family: 'Noto Sans Symbols 2', sans-serif;
+      font-size: 28px;
+      fill: #b87c5e;
+      text-anchor: middle;
+    }
+    .ring-decorative {
+      fill: none;
+      stroke: #ede8e0;
+      stroke-width: 3;
+      stroke-dasharray: 1 7;
+      opacity: 1;
+    }
+    .ring-rotator {
+      transform-origin: 200px 200px;
+      animation: wheel-spin 160s linear infinite;
+    }
+    @keyframes wheel-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .sign-arc-active { fill: #b87c5e; opacity: 0.08; }
+    .cusp-dot { fill: #b87c5e; opacity: 0.6; }
+    .cusp-dot.major { opacity: 1; }
+
+    /* ===== HIGHLIGHTS (açık tema) ===== */
+    .today-highlights {
+      padding: 2vw 24px 4vw;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .highlights-inner {
+      background: #ffffffec;
+      border: 1px solid #ede8e0;
+      border-radius: 24px;
+      padding: 40px 44px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+    .highlights-header {
+      margin-bottom: 28px;
+    }
+    .highlights-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: #b87c5e;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .highlights-title {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: #1c1b1a;
+      letter-spacing: -0.02em;
+    }
+    .highlights-title span {
+      color: #b87c5e;
+    }
+    .highlights-sub {
+      color: #5e554d;
+      font-size: 0.98rem;
+      margin-top: 4px;
+    }
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .highlight-card {
+      background: #fbf9f4;
+      border: 1px solid #ede8e0;
+      border-radius: 16px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .highlight-card:hover {
+      border-color: #d0c2b2;
+      background: #f8f5f0;
+    }
+    .hc-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(184, 124, 94, 0.06);
+      border-radius: 12px;
+      color: #b87c5e;
+    }
+    .hc-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .hc-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      color: #8a7b6d;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .hc-value {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1c1b1a;
+      margin-top: 1px;
+      line-height: 1.2;
+    }
+    .hc-time {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: #8a7b6d;
+      margin-top: 2px;
+    }
+    .highlight-card.voc-active {
+      border-color: #b4502e;
+      background: #fcf5f0;
+    }
+    .highlight-card.voc-active .hc-icon {
+      background: rgba(180, 80, 46, 0.08);
+      color: #b4502e;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px 28px;
+      border-top: 1px solid #e3dbd2;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+      color: #5e554d;
+      font-weight: 400;
+    }
+    footer .mono {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      color: #7d7165;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .highlights-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 820px) {
+      .hamburger {
+        display: flex;
+      }
+      nav {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        padding: 16px 0 12px;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+        margin-top: 8px;
+      }
+      nav.open {
+        display: flex;
+      }
+      .nav-wrapper {
+        gap: 16px;
+      }
+      .btn-ghost {
+        padding: 6px 16px;
+        font-size: 0.8rem;
+      }
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 4vw 16px 3vw;
+      }
+      .wheel-wrap {
+        order: -1;
+        margin-bottom: 20px;
+      }
+      .highlights-inner {
+        padding: 28px 24px;
+      }
+      .highlights-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      header {
+        padding: 0 16px;
+      }
+      header .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 0 12px;
+      }
+      .highlights-grid {
+        grid-template-columns: 1fr;
+      }
+      .highlights-title {
+        font-size: 1.6rem;
+      }
+      .hero-data {
+        gap: 16px;
+      }
+      .data-item .num {
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 1.4rem;
+      }
+      .btn-ghost {
+        padding: 5px 12px;
+        font-size: 0.7rem;
+      }
+      .highlights-inner {
+        padding: 20px 16px;
+        border-radius: 16px;
+      }
+      .highlights-title {
+        font-size: 1.3rem;
+      }
+      .highlight-card {
+        padding: 14px 16px;
+      }
+      .hc-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 1.3rem;
+      }
+      .hc-value {
+        font-size: 0.85rem;
+      }
+      .hero-sub {
+        font-size: 0.92rem;
+      }
+    }
+  </style>
 </head>
-<body data-theme="light">
+<body>
 
 <!-- SABİT HEADER (full-width) -->
 <header id="mainHeader">
@@ -16,7 +642,6 @@
     <a href="index.html" class="logo">astro<span>.</span>takvim</a>
 
     <div class="nav-wrapper">
-      <!-- Hamburger Butonu -->
       <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
         <span></span>
         <span></span>
@@ -31,7 +656,7 @@
         <a href="hakkimda.html">Hakkımda</a>
       </nav>
 
-      <a href="kayit.html" class="btn-ghost">KAYDOL</a>
+      <a href="kayit.html" class="btn-ghost highlight">Kaydol</a>
     </div>
   </div>
 </header>
@@ -44,7 +669,6 @@
         <path d="M20 13.2A8.2 8.2 0 1 1 10.8 4a6.4 6.4 0 0 0 9.2 9.2Z" fill="currentColor"/>
       </svg>
     </div>
-    <div class="voc-divider"></div>
     <div class="voc-copy">
       <span class="voc-label" id="voc-label">—</span>
       <span class="voc-text" id="voc-text">Hesaplanıyor...</span>
@@ -74,7 +698,18 @@
       </div>
     </div>
 
-    
+    <div class="cta-row">
+      <a href="gunluk.html" class="btn btn-primary">
+        <span>Bugünün Detayını Gör</span>
+        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+      <a href="aylik-takvim.html" class="btn btn-ghost-light">
+        <span>Aylık Takvime Bak</span>
+      </a>
+    </div>
   </div>
 
   <div class="wheel-wrap">
@@ -84,7 +719,7 @@
   </div>
 </section>
 
-<!-- YENİ BÖLÜM: BUGÜNÜN ÖNE ÇIKANLARI -->
+<!-- BUGÜNÜN ÖNE ÇIKANLARI -->
 <section class="today-highlights">
   <div class="highlights-inner">
     <div class="highlights-header">
@@ -94,7 +729,6 @@
     </div>
 
     <div class="highlights-grid">
-      <!-- 1. Kart: Burç Geçişi -->
       <div class="highlight-card">
         <div class="hc-icon">♃</div>
         <div class="hc-content">
@@ -104,7 +738,6 @@
         </div>
       </div>
 
-      <!-- 2. Kart: Faz -->
       <div class="highlight-card">
         <div class="hc-icon">🌓</div>
         <div class="hc-content">
@@ -114,7 +747,6 @@
         </div>
       </div>
 
-      <!-- 3. Kart: Uygun Aktivite -->
       <div class="highlight-card">
         <div class="hc-icon">✦</div>
         <div class="hc-content">
@@ -124,7 +756,6 @@
         </div>
       </div>
 
-      <!-- 4. Kart: Ay Boşluğu -->
       <div class="highlight-card" id="hc-voc">
         <div class="hc-icon">◎</div>
         <div class="hc-content">
@@ -134,9 +765,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Hızlı Erişim Butonları -->
-    
   </div>
 </section>
 
@@ -178,12 +806,12 @@
 // ===== ASTRONOMİ HESAPLAMALARI =====
 const signs = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
 const symbols = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
-const AY_TR_TAM = ["Ocak","Şubat","Mart","Nisan","May","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+const AY_TR_TAM = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
 const AY_TR_KISA = ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
 const TZ_OFFSET_MS = 3 * 60 * 60 * 1000;
 
 const svg = document.getElementById('wheel');
-const cx = 200, cy = 200, rOuter = 175, rDeco = 188, rTick = 160, rLabel = 140;
+const cx = 200, cy = 200, rOuter = 175, rDeco = 188, rLabel = 140;
 
 function polar(cx, cy, r, angleDeg){
   const rad = (angleDeg - 90) * Math.PI / 180;
@@ -232,7 +860,7 @@ function fmtTarihSaat(d){
   return `${String(d.getUTCDate()).padStart(2,'0')} ${AY_TR_KISA[d.getUTCMonth()]}, ${fmtSaat(d)}`;
 }
 
-// --- Ay Boşluğu (Void of Course) ---
+// --- Ay Boşluğu ---
 function findCrossing(t1, t2, target){
   let lo=t1.getTime(), hi=t2.getTime();
   const loDiff = ((moonLon(new Date(lo))-target+180)%360+360)%360-180;
@@ -340,7 +968,7 @@ html += `<text class="center-label" x="${cx}" y="${cy + 2}" text-anchor="middle"
 html += `<text class="center-sub" x="${cx}" y="${cy + 22}" text-anchor="middle" dominant-baseline="middle">${durum.toUpperCase()}</text>`;
 svg.innerHTML = html;
 
-  // ===== BUGÜNÜN ÖNE ÇIKANLARI =====
+// ===== BUGÜNÜN ÖNE ÇIKANLARI =====
 function updateHighlights() {
   const now = new Date();
   const lon = moonLon(now);
@@ -350,12 +978,10 @@ function updateHighlights() {
   const durum = phaseAngle < 180 ? "Büyüyor" : "Küçülüyor";
   const illumPct = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, now).phase_fraction * 100);
 
-  // 1. Başlık
   document.getElementById('highlight-sign').textContent = signName;
   document.getElementById('highlight-desc').textContent = 
     `Ay ${signName} burcunda ve şu an ${durum.toLowerCase()}. Bugünün enerjisini keşfet.`;
 
-  // 2. Sonraki geçiş
   const stepMs = 4 * 60 * 60 * 1000;
   let t1 = now, sign1 = signIdx, nextTransition = null;
   for (let t = now.getTime(); t < now.getTime() + 15 * 24 * 60 * 60 * 1000; t += stepMs) {
@@ -377,12 +1003,10 @@ function updateHighlights() {
     document.getElementById('hc-next-time').textContent = '';
   }
 
-  // 3. Faz
   const phaseEmoji = durum === 'Büyüyor' ? '🌙' : '🌘';
   document.getElementById('hc-phase').textContent = `${phaseEmoji} ${durum}`;
   document.getElementById('hc-illum').textContent = `%${illumPct} aydınlanma`;
 
-  // 4. Uygun aktivite
   const suitableMap = {
     0: 'Yeni başlangıçlar, kariyer planı',
     1: 'Finans, değerler, keyif',
@@ -400,7 +1024,6 @@ function updateHighlights() {
   document.getElementById('hc-suitable').textContent = suitableMap[signIdx] || 'Günü gözlemle';
   document.getElementById('hc-suitable-detail').textContent = `${signName} burcu enerjisi`;
 
-  // 5. Ay Boşluğu
   const voc = findVoc(now);
   const isVoidNow = now >= voc.voidStart && now < voc.voidEnd;
   const vocCard = document.getElementById('hc-voc');
@@ -417,8 +1040,6 @@ function updateHighlights() {
     vocTime.textContent = `Sıradaki: ${fmtTarihSaat(toIstanbul(voc.voidStart))}`;
   }
 }
-
-// Highlights'ı güncelle
 updateHighlights();
 
 // --- Hero verileri ---
