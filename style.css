@@ -26,45 +26,6 @@
   --ember: #b4502e;
 }
 
-/* ===== SABİT HEADER (ortak, artık style.css içinde) ===== */
-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  /* arka plan ve border tema değişkenleriyle kontrol edilir */
-  background: rgba(251, 249, 244, 0.95);
-  backdrop-filter: blur(14px) saturate(1.2);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  transition: box-shadow 0.2s;
-  width: 100%;
-  padding: 0 24px;
-}
-
-/* header iç düzen */
-.header-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding: 18px 0 14px;
-}
-
-header.scrolled {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-}
-
-.logo {
-  font-family: 'Fraunces', serif;
-  font-size: 1.7rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  text-decoration: none;
-}
-.logo span { color: var(--brass); }
 
 /* navigation */
 nav {
