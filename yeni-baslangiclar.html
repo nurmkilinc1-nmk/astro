@@ -418,15 +418,16 @@
   <div class="cal-window-list" id="window-list">
     <p class="cal-empty">Hesaplanıyor...</p>
   </div>
-</div>
   <!-- ÖZET BİLGİ KUTUSU -->
   <div class="info-box">
-    <span class="icon">☽</span>
-    <div class="text">
-      <strong>Nasıl okunur?</strong> Her satır, Ay'ın uygun bir burçta olduğu ve <strong>Ay Boşluğu</strong> olmayan bir zaman aralığını gösterir. 
-      <em>"En Uygun"</em> etiketi, Terazi burcunda Ay varken gösterilir — ilişkiler ve sosyal uyum için en ideal zaman.
-    </div>
+  <span class="icon">🌱</span>
+  <div class="text">
+    <strong>Nasıl okunur?</strong> Her satır, Yeniay'dan sonraki 7 gün içinde <strong>Ay Boşluğu</strong> olmayan bir zaman aralığını gösterir. 
+    <em>Yeni başlangıçlar</em> için en ideal dönem, yeniay sonrası ilk haftadır.
   </div>
+</div>
+</div>
+  
 </div>
 
 <footer>
@@ -568,7 +569,10 @@ function fmt(d){
   return `${dd} ${mm}, ${hh}:${mi}`;
 }
 
-const CAT = { goodSigns: [1,4,6], avoidVOC: true };
+const CAT = { 
+  timeRule: "afterNewMoon7", 
+  avoidVOC: true 
+};
 
 function evaluate(cat, period, voidStart, daysSinceNM){
   if(cat.timeRule === "afterNewMoon7" && daysSinceNM > 7) return null;
