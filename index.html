@@ -6,6 +6,33 @@
   <title>Anasayfa — astro.takvim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+  <!-- ===== PWA META TAGS ===== -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#b87c5e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="astro.takvim">
+
+<!-- iOS için özel ikonlar -->
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192.png">
+
+<!-- PWA Service Worker Kaydı -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js')
+        .then(function(registration) {
+          console.log('Service Worker başarıyla kaydedildi:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('Service Worker kaydı başarısız:', error);
+        });
+    });
+  }
+</script>
+  
   <style>
     /* ===== RESET & BASE ===== */
     * {
