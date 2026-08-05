@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Çevrimdışı — astro.takvim</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: #fbf9f4;
+      color: #1c1b1a;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+    .offline-box {
+      max-width: 400px;
+      padding: 40px;
+      background: #ffffffec;
+      border-radius: 24px;
+      border: 1px solid #ede8e0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .offline-box .icon { font-size: 4rem; display: block; margin-bottom: 16px; }
+    .offline-box h1 { font-family: 'Fraunces', serif; font-size: 1.8rem; margin-bottom: 12px; }
+    .offline-box p { color: #5e554d; line-height: 1.7; }
+    .offline-box .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 32px;
+      background: #b87c5e;
+      color: #fbf9f4;
+      text-decoration: none;
+      border-radius: 40px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .offline-box .btn:hover { background: #a06b4f; }
+  </style>
+</head>
+<body>
+  <div class="offline-box">
+    <span class="icon">🌙</span>
+    <h1>Bağlantı Yok</h1>
+    <p>astro.takvim'e erişmek için internet bağlantınızı kontrol edin.<br>
+    <em style="color:#b87c5e; font-size:0.85rem;">Önceden ziyaret ettiğiniz sayfalar çevrimdışı da çalışır.</em></p>
+    <a href="/" class="btn">Anasayfaya Dön</a>
+  </div>
+</body>
+</html>
