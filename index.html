@@ -336,76 +336,144 @@
       stroke: #fbf9f4;
     }
 
-    /* ===== ZODIAC WHEEL (açık tema) ===== */
-    .wheel-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .wheel-frame {
-      position: relative;
-      width: 100%;
-      max-width: 440px;
-      aspect-ratio: 1;
-    }
-    svg { width: 100%; height: 100%; overflow: visible; }
-    .ring-outer { fill: none; stroke: #e6ddd4; stroke-width: 1.5; }
-    .tick-major { stroke: #d6cbc0; stroke-width: 1.5; }
-    .tick-minor { stroke: #ede8e0; stroke-width: 1; }
-    .sign-label {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 9px;
-      fill: #8a7b6d;
-      letter-spacing: 0.05em;
-    }
-    .sign-label.active { fill: #b87c5e; font-weight: 600; }
-    .moon-marker {
-      fill: #1c1b1a;
-      filter: drop-shadow(0 0 12px rgba(184, 124, 94, 0.3));
-      animation: pulse 3.5s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.55; }
-    }
-    .center-label {
-      font-family: 'Fraunces', serif;
-      font-weight: 500;
-      font-size: 20px;
-      fill: #1c1b1a;
-      text-anchor: middle;
-    }
-    .center-sub {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 10px;
-      fill: #b87c5e;
-      text-anchor: middle;
-      letter-spacing: 0.12em;
-    }
-    .center-symbol {
-      font-family: 'Noto Sans Symbols 2', sans-serif;
-      font-size: 28px;
-      fill: #b87c5e;
-      text-anchor: middle;
-    }
-    .ring-decorative {
-      fill: none;
-      stroke: #ede8e0;
-      stroke-width: 3;
-      stroke-dasharray: 1 7;
-      opacity: 1;
-    }
-    .ring-rotator {
-      transform-origin: 200px 200px;
-      animation: wheel-spin 160s linear infinite;
-    }
-    @keyframes wheel-spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    .sign-arc-active { fill: #b87c5e; opacity: 0.08; }
-    .cusp-dot { fill: #b87c5e; opacity: 0.6; }
-    .cusp-dot.major { opacity: 1; }
+    /* ===== ZODIAC WHEEL (açık tema - geliştirilmiş) ===== */
+.wheel-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.wheel-frame {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 1;
+}
+svg { width: 100%; height: 100%; overflow: visible; }
+
+/* Dış halka - daha belirgin */
+.ring-outer { 
+  fill: none; 
+  stroke: #d6cbc0; 
+  stroke-width: 2; 
+}
+
+/* İç halka - daha belirgin */
+.ring-inner { 
+  fill: none; 
+  stroke: #e6ddd4; 
+  stroke-width: 1.5; 
+  stroke-dasharray: 4 4;
+}
+
+/* Burç çizgileri - daha kalın ve belirgin */
+.tick-major { 
+  stroke: #b87c5e; 
+  stroke-width: 2; 
+  opacity: 0.6;
+}
+.tick-minor { 
+  stroke: #d6cbc0; 
+  stroke-width: 1.2; 
+}
+
+/* Burç etiketleri - büyütüldü */
+.sign-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; /* 9px → 11px */
+  fill: #7d7165;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+.sign-label.active { 
+  fill: #b87c5e; 
+  font-weight: 700;
+  font-size: 13px; /* aktif olanı daha büyük */
+}
+
+/* Ay işaretçisi - daha büyük ve parlak */
+.moon-marker {
+  fill: #1c1b1a;
+  stroke: #b87c5e;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 16px rgba(184, 124, 94, 0.4));
+  animation: pulse 3.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 1; 
+    r: 8; /* 7 → 8 */
+  }
+  50% { 
+    opacity: 0.6; 
+    r: 9; 
+  }
+}
+
+/* Merkez burç sembolü - büyütüldü */
+.center-symbol {
+  font-family: 'Segoe UI Symbol', 'Arial Unicode MS', sans-serif;
+  font-size: 38px; /* 28px → 38px */
+  fill: #b87c5e;
+  text-anchor: middle;
+  dominant-baseline: central;
+  filter: drop-shadow(0 0 8px rgba(184, 124, 94, 0.15));
+}
+
+/* Merkez burç adı - büyütüldü */
+.center-label {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 24px; /* 20px → 24px */
+  fill: #1c1b1a;
+  text-anchor: middle;
+  dominant-baseline: central;
+  letter-spacing: 0.02em;
+}
+
+/* Merkez alt yazı (büyüyor/küçülüyor) */
+.center-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; /* 10px → 11px */
+  fill: #b87c5e;
+  text-anchor: middle;
+  dominant-baseline: central;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+/* Dekoratif halka */
+.ring-decorative {
+  fill: none;
+  stroke: #ede8e0;
+  stroke-width: 3.5;
+  stroke-dasharray: 2 8;
+  opacity: 1;
+}
+.ring-rotator {
+  transform-origin: 200px 200px;
+  animation: wheel-spin 160s linear infinite;
+}
+@keyframes wheel-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Aktif burç dilimi - daha belirgin */
+.sign-arc-active { 
+  fill: #b87c5e; 
+  opacity: 0.12; /* 0.08 → 0.12 */
+}
+
+/* Burç geçiş noktaları */
+.cusp-dot { 
+  fill: #b87c5e; 
+  opacity: 0.7; 
+  r: 3;
+}
+.cusp-dot.major { 
+  opacity: 1; 
+  r: 4;
+}
 
     /* ===== HIGHLIGHTS (açık tema) ===== */
     .today-highlights {
@@ -579,15 +647,6 @@
     }
 
     @media (max-width: 700px) {
-      header {
-        padding: 0 16px;
-      }
-      header .header-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 14px 0 12px;
-      }
       .highlights-grid {
         grid-template-columns: 1fr;
       }
@@ -938,34 +997,65 @@ const durum = phaseAngle < 180 ? "büyüyor" : "küçülüyor";
 const illumPct = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, now).phase_fraction * 100);
 const lastFull = toIstanbul(lastFullMoon(now));
 
-// --- Çember çizimi ---
+// --- Çember çizimi (geliştirilmiş) ---
 let html = "";
+
+// Dekoratif halka
 html += `<g class="ring-rotator"><circle class="ring-decorative" cx="${cx}" cy="${cy}" r="${rDeco}"/></g>`;
+
+// Aktif burç dilimi - daha belirgin
 html += `<path class="sign-arc-active" d="${donutSlice(cx, cy, rOuter-60, rOuter, activeSignIndex*30, activeSignIndex*30+30)}"/>`;
+
+// Dış halka
 html += `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter}"/>`;
-html += `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter-60}" style="opacity:0.4"/>`;
+
+// İç halka (yeni - daha belirgin)
+html += `<circle class="ring-inner" cx="${cx}" cy="${cy}" r="${rOuter-60}"/>`;
+
+// Çizgiler
 for(let deg=0; deg<360; deg+=10){
   const isMajor = deg % 30 === 0;
   const p1 = polar(cx, cy, rOuter, deg);
-  const p2 = polar(cx, cy, isMajor ? rOuter-16 : rOuter-8, deg);
+  const p2 = polar(cx, cy, isMajor ? rOuter-18 : rOuter-10, deg);
   html += `<line class="${isMajor?'tick-major':'tick-minor'}" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}"/>`;
 }
+
+// Burç geçiş noktaları
 for(let deg=0; deg<360; deg+=30){
-  const p = polar(cx, cy, rOuter+7, deg);
-  html += `<circle class="cusp-dot major" cx="${p.x}" cy="${p.y}" r="2"/>`;
+  const p = polar(cx, cy, rOuter+8, deg);
+  html += `<circle class="cusp-dot major" cx="${p.x}" cy="${p.y}" r="3.5"/>`;
 }
+
+// Burç etiketleri - daha büyük
 signs.forEach((s, i)=>{
   const midAngle = i*30 + 15;
   const p = polar(cx, cy, rLabel, midAngle);
   const isActive = i === activeSignIndex;
   html += `<text class="sign-label${isActive?' active':''}" x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
 });
+
+// Ay işaretçisi - daha büyük
 const moonPos = polar(cx, cy, rOuter-30, moonAngleDeg);
-html += `<circle class="moon-marker" cx="${moonPos.x}" cy="${moonPos.y}" r="7"/>`;
+html += `<circle class="moon-marker" cx="${moonPos.x}" cy="${moonPos.y}" r="8"/>`;
+html += `<circle cx="${moonPos.x}" cy="${moonPos.y}" r="3" fill="#fbf9f4" opacity="0.5"/>`; // iç parlaklık
+
+// Merkez - GELİŞMİŞ EMOJİ (Ay sembolü yerine burç sembolü + ay kombinasyonu)
 const activeSymbol = symbols[activeSignIndex];
-html += `<text class="center-symbol" x="${cx}" y="${cy - 22}" text-anchor="middle" dominant-baseline="middle">${activeSymbol}</text>`;
-html += `<text class="center-label" x="${cx}" y="${cy + 2}" text-anchor="middle" dominant-baseline="middle">${signs[activeSignIndex]}</text>`;
-html += `<text class="center-sub" x="${cx}" y="${cy + 22}" text-anchor="middle" dominant-baseline="middle">${durum.toUpperCase()}</text>`;
+// Gerçek Ay fazına göre emoji seçimi
+const phaseEmojis = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
+const phaseIdx = Math.round((phaseAngle / 360) * (phaseEmojis.length - 1));
+const moonEmoji = phaseEmojis[phaseIdx] || '🌙';
+
+// Merkezde burç sembolü + ay emojisi birlikte
+html += `<text class="center-symbol" x="${cx}" y="${cy - 28}" text-anchor="middle" dominant-baseline="central">${activeSymbol}</text>`;
+html += `<text class="center-symbol" x="${cx}" y="${cy + 8}" text-anchor="middle" dominant-baseline="central" style="font-size:24px; fill:#8a7b6d;">${moonEmoji}</text>`;
+
+// Burç adı
+html += `<text class="center-label" x="${cx}" y="${cy + 42}" text-anchor="middle" dominant-baseline="central">${signs[activeSignIndex]}</text>`;
+
+// Durum (büyüyor/küçülüyor)
+html += `<text class="center-sub" x="${cx}" y="${cy + 64}" text-anchor="middle" dominant-baseline="central">${durum.toUpperCase()}</text>`;
+
 svg.innerHTML = html;
 
 // ===== BUGÜNÜN ÖNE ÇIKANLARI =====
