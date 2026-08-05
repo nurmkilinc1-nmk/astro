@@ -1,0 +1,87 @@
+{
+  "name": "astro.takvim — Ay Takvimi",
+  "short_name": "astro.takvim",
+  "description": "Gerçek Ay konumuna dayalı, dakikası dakikasına hesaplanmış burç ve faz takvimi",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fbf9f4",
+  "theme_color": "#b87c5e",
+  "categories": ["lifestyle", "productivity", "weather"],
+  "lang": "tr",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "label": "Anasayfa"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Bugünkü Ay",
+      "short_name": "Bugün",
+      "description": "Bugünün Ay durumunu gör",
+      "url": "/gunluk.html",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Özel Takvimler",
+      "short_name": "Takvimler",
+      "description": "Tüm özel takvimleri gör",
+      "url": "/ozel-takvimler.html",
+      "icons": [{ "src": "/icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ]
+}
