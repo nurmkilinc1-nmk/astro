@@ -900,7 +900,7 @@ const svg = document.getElementById('wheel');
 const cx = 200, cy = 200, rOuter = 175, rDeco = 188, rLabel = 140;
 
 function polar(cx, cy, r, angleDeg){
-  const rad = (angleDeg - 90) * Math.PI / 180;
+  const rad = (angleDeg + 180) * Math.PI / 180;
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 function donutSlice(cx, cy, rInner, rOuter, startDeg, endDeg){
