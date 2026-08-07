@@ -413,18 +413,18 @@ svg { width: 100%; height: 100%; overflow: visible; }
 .moon-marker {
   fill: #1c1b1a;
   stroke: #b87c5e;
-  stroke-width: 2;
+  stroke-width: 2,5;
   filter: drop-shadow(0 0 16px rgba(184, 124, 94, 0.4));
   animation: pulse 3.5s ease-in-out infinite;
 }
 @keyframes pulse {
   0%, 100% { 
     opacity: 1; 
-    r: 8; /* 7 → 8 */
+    r: 11; 
   }
   50% { 
     opacity: 0.6; 
-    r: 9; 
+    r: 12; 
   }
 }
 
@@ -719,7 +719,7 @@ svg { width: 100%; height: 100%; overflow: visible; }
         <a href="gunluk.html">Günlük</a>
         <a href="aylik-takvim.html">Aylık Takvim</a>
         <a href="ozel-takvimler.html">Özel Takvimler</a>
-        <a href="danismanlik.html">Danışmanlık</a>
+        <a href="astrosozluk.html">Astro sözlük</a>
         <a href="hakkimda.html">Hakkımda</a>
       </nav>
 
@@ -881,8 +881,8 @@ const svg = document.getElementById('wheel');
 const cx = 200, cy = 200, rOuter = 175, rDeco = 188, rLabel = 140;
 
 function polar(cx, cy, r, angleDeg){
-  const rad = angleDeg * Math.PI / 180;
-  return { x: cx - r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 function donutSlice(cx, cy, rInner, rOuter, startDeg, endDeg){
   const p1 = polar(cx, cy, rOuter, startDeg);
