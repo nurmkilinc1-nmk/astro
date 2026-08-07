@@ -60,6 +60,255 @@
     .logo span {
       color: #b87c5e;
     }
+    /* ===== GÜNÜN RENGİ ===== */
+.daily-color {
+  margin: 24px 0 32px;
+  padding: 0 4px;
+}
+
+.daily-color-inner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #ffffffec;
+  border: 1px solid #ede8e0;
+  border-radius: 20px;
+  padding: 16px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+  position: relative;
+  transition: border-color 0.3s;
+}
+
+.daily-color-inner:hover {
+  border-color: #d0c2b2;
+}
+
+.color-display {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 3px solid rgba(0,0,0,0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.daily-color-inner:hover .color-display {
+  transform: scale(1.05);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+}
+
+.color-info {
+  flex: 1;
+}
+
+.color-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8a7b6d;
+  margin-bottom: 2px;
+}
+
+.color-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #1c1b1a;
+  line-height: 1.2;
+}
+
+.color-sub {
+  font-size: 0.82rem;
+  color: #5e554d;
+  margin-top: 2px;
+}
+
+.color-info-btn {
+  background: rgba(184, 124, 94, 0.06);
+  border: 1px solid #ede8e0;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #8a7b6d;
+  flex-shrink: 0;
+}
+
+.color-info-btn:hover {
+  background: rgba(184, 124, 94, 0.12);
+  border-color: #b87c5e;
+  color: #b87c5e;
+  transform: scale(1.05);
+}
+
+.color-info-btn svg {
+  stroke: currentColor;
+}
+
+/* ===== RENK MODAL ===== */
+.color-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.color-modal.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.color-modal-content {
+  background: #fbf9f4;
+  border-radius: 28px;
+  padding: 40px 36px 32px;
+  max-width: 440px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.color-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: #8a7b6d;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.color-modal-close:hover {
+  color: #1c1b1a;
+}
+
+.color-modal-icon {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.color-modal-content h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #1c1b1a;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.color-modal-content p {
+  color: #4b4440;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-extra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.modal-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  padding: 4px 16px;
+  background: #f4efe9;
+  border: 1px solid #e6ddd4;
+  border-radius: 40px;
+  color: #5e554d;
+  letter-spacing: 0.04em;
+}
+
+.modal-badge.sign {
+  color: #b87c5e;
+  font-weight: 600;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .daily-color-inner {
+    padding: 14px 18px;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .color-display {
+    width: 48px;
+    height: 48px;
+  }
+
+  .color-name {
+    font-size: 1.1rem;
+  }
+
+  .color-info-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .color-modal-content {
+    padding: 30px 24px 24px;
+  }
+
+  .color-modal-content h3 {
+    font-size: 1.3rem;
+  }
+
+  .modal-extra {
+    gap: 6px;
+  }
+
+  .modal-badge {
+    font-size: 0.6rem;
+    padding: 3px 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .daily-color-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .color-info {
+    text-align: center;
+  }
+}
 
     /* ===== NAVIGATION ===== */
     nav {
@@ -479,6 +728,40 @@
   </div>
 </header>
 
+  <!-- GÜNÜN RENGİ -->
+<div class="daily-color" id="dailyColor">
+  <div class="daily-color-inner">
+    <div class="color-display" id="colorDisplay" style="background: #b87c5e;"></div>
+    <div class="color-info">
+      <div class="color-label">Günün Rengi</div>
+      <div class="color-name" id="colorName">—</div>
+      <div class="color-sub" id="colorSub">Hesaplanıyor...</div>
+    </div>
+    <button class="color-info-btn" id="colorInfoBtn" aria-label="Renk açıklaması">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- RENK AÇIKLAMA MODAL -->
+<div class="color-modal" id="colorModal">
+  <div class="color-modal-content">
+    <button class="color-modal-close" id="colorModalClose">✕</button>
+    <div class="color-modal-icon" id="modalIcon">🎨</div>
+    <h3 id="modalTitle">Bugünün Rengi: Sarı</h3>
+    <p id="modalDesc">Sarı, İkizler burcunun rengidir. İletişim, zeka ve neşe enerjisini temsil eder. Bugün sosyalleşmek, yeni fikirler üretmek ve öğrenmek için ideal bir gün.</p>
+    <div class="modal-extra" id="modalExtra">
+      <span class="modal-badge" id="modalSign">♊ İkizler</span>
+      <span class="modal-badge" id="modalElement">Hava</span>
+      <span class="modal-badge" id="modalPlanet">Merkür</span>
+    </div>
+  </div>
+</div>
+
 <div class="page-wrap">
   <div class="page-header">
     <h1 id="baslik">Günlük Ay Durumu</h1>
@@ -557,6 +840,180 @@
     });
   });
 })();
+
+  // ===== GÜNÜN RENGİ =====
+const COLOR_DATA = {
+  0: {  // Koç
+    color: '#E74C3C',
+    name: 'Kırmızı',
+    emoji: '🔥',
+    description: 'Kırmızı, Koç burcunun enerjisini temsil eder. Ateş, tutku, cesaret ve hareketlilik anlamına gelir. Bugün harekete geçmek, risk almak ve liderlik etmek için harika bir zaman!',
+    sign: '♈ Koç',
+    element: 'Ateş',
+    planet: 'Mars'
+  },
+  1: {  // Boğa
+    color: '#27AE60',
+    name: 'Yeşil',
+    emoji: '🌿',
+    description: 'Yeşil, Boğa burcunun rengidir. Doğa, bolluk, sadelik ve maddi güvenceyi simgeler. Bugün doğayla vakit geçirmek, bedenine iyi bakmak ve keyif almak için uygun.',
+    sign: '♉ Boğa',
+    element: 'Toprak',
+    planet: 'Venüs'
+  },
+  2: {  // İkizler
+    color: '#F1C40F',
+    name: 'Sarı',
+    emoji: '☀️',
+    description: 'Sarı, İkizler burcunun rengidir. İletişim, zeka, neşe ve öğrenme enerjisini taşır. Bugün sosyalleşmek, yeni fikirler üretmek ve yazışmalar için ideal.',
+    sign: '♊ İkizler',
+    element: 'Hava',
+    planet: 'Merkür'
+  },
+  3: {  // Yengeç
+    color: '#BDC3C7',
+    name: 'Gümüş',
+    emoji: '🌙',
+    description: 'Gümüş/Yumuşak Beyaz, Yengeç burcunun rengidir. Duygusallık, koruma, sezgi ve aile bağlarını temsil eder. Bugün duygularına zaman ayırmak, evde vakit geçirmek ve içsel sesini dinlemek güzel.',
+    sign: '♋ Yengeç',
+    element: 'Su',
+    planet: 'Ay'
+  },
+  4: {  // Aslan
+    color: '#F39C12',
+    name: 'Altın',
+    emoji: '👑',
+    description: 'Altın Sarısı, Aslan burcunun rengidir. Işıltı, yaratıcılık, liderlik ve özgüven enerjisi taşır. Bugün kendini ifade etmek, sanatla ilgilenmek ve ilgi odağı olmak için harika!',
+    sign: '♌ Aslan',
+    element: 'Ateş',
+    planet: 'Güneş'
+  },
+  5: {  // Başak
+    color: '#E67E22',
+    name: 'Toprak Turuncusu',
+    emoji: '🧹',
+    description: 'Toprak Turuncusu, Başak burcunun rengidir. Düzen, analiz, sağlık ve detaylara dikkat enerjisini taşır. Bugün düzen yapmak, sağlıkla ilgilenmek ve işleri organize etmek için uygun.',
+    sign: '♍ Başak',
+    element: 'Toprak',
+    planet: 'Merkür'
+  },
+  6: {  // Terazi
+    color: '#F5B7B1',
+    name: 'Pembe',
+    emoji: '🌸',
+    description: 'Pembe, Terazi burcunun rengidir. Uyum, aşk, denge ve estetik enerjisini temsil eder. Bugün ilişkilere odaklanmak, sanatla ilgilenmek ve güzellik aramak için ideal.',
+    sign: '♎ Terazi',
+    element: 'Hava',
+    planet: 'Venüs'
+  },
+  7: {  // Akrep
+    color: '#8E44AD',
+    name: 'Koyu Mor',
+    emoji: '🔮',
+    description: 'Koyu Mor, Akrep burcunun rengidir. Tutku, gizem, dönüşüm ve derinlik enerjisini taşır. Bugün içsel keşif, derin düşünceler ve araştırma için uygun.',
+    sign: '♏ Akrep',
+    element: 'Su',
+    planet: 'Plüton'
+  },
+  8: {  // Yay
+    color: '#3498DB',
+    name: 'Mavi',
+    emoji: '🌍',
+    description: 'Mavi, Yay burcunun rengidir. Keşif, özgürlük, iyimserlik ve macera enerjisini temsil eder. Bugün seyahat planlamak, yeni şeyler öğrenmek ve keşfetmek için ideal!',
+    sign: '♐ Yay',
+    element: 'Ateş',
+    planet: 'Jüpiter'
+  },
+  9: {  // Oğlak
+    color: '#7F8C8D',
+    name: 'Gri',
+    emoji: '🗻',
+    description: 'Gri, Oğlak burcunun rengidir. Disiplin, sabır, otorite ve hedef odaklılığı temsil eder. Bugün plan yapmak, kariyerle ilgilenmek ve uzun vadeli hedefler belirlemek için uygun.',
+    sign: '♑ Oğlak',
+    element: 'Toprak',
+    planet: 'Satürn'
+  },
+  10: {  // Kova
+    color: '#2980B9',
+    name: 'Mavi',
+    emoji: '⚡',
+    description: 'Mavi, Kova burcunun rengidir. Yenilik, özgünlük, topluluk ve gelecek enerjisini taşır. Bugün yaratıcı projeler, arkadaşlarla vakit geçirmek ve yenilikçi fikirler için uygun.',
+    sign: '♒ Kova',
+    element: 'Hava',
+    planet: 'Uranüs'
+  },
+  11: {  // Balık
+    color: '#9B59B6',
+    name: 'Lavanta',
+    emoji: '🌊',
+    description: 'Lavanta, Balık burcunun rengidir. Ruhsallık, hayaller, sanat ve duygusallığı temsil eder. Bugün meditasyon, sanat, müzik ve yaratıcı aktiviteler için ideal.',
+    sign: '♓ Balık',
+    element: 'Su',
+    planet: 'Neptün'
+  }
+};
+
+function updateDailyColor() {
+  const now = new Date();
+  const lon = moonLon(now);
+  const signIdx = Math.floor(lon / 30);
+  const data = COLOR_DATA[signIdx];
+  
+  const colorDisplay = document.getElementById('colorDisplay');
+  const colorName = document.getElementById('colorName');
+  const colorSub = document.getElementById('colorSub');
+  
+  // Rengi göster
+  colorDisplay.style.background = data.color;
+  colorName.textContent = `${data.emoji} ${data.name}`;
+  colorSub.textContent = `${data.sign} · ${data.element} · ${data.planet}`;
+  
+  // Modal için verileri kaydet
+  const modal = document.getElementById('colorModal');
+  const modalIcon = document.getElementById('modalIcon');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalSign = document.getElementById('modalSign');
+  const modalElement = document.getElementById('modalElement');
+  const modalPlanet = document.getElementById('modalPlanet');
+  
+  modalIcon.textContent = data.emoji;
+  modalTitle.textContent = `Bugünün Rengi: ${data.name}`;
+  modalDesc.textContent = data.description;
+  modalSign.textContent = data.sign;
+  modalSign.className = 'modal-badge sign';
+  modalElement.textContent = data.element;
+  modalPlanet.textContent = data.planet;
+}
+
+// Modal açma/kapama
+document.getElementById('colorInfoBtn').addEventListener('click', function() {
+  document.getElementById('colorModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+});
+
+document.getElementById('colorModalClose').addEventListener('click', function() {
+  document.getElementById('colorModal').classList.remove('active');
+  document.body.style.overflow = '';
+});
+
+document.getElementById('colorModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
+
+// ESC tuşu ile kapatma
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.getElementById('colorModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
+
+// Sayfa yüklendiğinde güncelle
+updateDailyColor();
 
 // ===== ASTRONOMİ HESAPLAMALARI =====
 const SIGNS = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
@@ -669,6 +1126,9 @@ const CATEGORIES = [
   { slug:"sosyal", title:"Sosyal & İlk Buluşma", goodSigns:[1,4,6], avoidVOC:true },
   { slug:"seyahat", title:"Seyahat", goodSigns:[8], avoidVOC:true },
   { slug:"imza-sozlesme", title:"Önemli İmza & Sözleşme", bonusSigns:[1,3,9], avoidVOC:true }
+  { slug:"sac-bakim", title:"Saç Bakımı & Kesim", goodSigns:[1,4,9], avoidVOC:true },
+  { slug:"saglik-tedavi", title:"Sağlık & Tedavi", bonusSigns:[5,9], avoidVOC:true },
+  { slug:"gida-mutfak", title:"Gıda & Mutfak", goodSigns:[3,7,11], avoidVOC:true }
 ];
 
 function evaluate(cat, period, voidStart, daysSinceNM){
