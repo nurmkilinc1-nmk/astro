@@ -9,21 +9,6 @@
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate icon" href="/favicon.ico">
-
-<!-- PWA Service Worker Kaydı -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js')
-        .then(function(registration) {
-          console.log('Service Worker başarıyla kaydedildi:', registration.scope);
-        })
-        .catch(function(error) {
-          console.log('Service Worker kaydı başarısız:', error);
-        });
-    });
-  }
-</script>
   
   <style>
     /* ===== RESET & BASE ===== */
@@ -99,10 +84,6 @@
       border-bottom-color: #b87c5e;
       color: #000;
     }
-    nav a.active {
-      border-bottom-color: #b87c5e;
-      color: #000;
-    }
 
     /* ===== HAMBURGER MENU ===== */
     .hamburger {
@@ -165,69 +146,233 @@
       gap: 28px;
     }
 
-    /* ===== VOC BANNER (açık tema) ===== */
     .voc-banner {
-      width: 100%;
-      padding: 10px 24px;
-      background: #f4efe9;
-      border-bottom: 1px solid #e6ddd4;
-      transition: background 0.3s, border-color 0.3s;
-    }
-    .voc-banner .voc-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .voc-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: rgba(184, 124, 94, 0.1);
-      color: #b87c5e;
-      flex-shrink: 0;
-    }
-    .voc-icon svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-    .voc-copy {
-      display: flex;
-      gap: 8px;
-      align-items: baseline;
-      flex-wrap: wrap;
-    }
-    .voc-label {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.72rem;
-      color: #b87c5e;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-    .voc-text {
-      color: #5e554d;
-      font-size: 0.9rem;
-    }
-    .voc-banner.is-void {
-      background: #f5ede8;
-      border-left: 6px solid #b4502e;
-    }
-    .voc-banner.is-void .voc-label {
-      color: #b4502e;
-    }
-    .voc-banner.is-void .voc-text {
-      color: #8a3d24;
-    }
-    .voc-banner.not-void {
-      background: #f4efe9;
-      border-left: 6px solid rgba(184, 124, 94, 0.15);
-    }
+  width: 100%;
+  padding: 12px 24px;
+  background: #f4efe9;
+  border-bottom: 1px solid #e6ddd4;
+  border-left: 6px solid rgba(184, 124, 94, 0.15);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Arkaplan hareket efekti (kayan yazı için zemin) */
+.voc-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 300%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(184, 124, 94, 0.03) 50%, 
+    transparent 100%
+  );
+  animation: voc-shimmer 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes voc-shimmer {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(33.33%); }
+}
+
+.voc-banner .voc-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== VOC IKON ===== */
+.voc-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(184, 124, 94, 0.1);
+  color: #b87c5e;
+  flex-shrink: 0;
+  transition: all 0.4s ease;
+}
+.voc-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  transition: transform 0.4s ease;
+}
+
+/* ===== VOC İÇERİK ===== */
+.voc-copy {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.voc-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: #b87c5e;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: color 0.4s ease;
+}
+
+/* ===== VOC METİN (GELİŞTİRİLMİŞ) ===== */
+.voc-text {
+  color: #5e554d;
+  font-size: 0.92rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  transition: color 0.4s ease;
+}
+
+/* Tarih/Saat kısmı - özel stil */
+.voc-text .voc-time {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #b87c5e;
+  background: rgba(184, 124, 94, 0.08);
+  padding: 2px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  letter-spacing: 0.02em;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.voc-text .voc-sign {
+  font-weight: 600;
+  color: #b87c5e;
+  transition: color 0.3s ease;
+}
+
+/* ===== AY BOŞLUKTA (AKTİF) ===== */
+.voc-banner.is-void {
+  background: linear-gradient(135deg, #fcf5f0, #f5ede8);
+  border-left: 6px solid #b4502e;
+  box-shadow: 0 2px 20px rgba(180, 80, 46, 0.08);
+  animation: voc-pulse-border 2s ease-in-out infinite;
+}
+
+@keyframes voc-pulse-border {
+  0%, 100% { border-left-color: #b4502e; }
+  50% { border-left-color: #d4603a; }
+}
+
+.voc-banner.is-void .voc-icon {
+  background: rgba(180, 80, 46, 0.12);
+  color: #b4502e;
+}
+.voc-banner.is-void .voc-icon svg {
+  animation: voc-icon-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes voc-icon-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.voc-banner.is-void .voc-label {
+  color: #b4502e;
+}
+.voc-banner.is-void .voc-text {
+  color: #8a3d24;
+}
+.voc-banner.is-void .voc-text .voc-time {
+  background: rgba(180, 80, 46, 0.12);
+  color: #b4502e;
+}
+.voc-banner.is-void .voc-text .voc-sign {
+  color: #b4502e;
+}
+
+/* Aktif durumda kayan metin efekti (sadece aktifken) */
+.voc-banner.is-void .voc-text {
+  animation: voc-slide-text 0.6s ease forwards;
+}
+
+@keyframes voc-slide-text {
+  0% { opacity: 0; transform: translateX(-10px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* ===== AY BOŞLUKTA DEĞİL (PASİF) ===== */
+.voc-banner.not-void {
+  background: #f4efe9;
+  border-left: 6px solid rgba(184, 124, 94, 0.15);
+}
+
+.voc-banner.not-void .voc-text .voc-time {
+  background: rgba(184, 124, 94, 0.06);
+  color: #8a7b6d;
+}
+
+.voc-banner.not-void .voc-text .voc-sign {
+  color: #b87c5e;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .voc-banner {
+    padding: 10px 16px;
+  }
+  .voc-banner .voc-inner {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .voc-icon {
+    width: 30px;
+    height: 30px;
+  }
+  .voc-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+  .voc-label {
+    font-size: 0.65rem;
+  }
+  .voc-text {
+    font-size: 0.82rem;
+  }
+  .voc-text .voc-time {
+    font-size: 0.75rem;
+    padding: 1px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .voc-banner {
+    padding: 8px 12px;
+  }
+  .voc-copy {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .voc-label {
+    font-size: 0.6rem;
+  }
+  .voc-text {
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+  .voc-text .voc-time {
+    font-size: 0.7rem;
+    padding: 1px 8px;
+  }
+}
 
     /* ===== HERO ===== */
     .hero {
@@ -927,70 +1072,112 @@ function fmtTarihSaat(d){
   return `${String(d.getUTCDate()).padStart(2,'0')} ${AY_TR_KISA[d.getUTCMonth()]}, ${fmtSaat(d)}`;
 }
 
-// --- Ay Boşluğu ---
-function findCrossing(t1, t2, target){
-  let lo=t1.getTime(), hi=t2.getTime();
-  const loDiff = ((moonLon(new Date(lo))-target+180)%360+360)%360-180;
-  for(let i=0;i<40;i++){
-    const mid=(lo+hi)/2;
-    const diff=((moonLon(new Date(mid))-target+180)%360+360)%360-180;
-    if((diff<0)===(loDiff<0)) lo=mid; else hi=mid;
+// --- Burç geçiş noktasını bul ---
+function findCrossing(t1, t2, target) {
+  let lo = t1.getTime(), hi = t2.getTime();
+  const loDiff = ((moonLon(new Date(lo)) - target + 180) % 360 + 360) % 360 - 180;
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo + hi) / 2;
+    const diff = ((moonLon(new Date(mid)) - target + 180) % 360 + 360) % 360 - 180;
+    if ((diff < 0) === (loDiff < 0)) lo = mid;
+    else hi = mid;
   }
-  return new Date((lo+hi)/2);
+  return new Date((lo + hi) / 2);
 }
-function findSignWindow(now){
-  const stepMs = 4*3600*1000;
-  const curSign = Math.floor(moonLon(now)/30);
-  let t = now.getTime(), prevT = t, nextCross=null;
-  while(!nextCross){
+
+// --- Mevcut burç penceresini bul ---
+function findSignWindow(now) {
+  const stepMs = 4 * 3600 * 1000;
+  const curSign = Math.floor(moonLon(now) / 30);
+  
+  let t = now.getTime(), prevT = t, nextCross = null;
+  while (!nextCross) {
     t += stepMs;
-    const s = Math.floor(moonLon(new Date(t))/30);
-    if(s!==curSign) nextCross = findCrossing(new Date(prevT), new Date(t), (s*30)%360);
+    const s = Math.floor(moonLon(new Date(t)) / 30);
+    if (s !== curSign) {
+      nextCross = findCrossing(new Date(prevT), new Date(t), (s * 30) % 360);
+    }
     prevT = t;
   }
-  t = now.getTime(); prevT = t;
+  
+  t = now.getTime();
+  prevT = t;
   let prevCross = null;
-  while(!prevCross){
+  while (!prevCross) {
     t -= stepMs;
-    const s = Math.floor(moonLon(new Date(t))/30);
-    if(s!==curSign) prevCross = findCrossing(new Date(t), new Date(prevT), (curSign*30)%360);
+    const s = Math.floor(moonLon(new Date(t)) / 30);
+    if (s !== curSign) {
+      prevCross = findCrossing(new Date(t), new Date(prevT), (curSign * 30) % 360);
+    }
     prevT = t;
   }
+  
   return { start: prevCross, end: nextCross, sign: curSign };
 }
-const VOC_PLANETS = [Astronomy.Body.Sun, Astronomy.Body.Mercury, Astronomy.Body.Venus, Astronomy.Body.Mars, Astronomy.Body.Jupiter, Astronomy.Body.Saturn];
-const VOC_ASPECTS = [0,60,90,120,180];
-function bisectAspect(body, aspectAngle, t1, t2){
-  function f(t){ return angDist(moonLon(t), planetLon(body,t)) - aspectAngle; }
-  let lo=t1.getTime(), hi=t2.getTime();
-  let loVal = f(new Date(lo));
-  for(let i=0;i<30;i++){
-    const mid=(lo+hi)/2;
-    const midVal = f(new Date(mid));
-    if((midVal<0)===(loVal<0)){ lo=mid; loVal=midVal; } else hi=mid;
+
+// --- Ay Boşluğu (Void of Course) hesapla ---
+const VOC_PLANETS = [
+  Astronomy.Body.Sun,
+  Astronomy.Body.Mercury,
+  Astronomy.Body.Venus,
+  Astronomy.Body.Mars,
+  Astronomy.Body.Jupiter,
+  Astronomy.Body.Saturn
+];
+const VOC_ASPECTS = [0, 60, 90, 120, 180];
+
+function bisectAspect(body, aspectAngle, t1, t2) {
+  function f(t) {
+    return angDist(moonLon(t), planetLon(body, t)) - aspectAngle;
   }
-  return new Date((lo+hi)/2);
+  let lo = t1.getTime(), hi = t2.getTime();
+  let loVal = f(new Date(lo));
+  for (let i = 0; i < 30; i++) {
+    const mid = (lo + hi) / 2;
+    const midVal = f(new Date(mid));
+    if ((midVal < 0) === (loVal < 0)) {
+      lo = mid;
+      loVal = midVal;
+    } else {
+      hi = mid;
+    }
+  }
+  return new Date((lo + hi) / 2);
 }
-function findVoc(now){
+
+function findVoc(now) {
   const win = findSignWindow(now);
-  const stepMs = 20*60*1000;
-  const times=[];
-  for(let t=win.start.getTime(); t<=win.end.getTime(); t+=stepMs) times.push(new Date(t));
+  const stepMs = 20 * 60 * 1000;
+  const times = [];
+  
+  for (let t = win.start.getTime(); t <= win.end.getTime(); t += stepMs) {
+    times.push(new Date(t));
+  }
+  
   const moonVals = times.map(moonLon);
-  let found=[];
-  for(const body of VOC_PLANETS){
-    const planetVals = times.map(t=>planetLon(body,t));
+  let found = [];
+  
+  for (const body of VOC_PLANETS) {
+    const planetVals = times.map(t => planetLon(body, t));
     let prevDist = angDist(moonVals[0], planetVals[0]);
-    for(let i=1;i<times.length;i++){
+    
+    for (let i = 1; i < times.length; i++) {
       const dist = angDist(moonVals[i], planetVals[i]);
-      for(const asp of VOC_ASPECTS){
-        const prevDiff = prevDist-asp, curDiff = dist-asp;
-        if((prevDiff<0)!==(curDiff<0)) found.push(bisectAspect(body, asp, times[i-1], times[i]));
+      for (const asp of VOC_ASPECTS) {
+        const prevDiff = prevDist - asp;
+        const curDiff = dist - asp;
+        if ((prevDiff < 0) !== (curDiff < 0)) {
+          found.push(bisectAspect(body, asp, times[i - 1], times[i]));
+        }
       }
       prevDist = dist;
     }
   }
-  const voidStart = found.length ? new Date(Math.max(...found.map(d=>d.getTime()))) : win.start;
+  
+  const voidStart = found.length 
+    ? new Date(Math.max(...found.map(d => d.getTime()))) 
+    : win.start;
+    
   return { voidStart, voidEnd: win.end, nextSign: win.sign };
 }
 
@@ -1159,27 +1346,62 @@ let newQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
 while (newQ.quarter !== 0) newQ = Astronomy.NextMoonQuarter(newQ);
 document.getElementById("stat-next-newmoon").textContent = fmtTarihSaat(toIstanbul(newQ.time.date));
   
-// --- Ay Boşluğu (VOC) banner ---
-const voc = findVoc(now);
-const nextSignIndex = (voc.nextSign + 1) % 12;
-const vocStartIst = toIstanbul(voc.voidStart);
-const vocEndIst = toIstanbul(voc.voidEnd);
-const banner = document.getElementById("voc-banner");
-const label = document.getElementById("voc-label");
-const text = document.getElementById("voc-text");
-const isVoidNow = now >= voc.voidStart && now < voc.voidEnd;
-
-if(isVoidNow){
-  banner.classList.remove("not-void");
-  banner.classList.add("is-void");
-  label.textContent = "Ay Boşlukta";
-  text.textContent = `${signs[nextSignIndex]} burcuna geçene kadar (${fmtTarihSaat(vocEndIst)}) yeni başlangıçlar için uygun değil.`;
-} else {
-  banner.classList.remove("is-void");
-  banner.classList.add("not-void");
-  label.textContent = "Ay Boşlukta Değil";
-  text.textContent = `Sıradaki boşluk: ${fmtTarihSaat(vocStartIst)} – ${fmtTarihSaat(vocEndIst)} (${signs[nextSignIndex]}'a geçişte)`;
+// --- VOC banner'ı güncelle ---
+function updateVocBanner(now) {
+  const voc = findVoc(now);
+  const nextSignIndex = (voc.nextSign + 1) % 12;
+  const vocStartIst = toIstanbul(voc.voidStart);
+  const vocEndIst = toIstanbul(voc.voidEnd);
+  const isVoidNow = now >= voc.voidStart && now < voc.voidEnd;
+  
+  const banner = document.getElementById('voc-banner');
+  const label = document.getElementById('voc-label');
+  const text = document.getElementById('voc-text');
+  
+  // --- Zaman formatı için yardımcı ---
+  function formatTime(date) {
+    return fmtTarihSaat(date);
+  }
+  
+  function formatShortTime(date) {
+    return fmtSaat(date);
+  }
+  
+  if (isVoidNow) {
+    // AY BOŞLUKTA - AKTİF
+    banner.classList.remove('not-void');
+    banner.classList.add('is-void');
+    
+    label.textContent = '🌙 Ay Boşlukta';
+    
+    // HTML içeriği - zaman kısmı vurgulu
+    text.innerHTML = `
+      <span class="voc-sign">${signs[nextSignIndex]}</span> 
+      burcuna geçene kadar 
+      <span class="voc-time">⏳ ${formatTime(vocEndIst)}</span> 
+      — yeni başlangıçlar için uygun değil.
+    `;
+    
+  } else {
+    // AY BOŞLUKTA DEĞİL - PASİF
+    banner.classList.remove('is-void');
+    banner.classList.add('not-void');
+    
+    label.textContent = '✅ Ay Boşlukta Değil';
+    
+    // HTML içeriği - zaman aralığı vurgulu
+    text.innerHTML = `
+      Sıradaki boşluk: 
+      <span class="voc-time">${formatTime(vocStartIst)}</span> 
+      – 
+      <span class="voc-time">${formatTime(vocEndIst)}</span> 
+      (<span class="voc-sign">${signs[nextSignIndex]}</span>'a geçişte)
+    `;
+  }
 }
+
+// --- Banner'ı güncelle ---
+updateVocBanner(now);
 </script>
 </body>
 </html>
