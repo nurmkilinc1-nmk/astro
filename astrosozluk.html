@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Astro sözlük — astro.takvim</title>
-  <!-- Google Fonts -->
+  <title>Astro Sözlük — astro.takvim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    
     * {
       margin: 0;
       padding: 0;
@@ -28,7 +26,6 @@
       padding: 40px 20px 60px;
     }
 
-    /* ===== TİPOGRAFİ ===== */
     h1, h2, h3 {
       font-family: 'Fraunces', serif;
       font-weight: 500;
@@ -41,7 +38,7 @@
       letter-spacing: -0.01em;
     }
 
-    /* ===== SABİT HEADER (full-width) ===== */
+    /* ===== HEADER ===== */
     header {
       position: sticky;
       top: 0;
@@ -81,7 +78,6 @@
       color: #b87c5e;
     }
 
-    /* ===== NAVIGATION ===== */
     nav {
       display: flex;
       gap: 28px;
@@ -105,7 +101,6 @@
       color: #000;
     }
 
-    /* ===== HAMBURGER MENU ===== */
     .hamburger {
       display: none;
       flex-direction: column;
@@ -151,7 +146,6 @@
       border-color: #1c1b1a;
     }
 
-    /* ===== MOBILE MENU ===== */
     .nav-wrapper {
       display: flex;
       align-items: center;
@@ -169,6 +163,7 @@
       font-weight: 500;
       line-height: 1.1;
       margin-bottom: 8px;
+      color: #1c1b1a;
     }
     .page-header p {
       font-size: 1.15rem;
@@ -177,34 +172,169 @@
       font-weight: 400;
     }
 
-    
-/* --- Astroloji Sözlüğü --- */
-.glossary-list{ display:flex; flex-direction:column; }
-.glossary-term{
-  padding: 22px 0; border-bottom: 1px solid var(--panel-border);
-}
-.glossary-term:first-child{ padding-top:0; }
-.glossary-term h3{
-  font-family:'Fraunces'; font-weight:500; font-size:1.15rem; color: var(--ink);
-  margin-bottom:8px;
-}
-.glossary-term h3 .en{
-  font-family:'IBM Plex Mono'; font-size:0.72rem; color: var(--brass-dim);
-  font-weight:400; margin-left:10px; text-transform:none; letter-spacing:0.02em;
-}
-.glossary-term p{ color: var(--ink-muted); font-size:0.9rem; max-width:680px; }
-.glossary-jump{
-  display:flex; flex-wrap:wrap; gap:8px; margin-bottom:36px;
-}
-.glossary-jump a{
-  font-family:'IBM Plex Mono'; font-size:0.74rem; color: var(--brass);
-  border:1px solid var(--brass-dim); border-radius:14px; padding:5px 13px;
-  text-decoration:none; transition: border-color 0.2s, background 0.2s;
-}
-.glossary-jump a:hover{ border-color: var(--brass); background: rgba(199,162,83,0.08); }
- 
+    /* ===== SÖZLÜK JUMP ===== */
+    .glossary-jump {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 40px;
+      padding: 16px 20px;
+      background: #ffffffec;
+      border: 1px solid #ede8e0;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .glossary-jump .jump-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: #8a7b6d;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      margin-right: 8px;
+      font-weight: 600;
+    }
+    .glossary-jump a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      color: #7d7165;
+      border: 1px solid #e6ddd4;
+      border-radius: 40px;
+      padding: 4px 14px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      background: transparent;
+    }
+    .glossary-jump a:hover {
+      border-color: #b87c5e;
+      color: #b87c5e;
+      background: rgba(184, 124, 94, 0.06);
+      transform: translateY(-1px);
+    }
 
-    
+    /* ===== SÖZLÜK LİSTESİ ===== */
+    .glossary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .glossary-term {
+      padding: 28px 32px;
+      background: #ffffffec;
+      border: 1px solid #ede8e0;
+      border-radius: 16px;
+      transition: all 0.25s ease;
+      scroll-margin-top: 100px;
+    }
+    .glossary-term:hover {
+      border-color: #d0c2b2;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+    }
+    .glossary-term:first-child {
+      margin-top: 0;
+    }
+
+    .glossary-term .term-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .glossary-term .term-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+      flex-shrink: 0;
+      width: 36px;
+      text-align: center;
+    }
+    .glossary-term h3 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #1c1b1a;
+      margin: 0;
+    }
+    .glossary-term h3 .en {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      color: #8a7b6d;
+      font-weight: 400;
+      margin-left: 10px;
+      text-transform: none;
+      letter-spacing: 0.02em;
+    }
+
+    .glossary-term .term-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 6px 0 10px;
+    }
+    .glossary-term .term-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.55rem;
+      padding: 2px 12px;
+      border-radius: 40px;
+      background: #f4efe9;
+      color: #7d7165;
+      border: 1px solid #e6ddd4;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .glossary-term .term-tag.essential {
+      background: rgba(184, 124, 94, 0.08);
+      color: #b87c5e;
+      border-color: rgba(184, 124, 94, 0.15);
+    }
+    .glossary-term .term-tag.advanced {
+      background: rgba(74, 74, 74, 0.04);
+      color: #6f6256;
+      border-color: rgba(74, 74, 74, 0.08);
+    }
+
+    .glossary-term p {
+      color: #4b4440;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      max-width: 720px;
+    }
+    .glossary-term p strong {
+      color: #1c1b1a;
+      font-weight: 600;
+    }
+    .glossary-term p .highlight {
+      color: #b87c5e;
+      font-weight: 500;
+    }
+
+    .glossary-term .term-related {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #f0ebe4;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .glossary-term .term-related span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem;
+      color: #8a7b6d;
+      margin-right: 6px;
+    }
+    .glossary-term .term-related a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: #b87c5e;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(184, 124, 94, 0.2);
+      transition: border-color 0.2s;
+    }
+    .glossary-term .term-related a:hover {
+      border-bottom-color: #b87c5e;
+    }
 
     /* ===== FOOTER ===== */
     footer {
@@ -229,7 +359,6 @@
       .hamburger {
         display: flex;
       }
-
       nav {
         display: none;
         flex-direction: column;
@@ -242,94 +371,90 @@
       nav.open {
         display: flex;
       }
-
       .nav-wrapper {
         gap: 16px;
       }
-
       .btn-ghost {
         padding: 6px 16px;
         font-size: 0.8rem;
       }
-
-      .service-grid {
-        grid-template-columns: 1fr 1fr;
+      .glossary-term {
+        padding: 20px 18px;
+      }
+      .glossary-term .term-header {
+        flex-wrap: wrap;
       }
     }
 
     @media (max-width: 700px) {
-      .consulting-intro {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding: 28px 24px;
-      }
-      .consulting-intro .text p {
-        max-width: 100%;
-      }
-      .service-grid {
-        grid-template-columns: 1fr;
-      }
       .page-header h1 {
         font-size: 2.5rem;
-      }
-      .process-block {
-        padding: 28px 20px;
-      }
-      .process-steps {
-        flex-direction: column;
-        gap: 16px;
-      }
-      .contact-cta {
-        flex-direction: column;
-        text-align: center;
-        padding: 28px 24px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .consulting-intro .icon-badge {
-        width: 56px;
-        height: 56px;
-        font-size: 2rem;
-      }
-      .step .num {
-        font-size: 1.6rem;
-        min-width: 28px;
-      }
-      .page-header h1 {
-        font-size: 2rem;
       }
       .page-header {
         padding-left: 18px;
         margin: 24px 0 32px;
+      }
+      .glossary-jump {
+        padding: 12px 14px;
+        gap: 6px;
+      }
+      .glossary-jump .jump-label {
+        width: 100%;
+        margin-bottom: 4px;
+      }
+      .glossary-jump a {
+        font-size: 0.65rem;
+        padding: 3px 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-header h1 {
+        font-size: 2rem;
+      }
+      .page-header {
+        padding-left: 14px;
+        margin: 18px 0 24px;
+      }
+      .glossary-term {
+        padding: 16px 14px;
+      }
+      .glossary-term h3 {
+        font-size: 1rem;
+      }
+      .glossary-term h3 .en {
+        font-size: 0.6rem;
+        display: block;
+        margin-left: 0;
+        margin-top: 2px;
+      }
+      .glossary-term p {
+        font-size: 0.88rem;
+      }
+      .glossary-jump a {
+        font-size: 0.6rem;
+        padding: 2px 8px;
       }
     }
   </style>
 </head>
 <body>
 
-<!-- SABİT HEADER (full-width) -->
+<!-- SABİT HEADER -->
 <header id="mainHeader">
   <div class="header-inner">
     <a href="index.html" class="logo">astro<span>.</span>takvim</a>
-
     <div class="nav-wrapper">
-      <!-- Hamburger Butonu -->
       <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </button>
-
       <nav id="mainNav">
         <a href="gunluk.html">Günlük</a>
         <a href="aylik-takvim.html">Aylık Takvim</a>
         <a href="ozel-takvimler.html">Özel Takvimler</a>
-        <a href="astrosozluk.html" class="active">Astro sözlük</a>
+        <a href="astrosozluk.html" class="active">Astro Sözlük</a>
         <a href="hakkimda.html">Hakkımda</a>
       </nav>
-
       <a href="index.html" class="btn-ghost">Anasayfa</a>
     </div>
   </div>
@@ -340,90 +465,265 @@
     <h1>Astroloji Sözlüğü</h1>
     <p>Sitede geçen terimlerin kısa, sade açıklamaları. Yorum değil, tanım — sitenin geri kalanı gibi kaynağını gizlemeden.</p>
   </div>
- 
+
+  <!-- HIZLI GEÇİŞ -->
   <div class="glossary-jump">
+    <span class="jump-label">⚡ Hızlı Git</span>
     <a href="#voc">Ay Boşluğu</a>
     <a href="#retrograd">Retrograd</a>
-    <a href="#yukselen">Yükselen Burç</a>
+    <a href="#yukselen">Yükselen</a>
     <a href="#gunes-burcu">Güneş Burcu</a>
     <a href="#ay-burcu">Ay Burcu</a>
     <a href="#ev">Ev</a>
     <a href="#acilar">Açılar</a>
     <a href="#dogum-haritasi">Doğum Haritası</a>
-    <a href="#tropikal-sideral">Tropikal / Sideral Zodyak</a>
     <a href="#yeniay-dolunay">Yeniay / Dolunay</a>
     <a href="#ekliptik">Ekliptik</a>
     <a href="#transit">Transit</a>
     <a href="#kombust">Kombüst</a>
+    <a href="#retro">Retro Gezegen</a>
   </div>
- 
+
+  <!-- SÖZLÜK LİSTESİ -->
   <div class="glossary-list">
- 
+
+    <!-- 1. AY BOŞLUĞU -->
     <div class="glossary-term" id="voc">
-      <h3>Ay Boşluğu <span class="en">Void of Course Moon</span></h3>
-      <p>Ay'ın bulunduğu burçta diğer gezegenlerle yapacağı son önemli açıyı tamamladığı andan, bir sonraki burca geçtiği ana kadar olan süre. Bu dönemde başlanan işlerin sonradan değişmesi veya sonuçsuz kalması geleneksel olarak beklenir; bu yüzden yeni başlangıçlar için önerilmez.</p>
+      <div class="term-header">
+        <span class="term-icon">🌙</span>
+        <h3>Ay Boşluğu <span class="en">Void of Course Moon</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+        <span class="term-tag">Sitede Kullanılıyor</span>
+      </div>
+      <p>Ay'ın bulunduğu burçta diğer gezegenlerle yapacağı son önemli açıyı tamamladığı andan, bir sonraki burca geçtiği ana kadar olan süre. Bu dönemde başlanan işlerin sonradan değişmesi veya sonuçsuz kalması geleneksel olarak beklenir; bu yüzden yeni başlangıçlar için <strong class="highlight">önerilmez</strong>. Sitede <span class="highlight">"Ay Boşlukta"</span> uyarısı bu dönemi işaret eder.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#transit">Transit</a>
+        <a href="#acilar">Açılar</a>
+      </div>
     </div>
- 
+
+    <!-- 2. RETROGRAD -->
     <div class="glossary-term" id="retrograd">
-      <h3>Retrograd <span class="en">Retrograde</span></h3>
-      <p>Bir gezegenin Dünya'dan bakıldığında gökyüzünde geriye doğru hareket ediyormuş gibi görünmesi — gerçekte gezegen yörüngesinde geri gitmez, bu bir görme (perspektif) etkisidir. Astrolojide özellikle Merkür retrograd dönemleri iletişim, seyahat ve teknik aksaklıklarla ilişkilendirilir.</p>
+      <div class="term-header">
+        <span class="term-icon">🔄</span>
+        <h3>Retrograd <span class="en">Retrograde</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+        <span class="term-tag advanced">İleri Seviye</span>
+      </div>
+      <p>Bir gezegenin Dünya'dan bakıldığında gökyüzünde <strong class="highlight">geriye doğru</strong> hareket ediyormuş gibi görünmesi — gerçekte gezegen yörüngesinde geri gitmez, bu bir görme (perspektif) etkisidir. Astrolojide özellikle <strong>Merkür retrograd</strong> dönemleri iletişim, seyahat ve teknik aksaklıklarla ilişkilendirilir. Retrograd dönemlerde <span class="highlight">içe dönük çalışma, revizyon ve yeniden değerlendirme</span> önerilir.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#transit">Transit</a>
+        <a href="#kombust">Kombüst</a>
+      </div>
     </div>
- 
+
+    <!-- 3. YÜKSELEN BURÇ -->
     <div class="glossary-term" id="yukselen">
-      <h3>Yükselen Burç <span class="en">Ascendant</span></h3>
-      <p>Doğum anında, doğum yerinin doğu ufkunda yükselmekte olan burç. Doğum haritasının en kişisel noktalarından biri kabul edilir; kişinin dış dünyaya yansıttığı ilk izlenimle ilişkilendirilir. Hesaplanması için doğum saati ve yeri gerekir.</p>
+      <div class="term-header">
+        <span class="term-icon">⬆️</span>
+        <h3>Yükselen Burç <span class="en">Ascendant</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+        <span class="term-tag advanced">İleri Seviye</span>
+      </div>
+      <p>Doğum anında, doğum yerinin <strong class="highlight">doğu ufkunda</strong> yükselmekte olan burç. Doğum haritasının en kişisel noktalarından biri kabul edilir; kişinin dış dünyaya yansıttığı ilk izlenimle ilişkilendirilir. Hesaplanması için <span class="highlight">doğum saati ve yeri</span> gerekir. Güneş burcundan farklı olarak saat ve yer değiştikçe değişir.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#gunes-burcu">Güneş Burcu</a>
+        <a href="#ay-burcu">Ay Burcu</a>
+        <a href="#dogum-haritasi">Doğum Haritası</a>
+      </div>
     </div>
- 
+
+    <!-- 4. GÜNEŞ BURCU -->
     <div class="glossary-term" id="gunes-burcu">
-      <h3>Güneş Burcu <span class="en">Sun Sign</span></h3>
-      <p>Doğum anında Güneş'in bulunduğu zodyak burcu — günlük hayatta "burcun ne?" diye sorulduğunda genelde bu kastedilir. Doğum tarihine göre sabittir, saat veya yere göre değişmez.</p>
+      <div class="term-header">
+        <span class="term-icon">☀️</span>
+        <h3>Güneş Burcu <span class="en">Sun Sign</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+      </div>
+      <p>Doğum anında Güneş'in bulunduğu zodyak burcu — günlük hayatta <span class="highlight">"burcun ne?"</span> diye sorulduğunda genelde bu kastedilir. Doğum tarihine göre sabittir, saat veya yere göre değişmez. Astrolojide <strong>kişinin temel kimliği, ego ve yaşam amacı</strong> ile ilişkilendirilir.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#ay-burcu">Ay Burcu</a>
+        <a href="#yukselen">Yükselen</a>
+      </div>
     </div>
- 
+
+    <!-- 5. AY BURCU -->
     <div class="glossary-term" id="ay-burcu">
-      <h3>Ay Burcu <span class="en">Moon Sign</span></h3>
-      <p>Doğum anında Ay'ın bulunduğu burç. Ay yaklaşık 2,5 günde bir burç değiştirdiği için Güneş burcundan farklı olarak doğum saatine oldukça duyarlıdır. Astrolojide iç dünya, duygular ve içgüdüsel tepkilerle ilişkilendirilir.</p>
+      <div class="term-header">
+        <span class="term-icon">🌙</span>
+        <h3>Ay Burcu <span class="en">Moon Sign</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+        <span class="term-tag">Sitede Kullanılıyor</span>
+      </div>
+      <p>Doğum anında Ay'ın bulunduğu burç. Ay yaklaşık <span class="highlight">2,5 günde bir</span> burç değiştirdiği için Güneş burcundan farklı olarak <strong>doğum saatine</strong> oldukça duyarlıdır. Astrolojide <strong>iç dünya, duygular, içgüdüsel tepkiler ve bilinçaltı</strong> ile ilişkilendirilir. Sitede Ay'ın şu anki konumu takip edilir.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#gunes-burcu">Güneş Burcu</a>
+        <a href="#yukselen">Yükselen</a>
+        <a href="#transit">Transit</a>
+      </div>
     </div>
- 
+
+    <!-- 6. EV -->
     <div class="glossary-term" id="ev">
-      <h3>Ev <span class="en">House</span></h3>
-      <p>Doğum haritasının, yaşamın farklı alanlarını (kariyer, ilişkiler, ev, sağlık vb.) temsil eden 12 dilime bölünmüş hali. Hangi gezegenin hangi evde olduğu, o yaşam alanının nasıl deneyimlendiğiyle ilişkilendirilir. Evlerin hesaplanması doğum saati ve yerine bağlıdır.</p>
+      <div class="term-header">
+        <span class="term-icon">🏠</span>
+        <h3>Ev <span class="en">House</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+        <span class="term-tag advanced">İleri Seviye</span>
+      </div>
+      <p>Doğum haritasının, yaşamın farklı alanlarını temsil eden <span class="highlight">12 dilime</span> bölünmüş hali. Her ev farklı bir yaşam alanını (kariyer, ilişkiler, ev, sağlık vb.) temsil eder. Hangi gezegenin hangi evde olduğu, o yaşam alanının nasıl deneyimlendiğiyle ilişkilendirilir. Evlerin hesaplanması <strong>doğum saati ve yerine</strong> bağlıdır.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#dogum-haritasi">Doğum Haritası</a>
+        <a href="#yukselen">Yükselen</a>
+      </div>
     </div>
- 
+
+    <!-- 7. AÇILAR -->
     <div class="glossary-term" id="acilar">
-      <h3>Açılar <span class="en">Aspects</span></h3>
-      <p>İki gök cismi arasındaki açısal mesafe. Bu sitede Ay Boşluğu hesabında kullanılan başlıca açılar: <strong>Kavuşum</strong> (0°), <strong>Altmışlık</strong> (60°), <strong>Kare</strong> (90°), <strong>Üçgen</strong> (120°) ve <strong>Karşıtlık</strong> (180°). Her biri geleneksel olarak farklı bir etkileşim türüyle (uyum, gerilim, destek gibi) ilişkilendirilir.</p>
+      <div class="term-header">
+        <span class="term-icon">📐</span>
+        <h3>Açılar <span class="en">Aspects</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+        <span class="term-tag advanced">İleri Seviye</span>
+        <span class="term-tag">Sitede Kullanılıyor</span>
+      </div>
+      <p>İki gök cismi arasındaki <span class="highlight">açısal mesafe</span>. Sitede Ay Boşluğu hesabında kullanılan başlıca açılar:</p>
+      <p style="margin-top:6px;">
+        <strong>Kavuşum</strong> (0°) · 
+        <strong>Altmışlık</strong> (60°) · 
+        <strong>Kare</strong> (90°) · 
+        <strong>Üçgen</strong> (120°) · 
+        <strong>Karşıtlık</strong> (180°)
+      </p>
+      <p style="margin-top:4px;">Her biri geleneksel olarak farklı bir etkileşim türüyle (uyum, gerilim, destek gibi) ilişkilendirilir.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#voc">Ay Boşluğu</a>
+        <a href="#dogum-haritasi">Doğum Haritası</a>
+      </div>
     </div>
- 
+
+    <!-- 8. DOĞUM HARİTASI -->
     <div class="glossary-term" id="dogum-haritasi">
-      <h3>Doğum Haritası <span class="en">Natal Chart</span></h3>
-      <p>Bir kişinin doğduğu an, yer ve saate göre gezegenlerin gökyüzündeki konumunu gösteren harita. Güneş burcundan çok daha fazla veri içerir — Ay burcu, yükselen, evler ve açılar gibi. Bu site şu an sadece Ay'ın gerçek zamanlı konumunu hesaplıyor, kişisel doğum haritası hesaplamıyor.</p>
+      <div class="term-header">
+        <span class="term-icon">🗺️</span>
+        <h3>Doğum Haritası <span class="en">Natal Chart</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+        <span class="term-tag advanced">İleri Seviye</span>
+      </div>
+      <p>Bir kişinin doğduğu an, yer ve saate göre gezegenlerin gökyüzündeki konumunu gösteren harita. Güneş burcundan çok daha fazla veri içerir — <span class="highlight">Ay burcu, yükselen, evler ve açılar</span> gibi. Bu site şu an sadece <strong>Ay'ın gerçek zamanlı konumunu</strong> hesaplıyor, kişisel doğum haritası hesaplamıyor.</p>
     </div>
- 
-    <div class="glossary-term" id="tropikal-sideral">
-      <h3>Tropikal / Sideral Zodyak <span class="en">Tropical / Sidereal Zodiac</span></h3>
-      <p>Batı astrolojisinde kullanılan <strong>tropikal zodyak</strong>, mevsimlere göre sabitlenir — 0° Koç, ilkbahar ekinoksuna denk gelir. Hint (Vedik) astrolojisinde kullanılan <strong>sideral zodyak</strong> ise sabit yıldızlara göre hizalanır ve tropikal sistemden yaklaşık 24° farklıdır. Bu site tropikal zodyak kullanır.</p>
-    </div>
- 
+
+    <!-- 9. YENİAY / DOLUNAY -->
     <div class="glossary-term" id="yeniay-dolunay">
-      <h3>Yeniay / Dolunay <span class="en">New Moon / Full Moon</span></h3>
-      <p><strong>Yeniay</strong>, Ay ile Güneş'in aynı ekliptik boylamda buluştuğu an (Ay'ın Dünya'dan görünmediği faz) — yeni bir döngünün başlangıcı olarak kabul edilir. <strong>Dolunay</strong> ise Ay ile Güneş'in tam karşıt konumda olduğu, Ay'ın tam yüzeyinin aydınlandığı andır; genelde bir döngünün doruk noktası ve sonuçların ortaya çıktığı zaman olarak yorumlanır.</p>
+      <div class="term-header">
+        <span class="term-icon">🌑🌕</span>
+        <h3>Yeniay / Dolunay <span class="en">New Moon / Full Moon</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+        <span class="term-tag">Sitede Kullanılıyor</span>
+      </div>
+      <p><strong class="highlight">Yeniay</strong>, Ay ile Güneş'in aynı ekliptik boylamda buluştuğu an — yeni bir döngünün başlangıcı olarak kabul edilir. <strong class="highlight">Dolunay</strong> ise Ay ile Güneş'in tam karşıt konumda olduğu, Ay'ın tam yüzeyinin aydınlandığı andır; genelde bir döngünün doruk noktası olarak yorumlanır. Sitede <span class="highlight">sıradaki Yeniay ve Dolunay</span> tarihleri gösterilir.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#ekliptik">Ekliptik</a>
+        <a href="#transit">Transit</a>
+      </div>
     </div>
- 
+
+    <!-- 10. EKLİPTİK -->
     <div class="glossary-term" id="ekliptik">
-      <h3>Ekliptik <span class="en">Ecliptic</span></h3>
-      <p>Dünya'dan bakıldığında Güneş'in gökyüzünde bir yıl boyunca izlediği görünen yol. Zodyak burçları bu yol boyunca 30°'lik 12 dilime ayrılır. Sitede kullanılan "ekliptik boylam" değeri, bir gök cisminin bu yol üzerindeki 0-360° arası konumunu ifade eder.</p>
+      <div class="term-header">
+        <span class="term-icon">🌀</span>
+        <h3>Ekliptik <span class="en">Ecliptic</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+        <span class="term-tag">Sitede Kullanılıyor</span>
+      </div>
+      <p>Dünya'dan bakıldığında Güneş'in gökyüzünde bir yıl boyunca izlediği görünen yol. Zodyak burçları bu yol boyunca <span class="highlight">30°'lik 12 dilime</span> ayrılır. Sitede kullanılan <span class="highlight">"ekliptik boylam"</span> değeri, bir gök cisminin bu yol üzerindeki 0-360° arası konumunu ifade eder.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#yeniay-dolunay">Yeniay / Dolunay</a>
+        <a href="#tropikal-sideral">Tropikal / Sideral</a>
+      </div>
     </div>
- 
+
+    <!-- 11. TRANSİT -->
     <div class="glossary-term" id="transit">
-      <h3>Transit</h3>
-      <p>Gezegenlerin şu anki (gerçek zamanlı) gökyüzündeki konumunun, bir doğum haritasındaki sabit noktalara yaptığı açılar. Günlük astrolojide "bugün gökyüzünde ne oluyor" sorusunun cevabı transit hareketleridir — bu site şu an sadece Ay'ın transitini takip ediyor.</p>
+      <div class="term-header">
+        <span class="term-icon">🚀</span>
+        <h3>Transit <span class="en">Transit</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+        <span class="term-tag">Sitede Kullanılıyor</span>
+      </div>
+      <p>Gezegenlerin şu anki (gerçek zamanlı) gökyüzündeki konumunun, bir doğum haritasındaki sabit noktalara yaptığı açılar. Günlük astrolojide <span class="highlight">"bugün gökyüzünde ne oluyor"</span> sorusunun cevabı transit hareketleridir — bu site şu an sadece <strong>Ay'ın transitini</strong> takip ediyor.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#voc">Ay Boşluğu</a>
+        <a href="#retrograd">Retrograd</a>
+      </div>
     </div>
- 
+
+    <!-- 12. KOMBÜST -->
     <div class="glossary-term" id="kombust">
-      <h3>Kombüst <span class="en">Combust</span></h3>
-      <p>Bir gezegenin Güneş'e çok yakın bir açısal mesafede olması durumu (genelde birkaç derece içinde). Geleneksel astrolojide bu gezegenin etkisinin Güneş'in parlaklığı tarafından "yakıldığı" veya zayıflatıldığı düşünülür. Merkür ve Venüs, yörüngeleri gereği en sık kombüst olan gezegenlerdir.</p>
+      <div class="term-header">
+        <span class="term-icon">☀️🔥</span>
+        <h3>Kombüst <span class="en">Combust</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag advanced">İleri Seviye</span>
+      </div>
+      <p>Bir gezegenin Güneş'e çok yakın bir açısal mesafede olması durumu (genelde birkaç derece içinde). Geleneksel astrolojide bu gezegenin etkisinin <span class="highlight">Güneş'in parlaklığı tarafından "yakıldığı"</span> veya zayıflatıldığı düşünülür. Merkür ve Venüs, yörüngeleri gereği en sık kombüst olan gezegenlerdir.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#retrograd">Retrograd</a>
+        <a href="#acilar">Açılar</a>
+      </div>
     </div>
- 
+
+    <!-- 13. RETRO GEZEGEN (EKLENDİ) -->
+    <div class="glossary-term" id="retro">
+      <div class="term-header">
+        <span class="term-icon">⏪</span>
+        <h3>Retro Gezegen <span class="en">Retrograde Planet</span></h3>
+      </div>
+      <div class="term-tags">
+        <span class="term-tag essential">★ Temel</span>
+      </div>
+      <p>Gökyüzünde geriye doğru hareket ediyormuş gibi görünen gezegen. Her gezegen belirli dönemlerde retrograd olur. Astrolojide <span class="highlight">retro gezegen</span>, o gezegenin temsil ettiği alanlarda <strong>içe dönüş, yeniden değerlendirme ve revizyon</strong> dönemi olarak yorumlanır. En bilinenleri Merkür, Venüs ve Mars retrogradlarıdır.</p>
+      <div class="term-related">
+        <span>İlişkili:</span>
+        <a href="#retrograd">Retrograd</a>
+        <a href="#transit">Transit</a>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -432,14 +732,12 @@
   <div class="mono">İstanbul</div>
 </footer>
 
-<!-- JS: Header gölge + Hamburger menü -->
 <script>
   (function() {
     const header = document.getElementById('mainHeader');
     const hamburger = document.getElementById('hamburgerBtn');
     const nav = document.getElementById('mainNav');
 
-    // Scroll'da gölge
     window.addEventListener('scroll', function() {
       const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
       if (currentScroll > 12) {
@@ -449,13 +747,11 @@
       }
     });
 
-    // Hamburger menü toggle
     hamburger.addEventListener('click', function() {
       this.classList.toggle('active');
       nav.classList.toggle('open');
     });
 
-    // Menü linkine tıklayınca kapat
     nav.querySelectorAll('a').forEach(function(link) {
       link.addEventListener('click', function() {
         hamburger.classList.remove('active');
