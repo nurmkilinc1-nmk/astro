@@ -6,7 +6,7 @@
   <title>Anasayfa — astro.takvim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="style.css">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="alternate icon" href="/favicon.ico">
   
@@ -846,6 +846,36 @@ svg { width: 100%; height: 100%; overflow: visible; }
         font-size: 0.92rem;
       }
     }
+
+    /* ===== TEMA DEĞİŞTİRME BUTONU ===== */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  border-radius: 40px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text);
+  font-size: 1.1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+}
+.theme-toggle:hover {
+  border-color: var(--highlight);
+  background: rgba(184, 124, 94, 0.06);
+  transform: scale(1.05);
+}
+.theme-toggle .theme-icon {
+  transition: transform 0.4s ease;
+  display: inline-block;
+}
+[data-theme="dark"] .theme-toggle .theme-icon {
+  transform: rotate(180deg);
+}
   </style>
 </head>
 <body>
@@ -871,6 +901,10 @@ svg { width: 100%; height: 100%; overflow: visible; }
       </nav>
 
       <a href="kayit.html" class="btn-ghost highlight">Kaydol</a>
+      <!-- Header içine, Kaydol butonunun yanına -->
+      <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
+        <span class="theme-icon">🌙</span>
+      </button>
     </div>
   </div>
 </header>
@@ -1404,6 +1438,30 @@ function updateVocBanner(now) {
 
 // --- Banner'ı güncelle ---
 updateVocBanner(now);
+
+
+  // ===== TEMA DEĞİŞTİRME =====
+(function() {
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = themeToggle.querySelector('.theme-icon');
+  
+  // Kayıtlı tema var mı?
+  const savedTheme = localStorage.getItem('astro-theme');
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  }
+  
+  // Tema değiştir
+  themeToggle.addEventListener('click', function() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('astro-theme', newTheme);
+    themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+  });
+})();
 </script>
 </body>
 </html>
