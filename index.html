@@ -6,902 +6,31 @@
   <title>Anasayfa — astro.takvim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="alternate icon" href="/favicon.ico">
-  
-  <style>
-    /* ===== RESET & BASE ===== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: #fbf9f4;
-      color: #1c1b1a;
-      font-family: 'Inter', sans-serif;
-      line-height: 1.6;
-    }
-
-    /* ===== SABİT HEADER (full-width) ===== */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(251, 249, 244, 0.95);
-      backdrop-filter: blur(14px) saturate(1.2);
-      -webkit-backdrop-filter: blur(14px) saturate(1.2);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      transition: box-shadow 0.2s;
-      width: 100%;
-      padding: 0 24px;
-    }
-
-    header .header-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      padding: 18px 0 14px;
-    }
-
-    header.scrolled {
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    }
-
-    .logo {
-      font-family: 'Fraunces', serif;
-      font-size: 1.7rem;
-      font-weight: 500;
-      letter-spacing: -0.02em;
-      color: #1c1b1a;
-      text-decoration: none;
-    }
-    .logo span {
-      color: #b87c5e;
-    }
-
-    /* ===== NAVIGATION ===== */
-    nav {
-      display: flex;
-      gap: 28px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      align-items: center;
-    }
-    nav a {
-      text-decoration: none;
-      color: #2d2a27;
-      border-bottom: 2px solid transparent;
-      padding-bottom: 4px;
-      transition: 0.2s;
-    }
-    nav a:hover {
-      border-bottom-color: #b87c5e;
-      color: #000;
-    }
-
-    /* ===== HAMBURGER MENU ===== */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 4px;
-      background: none;
-      border: none;
-    }
-    .hamburger span {
-      display: block;
-      width: 28px;
-      height: 2.5px;
-      background: #1c1b1a;
-      border-radius: 4px;
-      transition: 0.3s;
-    }
-    .hamburger.active span:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
-    }
-    .hamburger.active span:nth-child(2) {
-      opacity: 0;
-    }
-    .hamburger.active span:nth-child(3) {
-      transform: rotate(-45deg) translate(5px, -5px);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      border: 1px solid #d6cfc6;
-      border-radius: 40px;
-      padding: 8px 20px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      text-decoration: none;
-      color: #1c1b1a;
-      transition: 0.2s;
-      white-space: nowrap;
-    }
-    .btn-ghost:hover {
-      background: #1c1b1a;
-      color: #fbf9f4;
-      border-color: #1c1b1a;
-    }
-    .btn-ghost.highlight {
-      border-color: #b87c5e;
-      color: #b87c5e;
-    }
-    .btn-ghost.highlight:hover {
-      background: #b87c5e;
-      color: #fbf9f4;
-    }
-
-    /* ===== MOBILE MENU ===== */
-    .nav-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-    }
-/* ============================================
-   VOC BANNER (GELİŞTİRİLMİŞ)
-   ============================================ */
-    .voc-banner {
-  width: 100%;
-  padding: 12px 24px;
-  background: #f4efe9;
-  border-bottom: 1px solid #e6ddd4;
-  border-left: 6px solid rgba(184, 124, 94, 0.15);
-  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Arkaplan hareket efekti (kayan yazı için zemin) */
-.voc-banner::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 300%;
-  height: 100%;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(184, 124, 94, 0.03) 50%, 
-    transparent 100%
-  );
-  animation: voc-shimmer 8s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes voc-shimmer {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(33.33%); }
-}
-
-.voc-banner .voc-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  position: relative;
-  z-index: 1;
-}
-
-/* ===== VOC IKON ===== */
-.voc-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(184, 124, 94, 0.1);
-  color: #b87c5e;
-  flex-shrink: 0;
-  transition: all 0.4s ease;
-}
-.voc-icon svg {
-  width: 18px;
-  height: 18px;
-  fill: currentColor;
-  transition: transform 0.4s ease;
-}
-
-/* ===== VOC İÇERİK ===== */
-.voc-copy {
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  flex-wrap: wrap;
-  flex: 1;
-}
-
-.voc-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.72rem;
-  color: #b87c5e;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 700;
-  flex-shrink: 0;
-  transition: color 0.4s ease;
-}
-
-/* ===== VOC METİN (GELİŞTİRİLMİŞ) ===== */
-.voc-text {
-  color: #5e554d;
-  font-size: 0.92rem;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  transition: color 0.4s ease;
-}
-
-/* Tarih/Saat kısmı - özel stil */
-.voc-text .voc-time {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #b87c5e;
-  background: rgba(184, 124, 94, 0.08);
-  padding: 2px 12px;
-  border-radius: 20px;
-  display: inline-block;
-  letter-spacing: 0.02em;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.voc-text .voc-sign {
-  font-weight: 600;
-  color: #b87c5e;
-  transition: color 0.3s ease;
-}
-
-/* ===== AY BOŞLUKTA (AKTİF) ===== */
-.voc-banner.is-void {
-  background: linear-gradient(135deg, #fcf5f0, #f5ede8);
-  border-left: 6px solid #b4502e;
-  box-shadow: 0 2px 20px rgba(180, 80, 46, 0.08);
-  animation: voc-pulse-border 2s ease-in-out infinite;
-}
-
-@keyframes voc-pulse-border {
-  0%, 100% { border-left-color: #b4502e; }
-  50% { border-left-color: #d4603a; }
-}
-
-.voc-banner.is-void .voc-icon {
-  background: rgba(180, 80, 46, 0.12);
-  color: #b4502e;
-}
-.voc-banner.is-void .voc-icon svg {
-  animation: voc-icon-pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes voc-icon-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-}
-
-.voc-banner.is-void .voc-label {
-  color: #b4502e;
-}
-.voc-banner.is-void .voc-text {
-  color: #8a3d24;
-}
-.voc-banner.is-void .voc-text .voc-time {
-  background: rgba(180, 80, 46, 0.12);
-  color: #b4502e;
-}
-.voc-banner.is-void .voc-text .voc-sign {
-  color: #b4502e;
-}
-
-/* Aktif durumda kayan metin efekti (sadece aktifken) */
-.voc-banner.is-void .voc-text {
-  animation: voc-slide-text 0.6s ease forwards;
-}
-
-@keyframes voc-slide-text {
-  0% { opacity: 0; transform: translateX(-10px); }
-  100% { opacity: 1; transform: translateX(0); }
-}
-
-/* ===== AY BOŞLUKTA DEĞİL (PASİF) ===== */
-.voc-banner.not-void {
-  background: #f4efe9;
-  border-left: 6px solid rgba(184, 124, 94, 0.15);
-}
-
-.voc-banner.not-void .voc-text .voc-time {
-  background: rgba(184, 124, 94, 0.06);
-  color: #8a7b6d;
-}
-
-.voc-banner.not-void .voc-text .voc-sign {
-  color: #b87c5e;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 640px) {
-  .voc-banner {
-    padding: 10px 16px;
-  }
-  .voc-banner .voc-inner {
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .voc-icon {
-    width: 30px;
-    height: 30px;
-  }
-  .voc-icon svg {
-    width: 14px;
-    height: 14px;
-  }
-  .voc-label {
-    font-size: 0.65rem;
-  }
-  .voc-text {
-    font-size: 0.82rem;
-  }
-  .voc-text .voc-time {
-    font-size: 0.75rem;
-    padding: 1px 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .voc-banner {
-    padding: 8px 12px;
-  }
-  .voc-copy {
-    flex-direction: column;
-    gap: 4px;
-  }
-  .voc-label {
-    font-size: 0.6rem;
-  }
-  .voc-text {
-    font-size: 0.78rem;
-    line-height: 1.4;
-  }
-  .voc-text .voc-time {
-    font-size: 0.7rem;
-    padding: 1px 8px;
-  }
-}
-
-    /* ===== HERO ===== */
-    .hero {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      align-items: center;
-      gap: 4vw;
-      padding: 4vw 24px 3vw;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .eyebrow {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.75rem;
-      color: #b87c5e;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .eyebrow::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #b87c5e;
-      display: inline-block;
-    }
-    h1 {
-      font-family: 'Fraunces', serif;
-      font-weight: 400;
-      font-size: clamp(2.4rem, 4vw, 3.4rem);
-      line-height: 1.08;
-      letter-spacing: -0.01em;
-      color: #1c1b1a;
-    }
-    h1 em {
-      font-style: italic;
-      font-weight: 300;
-      color: #b87c5e;
-    }
-    h1 span {
-      color: #b87c5e;
-    }
-    .hero-sub {
-      margin-top: 20px;
-      color: #5e554d;
-      font-size: 1.02rem;
-      max-width: 480px;
-    }
-    .hero-data {
-      display: flex;
-      gap: 28px;
-      margin-top: 32px;
-      flex-wrap: wrap;
-    }
-    .data-item {
-      border-left: 2px solid #e6ddd4;
-      padding-left: 14px;
-    }
-    .data-item:first-child {
-      border-left: none;
-      padding-left: 0;
-    }
-    .data-item .num {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 1.3rem;
-      color: #1c1b1a;
-      font-weight: 500;
-    }
-    .data-item .label {
-      font-size: 0.7rem;
-      color: #8a7b6d;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 2px;
-    }
-
-    /* ===== BUTONLAR ===== */
-    .cta-row {
-      display: flex;
-      gap: 14px;
-      margin-top: 36px;
-      flex-wrap: wrap;
-    }
-    .btn {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 12px 26px;
-      border-radius: 40px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-      border: 1px solid transparent;
-    }
-    .btn-primary {
-      background: #b87c5e;
-      color: #fbf9f4;
-    }
-    .btn-primary:hover {
-      background: #a06b4f;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(184, 124, 94, 0.3);
-    }
-    .btn-ghost-light {
-      border-color: #d6cfc6;
-      color: #1c1b1a;
-      background: transparent;
-    }
-    .btn-ghost-light:hover {
-      border-color: #b87c5e;
-      color: #b87c5e;
-      background: rgba(184, 124, 94, 0.04);
-    }
-    .btn-icon, .btn-icon-left {
-      width: 18px;
-      height: 18px;
-    }
-    .btn-primary .btn-icon {
-      stroke: #fbf9f4;
-    }
-
-    /* ===== ZODIAC WHEEL (açık tema - geliştirilmiş) ===== */
-.wheel-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.wheel-frame {
-  position: relative;
-  width: 100%;
-  max-width: 440px;
-  aspect-ratio: 1;
-}
-svg { width: 100%; height: 100%; overflow: visible; }
-
-/* Dış halka - daha belirgin */
-.ring-outer { 
-  fill: none; 
-  stroke: #d6cbc0; 
-  stroke-width: 2; 
-}
-
-/* İç halka - daha belirgin */
-.ring-inner { 
-  fill: none; 
-  stroke: #e6ddd4; 
-  stroke-width: 1.5; 
-  stroke-dasharray: 4 4;
-}
-
-/* Burç çizgileri - daha kalın ve belirgin */
-.tick-major { 
-  stroke: #b87c5e; 
-  stroke-width: 2; 
-  opacity: 0.6;
-}
-.tick-minor { 
-  stroke: #d6cbc0; 
-  stroke-width: 1.2; 
-}
-
-/* Burç etiketleri - büyütüldü */
-.sign-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px; /* 9px → 11px */
-  fill: #7d7165;
-  letter-spacing: 0.05em;
-  font-weight: 500;
-}
-.sign-label.active { 
-  fill: #b87c5e; 
-  font-weight: 700;
-  font-size: 13px; /* aktif olanı daha büyük */
-}
-
-/* Ay işaretçisi - daha büyük ve parlak */
-.moon-marker {
-  fill: #1c1b1a;
-  stroke: #b87c5e;
-  stroke-width: 2,5;
-  filter: drop-shadow(0 0 16px rgba(184, 124, 94, 0.4));
-  animation: pulse 3.5s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { 
-    opacity: 1; 
-    r: 11; 
-  }
-  50% { 
-    opacity: 0.6; 
-    r: 12; 
-  }
-}
-
-/* Merkez burç sembolü - büyütüldü */
-.center-symbol {
-  font-family: 'Segoe UI Symbol', 'Arial Unicode MS', sans-serif;
-  font-size: 38px; /* 28px → 38px */
-  fill: #b87c5e;
-  text-anchor: middle;
-  dominant-baseline: central;
-  filter: drop-shadow(0 0 8px rgba(184, 124, 94, 0.15));
-}
-
-/* Merkez burç adı - büyütüldü */
-.center-label {
-  font-family: 'Fraunces', serif;
-  font-weight: 600;
-  font-size: 24px; /* 20px → 24px */
-  fill: #1c1b1a;
-  text-anchor: middle;
-  dominant-baseline: central;
-  letter-spacing: 0.02em;
-}
-
-/* Dekoratif halka */
-.ring-decorative {
-  fill: none;
-  stroke: #ede8e0;
-  stroke-width: 3.5;
-  stroke-dasharray: 2 8;
-  opacity: 1;
-}
-.ring-rotator {
-  transform-origin: 200px 200px;
-  animation: wheel-spin 160s linear infinite;
-}
-@keyframes wheel-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
-}
-
-/* Aktif burç dilimi - daha belirgin */
-.sign-arc-active { 
-  fill: #b87c5e; 
-  opacity: 0.12; /* 0.08 → 0.12 */
-}
-
-/* Burç geçiş noktaları */
-.cusp-dot { 
-  fill: #b87c5e; 
-  opacity: 0.7; 
-  r: 3;
-}
-.cusp-dot.major { 
-  opacity: 1; 
-  r: 4;
-}
-
-    /* ===== HIGHLIGHTS (açık tema) ===== */
-    .today-highlights {
-      padding: 2vw 24px 4vw;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .highlights-inner {
-      background: #ffffffec;
-      border: 1px solid #ede8e0;
-      border-radius: 24px;
-      padding: 40px 44px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-    }
-    .highlights-header {
-      margin-bottom: 28px;
-    }
-    .highlights-eyebrow {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.7rem;
-      color: #b87c5e;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    .highlights-title {
-      font-family: 'Fraunces', serif;
-      font-size: 2rem;
-      font-weight: 400;
-      color: #1c1b1a;
-      letter-spacing: -0.02em;
-    }
-    .highlights-title span {
-      color: #b87c5e;
-    }
-    .highlights-sub {
-      color: #5e554d;
-      font-size: 0.98rem;
-      margin-top: 4px;
-    }
-    .highlights-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-    .highlight-card {
-      background: #fbf9f4;
-      border: 1px solid #ede8e0;
-      border-radius: 16px;
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      transition: border-color 0.25s, background 0.25s;
-    }
-    .highlight-card:hover {
-      border-color: #d0c2b2;
-      background: #f8f5f0;
-    }
-    .hc-icon {
-      font-size: 1.6rem;
-      line-height: 1;
-      flex-shrink: 0;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(184, 124, 94, 0.06);
-      border-radius: 12px;
-      color: #b87c5e;
-    }
-    .hc-content {
-      flex: 1;
-      min-width: 0;
-    }
-    .hc-label {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.55rem;
-      color: #8a7b6d;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .hc-value {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #1c1b1a;
-      margin-top: 1px;
-      line-height: 1.2;
-    }
-    .hc-time {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.65rem;
-      color: #8a7b6d;
-      margin-top: 2px;
-    }
-    .highlight-card.voc-active {
-      border-color: #b4502e;
-      background: #fcf5f0;
-    }
-    .highlight-card.voc-active .hc-icon {
-      background: rgba(180, 80, 46, 0.08);
-      color: #b4502e;
-    }
-
-    /* ===== FOOTER ===== */
-    footer {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 32px 24px 28px;
-      border-top: 1px solid #e3dbd2;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      font-size: 0.9rem;
-      color: #5e554d;
-      font-weight: 400;
-    }
-    footer .mono {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.8rem;
-      color: #7d7165;
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 1024px) {
-      .highlights-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 820px) {
-      .hamburger {
-        display: flex;
-      }
-      nav {
-        display: none;
-        flex-direction: column;
-        gap: 12px;
-        width: 100%;
-        padding: 16px 0 12px;
-        border-top: 1px solid rgba(0, 0, 0, 0.06);
-        margin-top: 8px;
-      }
-      nav.open {
-        display: flex;
-      }
-      .nav-wrapper {
-        gap: 16px;
-      }
-      .btn-ghost {
-        padding: 6px 16px;
-        font-size: 0.8rem;
-      }
-      .hero {
-        grid-template-columns: 1fr;
-        padding: 4vw 16px 3vw;
-      }
-      .wheel-wrap {
-        order: -1;
-        margin-bottom: 20px;
-      }
-      .highlights-inner {
-        padding: 28px 24px;
-      }
-      .highlights-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .highlights-grid {
-        grid-template-columns: 1fr;
-      }
-      .highlights-title {
-        font-size: 1.6rem;
-      }
-      .hero-data {
-        gap: 16px;
-      }
-      .data-item .num {
-        font-size: 1.1rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .logo {
-        font-size: 1.4rem;
-      }
-      .btn-ghost {
-        padding: 5px 12px;
-        font-size: 0.7rem;
-      }
-      .highlights-inner {
-        padding: 20px 16px;
-        border-radius: 16px;
-      }
-      .highlights-title {
-        font-size: 1.3rem;
-      }
-      .highlight-card {
-        padding: 14px 16px;
-      }
-      .hc-icon {
-        width: 34px;
-        height: 34px;
-        font-size: 1.3rem;
-      }
-      .hc-value {
-        font-size: 0.85rem;
-      }
-      .hero-sub {
-        font-size: 0.92rem;
-      }
-    }
-
-    /* ===== TEMA DEĞİŞTİRME BUTONU ===== */
-.theme-toggle {
-  background: transparent;
-  border: 1px solid var(--card-border);
-  border-radius: 40px;
-  padding: 6px 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: var(--text);
-  font-size: 1.1rem;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-  min-height: 40px;
-}
-.theme-toggle:hover {
-  border-color: var(--highlight);
-  background: rgba(184, 124, 94, 0.06);
-  transform: scale(1.05);
-}
-.theme-toggle .theme-icon {
-  transition: transform 0.4s ease;
-  display: inline-block;
-}
-[data-theme="dark"] .theme-toggle .theme-icon {
-  transform: rotate(180deg);
-}
-  </style>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" href="/favicon.ico">
 </head>
 <body>
 
-<!-- SABİT HEADER (full-width) -->
+<!-- SABİT HEADER -->
 <header id="mainHeader">
   <div class="header-inner">
     <a href="index.html" class="logo">astro<span>.</span>takvim</a>
 
     <div class="nav-wrapper">
       <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span>
       </button>
 
       <nav id="mainNav">
         <a href="gunluk.html">Günlük</a>
         <a href="aylik-takvim.html">Aylık Takvim</a>
         <a href="ozel-takvimler.html">Özel Takvimler</a>
-        <a href="astrosozluk.html">Astro sözlük</a>
+        <a href="astrosozluk.html">Astro Sözlük</a>
         <a href="hakkimda.html">Hakkımda</a>
       </nav>
 
       <a href="kayit.html" class="btn-ghost highlight">Kaydol</a>
-      <!-- Header içine, Kaydol butonunun yanına -->
       <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
         <span class="theme-icon">🌙</span>
       </button>
@@ -931,19 +60,19 @@ svg { width: 100%; height: 100%; overflow: visible; }
     <h1>Ay şu an <em id="hero-sign">—</em><br>burcunda, <span id="hero-durum">—</span>.</h1>
 
     <div class="hero-data">
-  <div class="data-item">
-    <div class="num" id="stat-next-phase">—</div>
-    <div class="label">Sıradaki Faz</div>
-  </div>
-  <div class="data-item">
-    <div class="num" id="stat-next-fullmoon">—</div>
-    <div class="label">Sıradaki Dolunay</div>
-  </div>
-  <div class="data-item">
-    <div class="num" id="stat-next-newmoon">—</div>
-    <div class="label">Sıradaki Yeniay</div>
-  </div>
-</div>
+      <div class="data-item">
+        <div class="num" id="stat-next-phase">—</div>
+        <div class="label">Sıradaki Faz</div>
+      </div>
+      <div class="data-item">
+        <div class="num" id="stat-next-fullmoon">—</div>
+        <div class="label">Sıradaki Dolunay</div>
+      </div>
+      <div class="data-item">
+        <div class="num" id="stat-next-newmoon">—</div>
+        <div class="label">Sıradaki Yeniay</div>
+      </div>
+    </div>
 
     <div class="cta-row">
       <a href="aylik-takvim.html" class="btn btn-ghost-light">
@@ -956,7 +85,6 @@ svg { width: 100%; height: 100%; overflow: visible; }
           <polyline points="12 5 19 12 12 19"></polyline>
         </svg>
       </a>
-      
     </div>
   </div>
 
@@ -967,7 +95,7 @@ svg { width: 100%; height: 100%; overflow: visible; }
   </div>
 </section>
 
-<!-- BUGÜNÜN ÖNE ÇIKANLARI -->
+<!-- HIGHLIGHTS -->
 <section class="today-highlights">
   <div class="highlights-inner">
     <div class="highlights-header">
@@ -985,7 +113,6 @@ svg { width: 100%; height: 100%; overflow: visible; }
           <div class="hc-time" id="hc-next-time">—</div>
         </div>
       </div>
-
       <div class="highlight-card">
         <div class="hc-icon">🌓</div>
         <div class="hc-content">
@@ -994,7 +121,6 @@ svg { width: 100%; height: 100%; overflow: visible; }
           <div class="hc-time" id="hc-illum">—</div>
         </div>
       </div>
-
       <div class="highlight-card">
         <div class="hc-icon">✦</div>
         <div class="hc-content">
@@ -1003,7 +129,6 @@ svg { width: 100%; height: 100%; overflow: visible; }
           <div class="hc-time" id="hc-suitable-detail">—</div>
         </div>
       </div>
-
       <div class="highlight-card" id="hc-voc">
         <div class="hc-icon">◎</div>
         <div class="hc-content">
@@ -1023,19 +148,16 @@ svg { width: 100%; height: 100%; overflow: visible; }
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
 <script>
-// ===== HEADER + HAMBURGER =====
+// ============================================
+// HEADER + HAMBURGER
+// ============================================
 (function() {
   const header = document.getElementById('mainHeader');
   const hamburger = document.getElementById('hamburgerBtn');
   const nav = document.getElementById('mainNav');
 
   window.addEventListener('scroll', function() {
-    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-    if (currentScroll > 12) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
+    header.classList.toggle('scrolled', window.pageYOffset > 12);
   });
 
   hamburger.addEventListener('click', function() {
@@ -1051,7 +173,32 @@ svg { width: 100%; height: 100%; overflow: visible; }
   });
 })();
 
-// ===== ASTRONOMİ HESAPLAMALARI =====
+// ============================================
+// TEMA DEĞİŞTİRME
+// ============================================
+(function() {
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = themeToggle.querySelector('.theme-icon');
+  
+  const savedTheme = localStorage.getItem('astro-theme');
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  }
+  
+  themeToggle.addEventListener('click', function() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('astro-theme', newTheme);
+    themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+  });
+})();
+
+// ============================================
+// ASTRONOMİ HESAPLAMALARI
+// ============================================
 const signs = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
 const symbols = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
 const AY_TR_TAM = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
@@ -1085,7 +232,6 @@ function angDist(a,b){
   return d>180 ? 360-d : d;
 }
 function toIstanbul(date){ return new Date(date.getTime() + TZ_OFFSET_MS); }
-
 function lastFullMoon(now){
   let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(new Date(now.getTime() - 40*24*60*60*1000)));
   let lastFull = null;
@@ -1108,7 +254,6 @@ function fmtTarihSaat(d){
   return `${String(d.getUTCDate()).padStart(2,'0')} ${AY_TR_KISA[d.getUTCMonth()]}, ${fmtSaat(d)}`;
 }
 
-// --- Burç geçiş noktasını bul ---
 function findCrossing(t1, t2, target) {
   let lo = t1.getTime(), hi = t2.getTime();
   const loDiff = ((moonLon(new Date(lo)) - target + 180) % 360 + 360) % 360 - 180;
@@ -1121,7 +266,6 @@ function findCrossing(t1, t2, target) {
   return new Date((lo + hi) / 2);
 }
 
-// --- Mevcut burç penceresini bul ---
 function findSignWindow(now) {
   const stepMs = 4 * 3600 * 1000;
   const curSign = Math.floor(moonLon(now) / 30);
@@ -1151,7 +295,6 @@ function findSignWindow(now) {
   return { start: prevCross, end: nextCross, sign: curSign };
 }
 
-// --- Ay Boşluğu (Void of Course) hesapla ---
 const VOC_PLANETS = [
   Astronomy.Body.Sun,
   Astronomy.Body.Mercury,
@@ -1228,22 +371,13 @@ const durum = phaseAngle < 180 ? "büyüyor" : "küçülüyor";
 const illumPct = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, now).phase_fraction * 100);
 const lastFull = toIstanbul(lastFullMoon(now));
 
-// --- Çember çizimi (geliştirilmiş) ---
+// --- Çember çizimi ---
 let html = "";
-
-// Dekoratif halka
 html += `<g class="ring-rotator"><circle class="ring-decorative" cx="${cx}" cy="${cy}" r="${rDeco}"/></g>`;
-
-// Aktif burç dilimi - daha belirgin
 html += `<path class="sign-arc-active" d="${donutSlice(cx, cy, rOuter-60, rOuter, activeSignIndex*30, activeSignIndex*30+30)}"/>`;
-
-// Dış halka
 html += `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter}"/>`;
-
-// İç halka (yeni - daha belirgin)
 html += `<circle class="ring-inner" cx="${cx}" cy="${cy}" r="${rOuter-60}"/>`;
 
-// Çizgiler
 for(let deg=0; deg<360; deg+=10){
   const isMajor = deg % 30 === 0;
   const p1 = polar(cx, cy, rOuter, deg);
@@ -1251,13 +385,11 @@ for(let deg=0; deg<360; deg+=10){
   html += `<line class="${isMajor?'tick-major':'tick-minor'}" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}"/>`;
 }
 
-// Burç geçiş noktaları
 for(let deg=0; deg<360; deg+=30){
   const p = polar(cx, cy, rOuter+8, deg);
   html += `<circle class="cusp-dot major" cx="${p.x}" cy="${p.y}" r="3.5"/>`;
 }
 
-// Burç etiketleri - daha büyük
 signs.forEach((s, i)=>{
   const midAngle = i*30 + 15;
   const p = polar(cx, cy, rLabel, midAngle);
@@ -1265,28 +397,22 @@ signs.forEach((s, i)=>{
   html += `<text class="sign-label${isActive?' active':''}" x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
 });
 
-// Ay işaretçisi - daha büyük
 const moonPos = polar(cx, cy, rOuter-30, moonAngleDeg);
-html += `<circle class="moon-marker" cx="${moonPos.x}" cy="${moonPos.y}" r="8"/>`;
-html += `<circle cx="${moonPos.x}" cy="${moonPos.y}" r="3" fill="#fbf9f4" opacity="0.5"/>`; // iç parlaklık
+html += `<circle class="moon-marker" cx="${moonPos.x}" cy="${moonPos.y}" r="11"/>`;
+html += `<circle cx="${moonPos.x}" cy="${moonPos.y}" r="4" fill="var(--bg)" opacity="0.6"/>`;
 
-// Merkez - GELİŞMİŞ EMOJİ (Ay sembolü yerine burç sembolü + ay kombinasyonu)
 const activeSymbol = symbols[activeSignIndex];
-// Gerçek Ay fazına göre emoji seçimi
 const phaseEmojis = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
 const phaseIdx = Math.round((phaseAngle / 360) * (phaseEmojis.length - 1));
 const moonEmoji = phaseEmojis[phaseIdx] || '🌙';
 
-// Merkezde burç sembolü + ay emojisi birlikte
 html += `<text class="center-symbol" x="${cx}" y="${cy - 28}" text-anchor="middle" dominant-baseline="central">${activeSymbol}</text>`;
-html += `<text class="center-symbol" x="${cx}" y="${cy + 8}" text-anchor="middle" dominant-baseline="central" style="font-size:24px; fill:#8a7b6d;">${moonEmoji}</text>`;
-
-// Burç adı
+html += `<text class="center-symbol" x="${cx}" y="${cy + 8}" text-anchor="middle" dominant-baseline="central" style="font-size:24px; fill:var(--text-subtle);">${moonEmoji}</text>`;
 html += `<text class="center-label" x="${cx}" y="${cy + 42}" text-anchor="middle" dominant-baseline="central">${signs[activeSignIndex]}</text>`;
 
 svg.innerHTML = html;
 
-// ===== BUGÜNÜN ÖNE ÇIKANLARI =====
+// --- Highlights ---
 function updateHighlights() {
   const now = new Date();
   const lon = moonLon(now);
@@ -1367,22 +493,19 @@ document.getElementById("eyebrow-date").textContent =
 document.getElementById("hero-sign").textContent = signs[activeSignIndex];
 document.getElementById("hero-durum").textContent = durum;
 
-// Sıradaki Faz
 let phaseQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
 while (phaseQ.quarter !== 0 && phaseQ.quarter !== 2) phaseQ = Astronomy.NextMoonQuarter(phaseQ);
 document.getElementById("stat-next-phase").textContent = phaseQ.quarter === 0 ? "🌑 Yeniay" : "🌕 Dolunay";
 
-// Sıradaki Dolunay
 let fullQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
 while (fullQ.quarter !== 2) fullQ = Astronomy.NextMoonQuarter(fullQ);
 document.getElementById("stat-next-fullmoon").textContent = fmtTarihSaat(toIstanbul(fullQ.time.date));
 
-// Sıradaki Yeniay
 let newQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
 while (newQ.quarter !== 0) newQ = Astronomy.NextMoonQuarter(newQ);
 document.getElementById("stat-next-newmoon").textContent = fmtTarihSaat(toIstanbul(newQ.time.date));
-  
-// --- VOC banner'ı güncelle ---
+
+// --- VOC Banner ---
 function updateVocBanner(now) {
   const voc = findVoc(now);
   const nextSignIndex = (voc.nextSign + 1) % 12;
@@ -1394,38 +517,22 @@ function updateVocBanner(now) {
   const label = document.getElementById('voc-label');
   const text = document.getElementById('voc-text');
   
-  // --- Zaman formatı için yardımcı ---
-  function formatTime(date) {
-    return fmtTarihSaat(date);
-  }
-  
-  function formatShortTime(date) {
-    return fmtSaat(date);
-  }
+  function formatTime(date) { return fmtTarihSaat(date); }
   
   if (isVoidNow) {
-    // AY BOŞLUKTA - AKTİF
     banner.classList.remove('not-void');
     banner.classList.add('is-void');
-    
-    label.textContent = ' Ay Boşlukta    ';
-    
-    // HTML içeriği - zaman kısmı vurgulu
+    label.textContent = ' Ay Boşlukta ';
     text.innerHTML = `
       <span class="voc-sign">${signs[nextSignIndex]}</span> 
       burcuna geçene kadar 
       <span class="voc-time"> ${formatTime(vocEndIst)}</span> 
-            [ yeni başlangıçlar için uygun değil. ]
+      — yeni başlangıçlar için uygun değil.
     `;
-    
   } else {
-    // AY BOŞLUKTA DEĞİL - PASİF
     banner.classList.remove('is-void');
     banner.classList.add('not-void');
-    
-    label.textContent = ' Ay Boşlukta Değil     ';
-    
-    // HTML içeriği - zaman aralığı vurgulu
+    label.textContent = ' Ay Boşlukta Değil ';
     text.innerHTML = `
       Sıradaki boşluk: 
       <span class="voc-time">${formatTime(vocStartIst)}</span> 
@@ -1435,33 +542,7 @@ function updateVocBanner(now) {
     `;
   }
 }
-
-// --- Banner'ı güncelle ---
 updateVocBanner(now);
-
-
-  // ===== TEMA DEĞİŞTİRME =====
-(function() {
-  const themeToggle = document.getElementById('themeToggle');
-  const themeIcon = themeToggle.querySelector('.theme-icon');
-  
-  // Kayıtlı tema var mı?
-  const savedTheme = localStorage.getItem('astro-theme');
-  if (savedTheme) {
-    document.documentElement.setAttribute('data-theme', savedTheme);
-    themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-  }
-  
-  // Tema değiştir
-  themeToggle.addEventListener('click', function() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('astro-theme', newTheme);
-    themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-  });
-})();
 </script>
 </body>
 </html>
