@@ -1,6 +1,92 @@
 /* ============================================
    style.css — astro.takvim Ana Tema
    ============================================ */
+/* ===== RENK DEĞİŞKENLERİ ===== */
+:root {
+  /* AÇIK TEMA (varsayılan) */
+  --bg: #fbf9f4;
+  --text: #1c1b1a;
+  --text-muted: #4b4440;
+  --text-subtle: #5e554d;
+  --card-bg: #ffffffec;
+  --card-border: #ede8e0;
+  --card-border-hover: #d0c2b2;
+  --banner-bg: #f4efe9;
+  --banner-border: #e6ddd4;
+  --badge-bg: #f4efe9;
+  --badge-text: #6f6256;
+  --badge-border: #e6ddd4;
+  --badge-ideal-bg: #e8ddd0;
+  --badge-ideal-text: #7a5f3e;
+  --badge-en-bg: #b87c5e;
+  --badge-en-text: #fbf9f4;
+  --highlight: #b87c5e;
+  --highlight-hover: #a06b4f;
+  --shadow: rgba(0,0,0,0.04);
+  --shadow-hover: rgba(0,0,0,0.08);
+  --input-bg: rgba(255,255,255,0.04);
+  --input-border: #ede8e0;
+  --footer-border: #e3dbd2;
+  --footer-text: #5e554d;
+  --voc-text: #5e554d;
+  --voc-label: #b87c5e;
+  --voc-bg: #f4efe9;
+  --voc-border: #e6ddd4;
+  --moon-marker: #1c1b1a;
+  --moon-marker-stroke: #b87c5e;
+  --sign-label: #7d7165;
+  --sign-active: #b87c5e;
+  --tick-major: #b87c5e;
+  --tick-minor: #d6cbc0;
+  --ring-outer: #d6cbc0;
+  --ring-inner: #e6ddd4;
+  --center-label: #1c1b1a;
+  --center-symbol: #b87c5e;
+  --center-sub: #b87c5e;
+}
+
+/* ===== KARANLIK TEMA ===== */
+[data-theme="dark"] {
+  --bg: #111729;
+  --text: #E9E5D8;
+  --text-muted: #A6ADC7;
+  --text-subtle: #8a9bb5;
+  --card-bg: #1A2338;
+  --card-border: #333F5E;
+  --card-border-hover: #C7A253;
+  --banner-bg: #1A2338;
+  --banner-border: #333F5E;
+  --badge-bg: #1A2338;
+  --badge-text: #A6ADC7;
+  --badge-border: #333F5E;
+  --badge-ideal-bg: #2a1f14;
+  --badge-ideal-text: #C7A253;
+  --badge-en-bg: #C7A253;
+  --badge-en-text: #111729;
+  --highlight: #C7A253;
+  --highlight-hover: #d9b567;
+  --shadow: rgba(0,0,0,0.15);
+  --shadow-hover: rgba(0,0,0,0.25);
+  --input-bg: rgba(255,255,255,0.05);
+  --input-border: #333F5E;
+  --footer-border: #333F5E;
+  --footer-text: #A6ADC7;
+  --voc-text: #A6ADC7;
+  --voc-label: #C7A253;
+  --voc-bg: #1A2338;
+  --voc-border: #333F5E;
+  --moon-marker: #E9E5D8;
+  --moon-marker-stroke: #C7A253;
+  --sign-label: #A6ADC7;
+  --sign-active: #C7A253;
+  --tick-major: #C7A253;
+  --tick-minor: #333F5E;
+  --ring-outer: #333F5E;
+  --ring-inner: #2a3454;
+  --center-label: #E9E5D8;
+  --center-symbol: #C7A253;
+  --center-sub: #C7A253;
+}
 
 /* ===== ROOT DEĞİŞKENLER ===== */
 :root {
@@ -70,8 +156,8 @@ nav a.active { border-bottom-color: var(--brass); color: var(--ink); }
 }
 
 body {
-  background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(199, 162, 83, 0.08), transparent), var(--bg);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--text);
   font-family: 'Inter', sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
