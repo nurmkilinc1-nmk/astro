@@ -204,10 +204,27 @@
     }
 
     table.data-table td {
-      padding: 14px 20px;
+      padding: 15px 20px;
       border-bottom: 1px solid #f0ebe4;
       color: #2d2824;
       transition: background 0.15s;
+      vertical-align: middle;
+    }
+
+    table.data-table tbody tr:not(.month-row) {
+      position: relative;
+    }
+    table.data-table tbody tr:not(.month-row)::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: transparent;
+    }
+    table.data-table tbody tr.today-row::before {
+      background: #b87c5e;
     }
 
     table.data-table tr:last-child td {
@@ -275,8 +292,10 @@
 
     /* ===== BURÇ ETİKETİ ===== */
     .sign-badge {
-      display: inline-block;
-      padding: 4px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 16px 4px 12px;
       border-radius: 40px;
       background: #f4efe9;
       color: #5e554d;
@@ -289,6 +308,35 @@
       background: rgba(184, 124, 94, 0.12);
       border-color: rgba(184, 124, 94, 0.25);
       color: #b87c5e;
+    }
+    .sign-glyph {
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+    .sign-glyph text {
+      font-family: 'Noto Sans Symbols 2', sans-serif;
+      fill: currentColor;
+    }
+
+    /* ===== TARİH HÜCRELERİ (geliştirilmiş) ===== */
+    .cell-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.86rem;
+      color: #2d2824;
+      white-space: nowrap;
+    }
+    .cell-date .day {
+      font-weight: 600;
+    }
+    .cell-date .month {
+      color: #8a7b6d;
+    }
+    .cell-date .hour {
+      color: #b87c5e;
+      margin-left: 6px;
+    }
+    tr.today-row .cell-date .hour {
+      color: #8a5b3f;
     }
 
     /* ===== FAZ ETİKETLERİ ===== */
@@ -576,6 +624,7 @@
 
 // ===== ASTRONOMİ HESAPLAMALARI =====
 const SIGNS = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
+const SIGN_SYMBOLS = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
 const AY_TR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
 const TZ_OFFSET_MS = 3 * 60 * 60 * 1000;
 const GUN_ONCESI = 6;
@@ -647,10 +696,13 @@ function toIstanbul(date) {
 
 function fmt(d) {
   const dd = String(d.getUTCDate()).padStart(2, "0");
-  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const ay = AY_TR[d.getUTCMonth()];
   const hh = String(d.getUTCHours()).padStart(2, "0");
-  const mi = String(d.getUTCMinutes()).padStart(2, "0");
-  return `${dd}.${mm} ${hh}:${mi}`;
+  return `<span class="cell-date"><span class="day">${dd}</span> <span class="month">${ay}</span><span class="hour">${hh}:00</span></span>`;
+}
+
+function signGlyph(signIdx) {
+  return `<svg class="sign-glyph" viewBox="0 0 24 24" width="13" height="13"><text x="12" y="17" text-anchor="middle">${SIGN_SYMBOLS[signIdx]}</text></svg>`;
 }
 
 function sameIstanbulDay(d1, d2) {
@@ -674,7 +726,7 @@ function render() {
       : new Date(sd.getTime() + 2.5 * 24 * 60 * 60 * 1000);
     const durum = phaseAt(transitions[i].time, phases);
     const isToday = nowIst.getTime() >= sd.getTime() && nowIst.getTime() < ed.getTime();
-    rows.push({ sd, ed, label: "Ay " + SIGNS[transitions[i].sign] + " Burcunda", durum, kind: "burc", isToday });
+    rows.push({ sd, ed, label: "Ay " + SIGNS[transitions[i].sign] + " Burcunda", sign: transitions[i].sign, durum, kind: "burc", isToday });
   }
 
   for (const p of phases) {
@@ -705,7 +757,7 @@ function render() {
       html += `<tr${rowClass}>
         <td>${fmt(r.sd)}</td>
         <td>${fmt(r.ed)}</td>
-        <td><span class="sign-badge">${r.label}</span> ${badge}</td>
+        <td><span class="sign-badge">${signGlyph(r.sign)}${r.label}</span> ${badge}</td>
         <td>${statusText}</td>
       </tr>`;
     } else {
