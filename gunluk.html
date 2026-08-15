@@ -1,169 +1,121 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Günlük — astro.takvim</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="alternate icon" href="/favicon.ico">
-  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="alternate icon" href="/favicon.ico" />
+
   <style>
-    /* ===== SAYFA ÖZEL STILLER (sadece gunluk.html'e özel) ===== */
-    
-    /* ===== GÜNÜN RENGİ — DİNAMİK / PREMIUM ===== */
+    /* ===== GÜNLÜK SAYFASI ÖZEL STILLER ===== */
+
+    /* Renk kartı – küçültülmüş */
     .daily-color {
-      margin: 30px 0 36px;
+      margin: 20px 0 24px;
       padding: 0 2px;
     }
-
     .daily-color-inner {
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: 20px;
-      min-height: 112px;
-      padding: 18px 22px;
-      background:
-        radial-gradient(circle at 8% 50%, var(--daily-glow, rgba(184,124,94,.16)), transparent 34%),
-        var(--card-bg);
-      border: 1px solid var(--daily-border, var(--card-border));
-      border-radius: 24px;
-      box-shadow: 0 8px 30px var(--shadow);
+      gap: 16px;
+      min-height: 80px;
+      padding: 14px 18px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: 0 4px 16px var(--shadow);
       position: relative;
       overflow: hidden;
-      transition: border-color .35s ease, box-shadow .35s ease, transform .35s ease;
+      transition: border-color .3s, box-shadow .3s, transform .3s;
     }
-
-    .daily-color-inner::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.08) 50%, transparent 65%);
-      transform: translateX(-100%);
-      transition: transform .7s ease;
-    }
-
     .daily-color-inner:hover {
-      border-color: var(--daily-border, var(--card-border-hover));
-      box-shadow: 0 14px 38px var(--shadow-hover);
-      transform: translateY(-2px);
+      border-color: var(--card-border-hover);
+      box-shadow: 0 8px 28px var(--shadow-hover);
+      transform: translateY(-1px);
     }
-
-    .daily-color-inner:hover::after {
-      transform: translateX(100%);
-    }
-
     .color-display-wrap {
-      width: 78px;
-      height: 78px;
+      width: 56px;
+      height: 56px;
       display: grid;
       place-items: center;
-      position: relative;
       flex-shrink: 0;
     }
-
     .color-display {
-      width: 64px;
-      height: 64px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
-      border: 4px solid var(--card-bg);
-      outline: 1px solid rgba(0,0,0,.08);
-      box-shadow: 0 7px 24px rgba(0,0,0,.14), inset 0 0 0 1px rgba(255,255,255,.18);
-      transition: background .6s ease, transform .35s ease, box-shadow .35s ease;
-      position: relative;
-      z-index: 1;
+      border: 3px solid var(--card-bg);
+      outline: 1px solid rgba(0,0,0,.07);
+      box-shadow: 0 4px 14px rgba(0,0,0,.10), inset 0 0 0 1px rgba(255,255,255,.15);
+      transition: background .5s ease, transform .3s, box-shadow .3s;
     }
-
-    .color-display-wrap::before,
-    .color-display-wrap::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      border: 1px solid var(--daily-border, rgba(184,124,94,.25));
-      inset: 3px;
-      opacity: .7;
-    }
-
-    .color-display-wrap::after {
-      inset: -3px;
-      opacity: .35;
-    }
-
     .daily-color-inner:hover .color-display {
-      transform: scale(1.07);
-      box-shadow: 0 10px 30px rgba(0,0,0,.18), inset 0 0 0 1px rgba(255,255,255,.22);
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,.14), inset 0 0 0 1px rgba(255,255,255,.18);
     }
 
-    .color-info {
-      min-width: 0;
-    }
-
+    .color-info { min-width: 0; }
     .color-label {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: .62rem;
+      font-size: 0.55rem;
       text-transform: uppercase;
-      letter-spacing: .13em;
+      letter-spacing: 0.12em;
       color: var(--text-muted);
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
-
     .color-name-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
     }
-
     .color-name {
       font-family: 'Fraunces', serif;
-      font-size: 1.55rem;
+      font-size: 1.2rem;
       font-weight: 500;
       color: var(--text);
-      line-height: 1.15;
-      letter-spacing: -.02em;
+      line-height: 1.2;
+      letter-spacing: -.01em;
     }
-
     .color-hex {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: .68rem;
+      font-size: 0.6rem;
       color: var(--text-muted);
-      padding: 4px 8px;
+      padding: 2px 8px;
       border: 1px solid var(--card-border);
       border-radius: 999px;
       background: var(--badge-bg);
     }
-
     .color-sub {
-      font-size: .82rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
-      margin-top: 7px;
+      margin-top: 2px;
     }
-
     .color-meta {
       display: flex;
-      gap: 7px;
-      margin-top: 9px;
+      gap: 5px;
+      margin-top: 4px;
       flex-wrap: wrap;
     }
-
     .color-meta span {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: .62rem;
-      letter-spacing: .03em;
+      font-size: 0.55rem;
+      letter-spacing: 0.03em;
       color: var(--badge-text);
       background: var(--badge-bg);
       border: 1px solid var(--badge-border);
       border-radius: 999px;
-      padding: 4px 9px;
+      padding: 2px 8px;
     }
 
     .color-info-btn {
-      width: 42px;
-      height: 42px;
+      width: 34px;
+      height: 34px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -174,17 +126,13 @@
       transition: all .25s ease;
       color: var(--text-muted);
       flex-shrink: 0;
-      position: relative;
-      z-index: 2;
     }
-
     .color-info-btn:hover {
-      background: var(--daily-soft, rgba(184,124,94,.12));
-      border-color: var(--daily-border, var(--highlight));
-      color: var(--highlight);
-      transform: scale(1.06) rotate(4deg);
+      background: var(--highlight);
+      border-color: var(--highlight);
+      color: var(--bg);
+      transform: scale(1.05);
     }
-
     .color-info-btn svg { stroke: currentColor; }
 
     /* Renk modalı */
@@ -192,7 +140,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(12, 10, 9, .48);
+      background: rgba(12,10,9,.5);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       z-index: 2000;
@@ -201,176 +149,151 @@
       padding: 20px;
       animation: fadeIn .25s ease;
     }
-
     .color-modal.active { display: flex; }
-
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-
     .color-modal-content {
       --modal-color: #b87c5e;
-      background:
-        radial-gradient(circle at 50% -15%, color-mix(in srgb, var(--modal-color) 16%, transparent), transparent 46%),
-        var(--card-bg);
+      background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 30px;
-      padding: 30px 32px 28px;
-      max-width: 500px;
-      width: min(500px, 100%);
+      border-radius: 24px;
+      padding: 24px 28px 22px;
+      max-width: 460px;
+      width: 100%;
       position: relative;
-      box-shadow: 0 28px 90px rgba(0,0,0,.22);
+      box-shadow: 0 24px 80px rgba(0,0,0,.2);
       animation: slideUp .3s cubic-bezier(.2,.8,.2,1);
     }
-
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(18px) scale(.97); }
+      from { opacity: 0; transform: translateY(16px) scale(.97); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
-
     .color-modal-close {
       position: absolute;
-      top: 14px;
-      right: 16px;
-      width: 34px;
-      height: 34px;
+      top: 12px;
+      right: 14px;
+      width: 30px;
+      height: 30px;
       display: grid;
       place-items: center;
       background: var(--badge-bg);
       border: 1px solid var(--card-border);
       border-radius: 50%;
-      font-size: 1rem;
+      font-size: .9rem;
       color: var(--text-muted);
       cursor: pointer;
       transition: .2s;
     }
-
     .color-modal-close:hover {
       color: var(--text);
       transform: rotate(8deg);
     }
-
     .modal-color-preview {
       width: 100%;
-      height: 110px;
-      border-radius: 22px;
-      margin-bottom: 22px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.16), 0 12px 30px rgba(0,0,0,.12);
-      position: relative;
-      overflow: hidden;
+      height: 80px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 8px 24px rgba(0,0,0,.10);
     }
-
-    .modal-color-preview::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,.18), transparent 42%, rgba(0,0,0,.08));
-    }
-
     .color-modal-icon {
-      font-size: 2.1rem;
-      margin-bottom: 7px;
+      font-size: 1.8rem;
+      margin-bottom: 4px;
       display: block;
     }
-
     .color-modal-content h3 {
       font-family: 'Fraunces', serif;
-      font-size: 1.7rem;
+      font-size: 1.4rem;
       font-weight: 500;
       color: var(--text);
-      margin-bottom: 9px;
+      margin-bottom: 4px;
     }
-
     .modal-date {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: .66rem;
-      letter-spacing: .07em;
+      font-size: 0.6rem;
+      letter-spacing: 0.07em;
       color: var(--text-muted);
       text-transform: uppercase;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
-
     .color-modal-content p {
       color: var(--text-muted);
-      font-size: .94rem;
-      line-height: 1.8;
-      margin-bottom: 20px;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
     }
-
     .modal-extra {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
-
     .modal-badge {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: .67rem;
-      padding: 6px 11px;
+      font-size: 0.6rem;
+      padding: 4px 10px;
       background: var(--badge-bg);
       border: 1px solid var(--badge-border);
       border-radius: 40px;
       color: var(--badge-text);
-      letter-spacing: .03em;
+      letter-spacing: 0.03em;
     }
-
     .modal-badge.sign {
       color: var(--highlight);
       font-weight: 600;
-      border-color: var(--daily-border, var(--highlight));
+      border-color: var(--highlight);
     }
 
     /* Sayfa özel responsive */
     @media (max-width: 700px) {
       .daily-color-inner {
-        grid-template-columns: auto 1fr auto;
-        gap: 14px;
-        padding: 16px;
+        gap: 12px;
+        padding: 12px 14px;
+        min-height: 68px;
       }
-      .color-display-wrap { width: 62px; height: 62px; }
-      .color-display { width: 52px; height: 52px; }
-      .color-name { font-size: 1.25rem; }
+      .color-display-wrap { width: 46px; height: 46px; }
+      .color-display { width: 38px; height: 38px; }
+      .color-name { font-size: 1rem; }
+      .color-sub { font-size: 0.65rem; }
       .color-meta { display: none; }
-      .color-info-btn { width: 38px; height: 38px; }
-      .color-modal-content { padding: 24px 22px 22px; border-radius: 24px; }
-      .modal-color-preview { height: 90px; }
-      .color-modal-content h3 { font-size: 1.45rem; }
+      .color-info-btn { width: 30px; height: 30px; }
+      .color-modal-content { padding: 20px; border-radius: 20px; }
+      .modal-color-preview { height: 70px; }
+      .color-modal-content h3 { font-size: 1.2rem; }
     }
-
     @media (max-width: 480px) {
-      .daily-color { margin-top: 22px; }
+      .daily-color { margin-top: 14px; }
       .daily-color-inner {
         grid-template-columns: 1fr auto;
-        gap: 12px;
+        gap: 10px;
+        padding: 10px 12px;
+        min-height: 60px;
       }
       .color-display-wrap {
         position: absolute;
-        right: 54px;
-        top: 14px;
-        transform: scale(.72);
-        opacity: .92;
+        right: 44px;
+        top: 10px;
+        transform: scale(.65);
+        opacity: .9;
       }
-      .color-info { padding-right: 54px; }
-      .color-name { font-size: 1.18rem; }
-      .color-sub { font-size: .74rem; line-height: 1.45; }
-      .color-hex { font-size: .58rem; }
-      .color-info-btn { grid-column: 2; grid-row: 1; }
+      .color-info { padding-right: 44px; }
+      .color-name { font-size: 0.95rem; }
+      .color-sub { font-size: 0.6rem; }
+      .color-hex { font-size: 0.5rem; }
+      .color-info-btn { grid-column: 2; grid-row: 1; width: 28px; height: 28px; }
     }
   </style>
 </head>
 <body>
 
-<!-- SABİT HEADER (full-width) -->
+<!-- HEADER (sabit, dokunulmadı) -->
 <header id="mainHeader">
   <div class="header-inner">
     <a href="index.html" class="logo">astro<span>.</span>takvim</a>
-
     <div class="nav-wrapper">
       <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
         <span></span><span></span><span></span>
       </button>
-
       <nav id="mainNav">
         <a href="gunluk.html" class="active">Günlük</a>
         <a href="aylik-takvim.html">Aylık Takvim</a>
@@ -378,13 +301,10 @@
         <a href="astrosozluk.html">Astro Sözlük</a>
         <a href="hakkimda.html">Hakkımda</a>
       </nav>
-
       <a href="index.html" class="btn-ghost">Anasayfa</a>
       <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
         <span class="theme-icon">
-          <!-- GÜNEŞ/AY SVG İKONU -->
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-            <!-- Güneş ikonu (varsayılan) -->
             <circle cx="12" cy="12" r="5"/>
             <line x1="12" y1="1" x2="12" y2="3"/>
             <line x1="12" y1="21" x2="12" y2="23"/>
@@ -402,7 +322,7 @@
 </header>
 
 <div class="page-wrap">
-  <!-- GÜNÜN RENGİ -->
+  <!-- GÜNÜN RENGİ (küçültüldü) -->
   <div class="daily-color" id="dailyColor">
     <div class="daily-color-inner">
       <div class="color-display-wrap">
@@ -421,7 +341,7 @@
         </div>
       </div>
       <button class="color-info-btn" id="colorInfoBtn" aria-label="Bugünün rengi açıklaması">
-        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="16" x2="12" y2="12"></line>
           <line x1="12" y1="8" x2="12.01" y2="8"></line>
@@ -430,7 +350,7 @@
     </div>
   </div>
 
-  <!-- RENK AÇIKLAMA MODAL -->
+  <!-- RENK MODALI -->
   <div class="color-modal" id="colorModal">
     <div class="color-modal-content" id="colorModalContent">
       <button class="color-modal-close" id="colorModalClose" aria-label="Kapat">✕</button>
@@ -479,7 +399,7 @@
   </div>
 
   <div class="placeholder-note">
-    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.8rem; letter-spacing:0.04em; color:#8a7b6d;">☽</span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:0.75rem; letter-spacing:0.04em; color:var(--text-muted);">☽</span>
     Yukarıdaki veriler sayfa açıldığında gerçek Ay konumuna göre otomatik hesaplanır. Günün rengi ise Ay burcu + takvim gününe göre her gün yeniden seçilir.
   </div>
 </div>
@@ -489,469 +409,440 @@
   <div class="mono">İstanbul</div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js">
+</script>
 <script>
-// ===== HEADER + HAMBURGER =====
-(function() {
-  const header = document.getElementById('mainHeader');
-  const hamburger = document.getElementById('hamburgerBtn');
-  const nav = document.getElementById('mainNav');
+  // ===== HEADER + HAMBURGER =====
+  (function() {
+    const header = document.getElementById('mainHeader');
+    const hamburger = document.getElementById('hamburgerBtn');
+    const nav = document.getElementById('mainNav');
 
-  window.addEventListener('scroll', function() {
-    header.classList.toggle('scrolled', window.pageYOffset > 12);
-  });
-
-  hamburger.addEventListener('click', function() {
-    this.classList.toggle('active');
-    nav.classList.toggle('open');
-  });
-
-  nav.querySelectorAll('a').forEach(function(link) {
-    link.addEventListener('click', function() {
-      hamburger.classList.remove('active');
-      nav.classList.remove('open');
+    window.addEventListener('scroll', function() {
+      header.classList.toggle('scrolled', window.pageYOffset > 12);
     });
-  });
-})();
 
-// ===== TEMA DEĞİŞTİRME (SVG ikonlu) =====
-(function() {
-  const themeToggle = document.getElementById('themeToggle');
-  const themeIcon = themeToggle.querySelector('.theme-icon svg');
-  
-  // Güneş ve Ay SVG'leri
-  const sunSVG = `
-    <circle cx="12" cy="12" r="5"/>
-    <line x1="12" y1="1" x2="12" y2="3"/>
-    <line x1="12" y1="21" x2="12" y2="23"/>
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-    <line x1="1" y1="12" x2="3" y2="12"/>
-    <line x1="21" y1="12" x2="23" y2="12"/>
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-  `;
-  
-  const moonSVG = `
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-  `;
-  
-  const savedTheme = localStorage.getItem('astro-theme');
-  if (savedTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeIcon.innerHTML = sunSVG;
-  } else {
-    themeIcon.innerHTML = moonSVG;
-  }
-  
-  themeToggle.addEventListener('click', function() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('astro-theme', newTheme);
-    themeIcon.innerHTML = newTheme === 'dark' ? sunSVG : moonSVG;
-  });
-})();
+    hamburger.addEventListener('click', function() {
+      this.classList.toggle('active');
+      nav.classList.toggle('open');
+    });
 
-// ===== ASTRONOMİ HESAPLAMALARI =====
-const SIGNS = ["Koç","Boğa","İkizler","Yengeç","Aslan","Başak","Terazi","Akrep","Yay","Oğlak","Kova","Balık"];
-const AY_TR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
-const TZ_OFFSET_MS = 3 * 60 * 60 * 1000;
+    nav.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        hamburger.classList.remove('active');
+        nav.classList.remove('open');
+      });
+    });
+  })();
 
-function moonLon(date) {
-  const l = Astronomy.EclipticGeoMoon(date).lon;
-  return ((l % 360) + 360) % 360;
-}
+  // ===== TEMA DEĞİŞTİRME =====
+  (function() {
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('.theme-icon svg');
 
-function planetLon(body, date){
-  const vec = Astronomy.GeoVector(body, date, true);
-  return ((Astronomy.Ecliptic(vec).elon % 360)+360)%360;
-}
+    const sunSVG = `
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/>
+      <line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    `;
+    const moonSVG = `
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    `;
 
-function angDist(a,b){ let d=Math.abs(a-b)%360; return d>180?360-d:d; }
-
-function findCrossing(t1, t2, target) {
-  let lo = t1.getTime(), hi = t2.getTime();
-  const loDiff = ((moonLon(new Date(lo)) - target + 180) % 360 + 360) % 360 - 180;
-  for (let i = 0; i < 40; i++) {
-    const mid = (lo + hi) / 2;
-    const diff = ((moonLon(new Date(mid)) - target + 180) % 360 + 360) % 360 - 180;
-    if ((diff < 0) === (loDiff < 0)) lo = mid; else hi = mid;
-  }
-  return new Date((lo + hi) / 2);
-}
-
-function toIstanbul(date) { return new Date(date.getTime() + TZ_OFFSET_MS); }
-
-function fmtTarih(d) {
-  const dd = String(d.getUTCDate()).padStart(2, "0");
-  const mm = AY_TR[d.getUTCMonth()];
-  const hh = String(d.getUTCHours()).padStart(2, "0");
-  const mi = String(d.getUTCMinutes()).padStart(2, "0");
-  return `${dd} ${mm}, ${hh}:${mi}`;
-}
-
-function fmtSaat(d){
-  return `${String(d.getUTCHours()).padStart(2,'0')}:${String(d.getUTCMinutes()).padStart(2,'0')}`;
-}
-
-function fmtTarihSaat(d){
-  return fmtTarih(d);
-}
-
-function findSignWindow(now){
-  const stepMs = 4*3600*1000;
-  const curSign = Math.floor(moonLon(now)/30);
-  let t = now.getTime(), prevT = t, nextCross=null;
-  while(!nextCross){
-    t += stepMs;
-    const s = Math.floor(moonLon(new Date(t))/30);
-    if(s!==curSign) nextCross = findCrossing(new Date(prevT), new Date(t), (s*30)%360);
-    prevT = t;
-  }
-  t = now.getTime(); prevT = t;
-  let prevCross = null;
-  while(!prevCross){
-    t -= stepMs;
-    const s = Math.floor(moonLon(new Date(t))/30);
-    if(s!==curSign) prevCross = findCrossing(new Date(t), new Date(prevT), (curSign*30)%360);
-    prevT = t;
-  }
-  return { start: prevCross, end: nextCross, sign: curSign };
-}
-
-const VOC_PLANETS = [Astronomy.Body.Sun, Astronomy.Body.Mercury, Astronomy.Body.Venus, Astronomy.Body.Mars, Astronomy.Body.Jupiter, Astronomy.Body.Saturn];
-const VOC_ASPECTS = [0,60,90,120,180];
-
-function bisectAspect(body, aspectAngle, t1, t2){
-  function f(t){ return angDist(moonLon(t), planetLon(body,t)) - aspectAngle; }
-  let lo=t1.getTime(), hi=t2.getTime();
-  let loVal = f(new Date(lo));
-  for(let i=0;i<30;i++){
-    const mid=(lo+hi)/2;
-    const midVal = f(new Date(mid));
-    if((midVal<0)===(loVal<0)){ lo=mid; loVal=midVal; } else hi=mid;
-  }
-  return new Date((lo+hi)/2);
-}
-
-function voidStartOf(period){
-  const stepMs = 20*60*1000;
-  const times=[];
-  for(let t=period.start.getTime(); t<=period.end.getTime(); t+=stepMs) times.push(new Date(t));
-  const moonVals = times.map(moonLon);
-  let found=[];
-  for(const body of VOC_PLANETS){
-    const planetVals = times.map(t=>planetLon(body,t));
-    let prevDist = angDist(moonVals[0], planetVals[0]);
-    for(let i=1;i<times.length;i++){
-      const dist = angDist(moonVals[i], planetVals[i]);
-      for(const asp of VOC_ASPECTS){
-        const pd = prevDist-asp, cd = dist-asp;
-        if((pd<0)!==(cd<0)) found.push(bisectAspect(body, asp, times[i-1], times[i]));
-      }
-      prevDist = dist;
+    const savedTheme = localStorage.getItem('astro-theme');
+    if (savedTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeIcon.innerHTML = sunSVG;
+    } else {
+      themeIcon.innerHTML = moonSVG;
     }
+
+    themeToggle.addEventListener('click', function() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('astro-theme', newTheme);
+      themeIcon.innerHTML = newTheme === 'dark' ? sunSVG : moonSVG;
+    });
+  })();
+
+  // ===== ASTRONOMİ HESAPLAMALARI =====
+  const SIGNS = ["Koç", "Boğa", "İkizler", "Yengeç", "Aslan", "Başak", "Terazi", "Akrep", "Yay", "Oğlak", "Kova", "Balık"];
+  const AY_TR = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+  const TZ_OFFSET_MS = 3 * 60 * 60 * 1000;
+
+  function moonLon(date) {
+    const l = Astronomy.EclipticGeoMoon(date).lon;
+    return ((l % 360) + 360) % 360;
   }
-  return found.length ? new Date(Math.max(...found.map(d=>d.getTime()))) : period.start;
-}
 
-function lastNewMoonBefore(date){
-  let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(new Date(date.getTime()-40*24*3600*1000)));
-  let last = null;
-  while(q.time.date.getTime() < date.getTime()){
-    if(q.quarter===0) last = q.time.date;
-    q = Astronomy.NextMoonQuarter(q);
+  function planetLon(body, date) {
+    const vec = Astronomy.GeoVector(body, date, true);
+    return ((Astronomy.Ecliptic(vec).elon % 360) + 360) % 360;
   }
-  return last;
-}
 
-function phaseDurum(date){
-  return Astronomy.MoonPhase(date) < 180 ? "büyüyor" : "küçülüyor";
-}
+  function angDist(a, b) { let d = Math.abs(a - b) % 360; return d > 180 ? 360 - d : d; }
 
-// --- Kategori kuralları (9 KATEGORİ) ---
-const CATEGORIES = [
-  { slug:"bahcivanlik", title:"Bahçıvanlık & Ekim-Dikim", goodSigns:[3,7,11], avoidVOC:true },
-  { slug:"yeni-baslangiclar", title:"Yeni Başlangıçlar", timeRule:"afterNewMoon7", avoidVOC:true },
-  { slug:"detoks", title:"Detoks & Düzen-Temizlik", phasePref:"küçülüyor", bestSign:5, avoidVOC:false },
-  { slug:"sosyal", title:"Sosyal & İlk Buluşma", goodSigns:[1,4,6], avoidVOC:true },
-  { slug:"seyahat", title:"Seyahat", goodSigns:[8], avoidVOC:true },
-  { slug:"imza-sozlesme", title:"Önemli İmza & Sözleşme", bonusSigns:[1,3,9], avoidVOC:true },
-  { slug:"sac-bakim", title:"Saç Bakımı & Kesim", goodSigns:[1,4,9], avoidVOC:true },
-  { slug:"saglik-tedavi", title:"Sağlık & Tedavi", bonusSigns:[5,9], avoidVOC:true },
-  { slug:"gida-mutfak", title:"Gıda & Mutfak", goodSigns:[3,7,11], avoidVOC:true }
-];
+  function findCrossing(t1, t2, target) {
+    let lo = t1.getTime(),
+      hi = t2.getTime();
+    const loDiff = ((moonLon(new Date(lo)) - target + 180) % 360 + 360) % 360 - 180;
+    for (let i = 0; i < 40; i++) {
+      const mid = (lo + hi) / 2;
+      const diff = ((moonLon(new Date(mid)) - target + 180) % 360 + 360) % 360 - 180;
+      if ((diff < 0) === (loDiff < 0)) lo = mid;
+      else hi = mid;
+    }
+    return new Date((lo + hi) / 2);
+  }
 
-function evaluate(cat, period, voidStart, daysSinceNM){
-  if(cat.timeRule === "afterNewMoon7" && daysSinceNM > 7) return null;
-  if(cat.phasePref && phaseDurum(period.start) !== cat.phasePref) return null;
-  if(cat.goodSigns && !cat.goodSigns.includes(period.sign)) return null;
-  const windowEnd = cat.avoidVOC ? voidStart : period.end;
-  if(windowEnd <= period.start) return null;
-  let label = "Uygun";
-  if(cat.bestSign !== undefined && period.sign === cat.bestSign) label = "En Uygun";
-  if(cat.bonusSigns && cat.bonusSigns.includes(period.sign)) label = "İdeal";
-  return { start: period.start, end: windowEnd, label };
-}
+  function toIstanbul(date) { return new Date(date.getTime() + TZ_OFFSET_MS); }
 
-// ===== GÜNÜN RENGİ =====
-const COLOR_PALETTES = {
-  0: [ // Koç
-    { color:'#C94B3C', name:'Kiremit Kırmızısı', emoji:'🔥', mood:'Cesaret · Hareket', description:'Bugünün tonu Koç enerjisinden ilham alıyor: sıcak, doğrudan ve harekete geçirici. Başlamak, karar vermek ve ertelediğin bir işi ileri taşımak için güçlü bir atmosfer yaratır.', element:'Ateş', planet:'Mars' },
-    { color:'#E06A4F', name:'Mercan Kırmızısı', emoji:'✨', mood:'Canlılık · İfade', description:'Mercan kırmızısı canlılığı ve kendini ortaya koymayı destekleyen bir ton. Bugün net konuşmak, görünür olmak ve enerjini yaratıcı bir işe yönlendirmek iyi gelebilir.' },
-    { color:'#A83A32', name:'Koyu Nar', emoji:'🌶️', mood:'Kararlılık · Güç', description:'Daha derin bir kırmızı olan koyu nar, Koç’un kararlı tarafını öne çıkarır. Bugün sınır koymak, net bir seçim yapmak ve odağını korumak için kullanılabilir.' }
-  ],
-  1: [
-    { color:'#668F5A', name:'Adaçayı Yeşili', emoji:'🌿', mood:'Denge · Sadelik', description:'Adaçayı yeşili Boğa’nın sakin, doğal ve güven veren tarafını taşır. Bugün yavaşlamak, bedensel ihtiyaçlarını fark etmek ve hayatına biraz düzenli konfor katmak için güzel bir ton.', element:'Toprak', planet:'Venüs' },
-    { color:'#8FA66A', name:'Zeytin Yeşili', emoji:'🍃', mood:'Huzur · Dayanıklılık', description:'Zeytin yeşili istikrarı ve doğayla bağlantıyı hatırlatır. Bugün acele etmek yerine sağlam adımlara, üretime ve uzun ömürlü seçimlere odaklanabilirsin.' },
-    { color:'#B6A86A', name:'Yumuşak Haki', emoji:'🌱', mood:'Güven · Topraklanma', description:'Yumuşak haki, Boğa’nın dingin ve gerçekçi doğasına eşlik eder. Günün enerjisini sadeleştirmek ve gereksiz gürültüyü azaltmak için iyi bir seçimdir.' }
-  ],
-  2: [
-    { color:'#E7B83C', name:'Safran Sarısı', emoji:'☀️', mood:'Merak · İletişim', description:'Safran sarısı İkizler’in meraklı ve hareketli zihnini çağrıştırır. Bugün konuşmak, yazmak, öğrenmek ve farklı fikirleri birbirine bağlamak için canlı bir atmosfer sunar.', element:'Hava', planet:'Merkür' },
-    { color:'#F2C85B', name:'Limon Sarısı', emoji:'💡', mood:'Neşe · Fikir', description:'Limon sarısı daha hafif ve oyunbaz bir İkizler tonudur. Yeni bir fikir denemek, kısa bir yolculuk yapmak veya sosyal bağlantıları canlandırmak için kullanılabilir.' },
-    { color:'#D6A72D', name:'Hardal Altını', emoji:'📚', mood:'Odak · Öğrenme', description:'Hardal altını, merakı biraz daha odaklı bir enerjiye taşır. Bugün bilgi toplamak, not almak ve zihnindeki dağınık parçaları bir araya getirmek için güzel bir eşlikçidir.' }
-  ],
-  3: [
-    { color:'#B9C6CF', name:'Ay Gümüşü', emoji:'🌙', mood:'Sezgi · Koruma', description:'Ay gümüşü Yengeç’in sezgisel ve koruyucu tarafını yansıtır. Bugün ev, aile, duygusal güven ve iç sesinle temas etmek için daha yumuşak bir ritim seçebilirsin.', element:'Su', planet:'Ay' },
-    { color:'#D6DDE1', name:'İnci Beyazı', emoji:'🫧', mood:'Sakinlik · Arınma', description:'İnci beyazı duygusal alanı sadeleştiren, sakin bir ton. Bugün zihnini ve yaşam alanını hafifletmek, dinlenmek ve sana iyi gelen insanlara yaklaşmak için uygun.' },
-    { color:'#8EA8B8', name:'Sis Mavisi', emoji:'🌫️', mood:'İçe Dönüş · Sezgi', description:'Sis mavisi, Yengeç’in derin ve sezgisel tarafını öne çıkarır. Dışarıdaki hızdan biraz uzaklaşıp ne hissettiğini anlamak için dingin bir alan yaratır.' }
-  ],
-  4: [
-    { color:'#D7A63A', name:'Bal Altını', emoji:'👑', mood:'Özgüven · Yaratıcılık', description:'Bal altını Aslan’ın sıcak, yaratıcı ve görünür olmayı seven doğasını taşır. Bugün kendini ifade etmek, üretimini paylaşmak ve yaptığın işe biraz ışıltı katmak için ideal.', element:'Ateş', planet:'Güneş' },
-    { color:'#C8872E', name:'Kehribar', emoji:'✨', mood:'Işıltı · Cesaret', description:'Kehribar, Aslan enerjisini daha sofistike bir sıcaklığa taşır. Dikkat çekmekten çok kendi değerini hatırlamak ve özgün tarafını göstermek için güçlüdür.' },
-    { color:'#E3C56B', name:'Şampanya Altını', emoji:'🌟', mood:'Zarafet · İlham', description:'Şampanya altını daha yumuşak bir Aslan tonudur. Bugün yaratıcı fikirleri beslemek, estetik seçimler yapmak ve kendine alan açmak için kullanılabilir.' }
-  ],
-  5: [
-    { color:'#C77A45', name:'Tarçın', emoji:'🧹', mood:'Düzen · Odak', description:'Tarçın tonu Başak’ın pratik, düzenli ve üretken tarafına eşlik eder. Bugün küçük işleri tamamlamak, yaşam alanını toparlamak ve detaylara dikkat etmek için destekleyici bir renk.', element:'Toprak', planet:'Merkür' },
-    { color:'#A88968', name:'Keten Kahvesi', emoji:'📋', mood:'Sadelik · Plan', description:'Keten kahvesi gereksiz karmaşayı azaltan bir Başak tonudur. Bugün yapılacakları sadeleştirmek ve işe yarayan bir düzen kurmak için güzel bir seçim.' },
-    { color:'#D29A68', name:'Şeftali Toprağı', emoji:'🪴', mood:'Bakım · Üretkenlik', description:'Şeftali toprağı, Başak’ın bakım verme enerjisini daha sıcak bir hale getirir. Sağlık, rutinler ve günlük yaşamı iyileştiren küçük dokunuşlar için uygundur.' }
-  ],
-  6: [
-    { color:'#D99AA3', name:'Gül Pudrası', emoji:'🌸', mood:'Uyum · Yakınlık', description:'Gül pudrası Terazi’nin zarif, ilişkisel ve estetik tarafını yansıtır. Bugün ilişkilerde denge kurmak, güzellik yaratmak ve iletişimi yumuşatmak için hoş bir atmosfer sağlar.', element:'Hava', planet:'Venüs' },
-    { color:'#C98598', name:'Eski Gül', emoji:'💗', mood:'Aşk · Zarafet', description:'Eski gül, Terazi’nin romantik ama ölçülü tarafını öne çıkarır. Bugün kırmadan konuşmak, ortak bir noktada buluşmak ve estetikten ilham almak için kullanılabilir.' },
-    { color:'#E3B8B8', name:'Pudra Pembe', emoji:'🕊️', mood:'Huzur · Denge', description:'Pudra pembe daha sakin bir Terazi tonudur. Günün sertliğini azaltmak, ilişkilerde alan açmak ve kendine nazik davranmak için iyi bir eşlikçidir.' }
-  ],
-  7: [
-    { color:'#68446F', name:'Mürdüm', emoji:'🔮', mood:'Derinlik · Dönüşüm', description:'Mürdüm, Akrep’in yoğun ve dönüştürücü doğasını yansıtır. Bugün yüzeyde kalmak yerine bir konunun özüne inmek, sezgilerine güvenmek ve gereksiz yükleri bırakmak için kullanılabilir.', element:'Su', planet:'Plüton' },
-    { color:'#452B52', name:'Gece Moru', emoji:'🌌', mood:'Gizem · İçgörü', description:'Gece moru Akrep enerjisini daha içe dönük bir hale getirir. Araştırma, sezgi, mahremiyet ve derin düşünme gerektiren işlerde güçlü bir atmosfer yaratır.' },
-    { color:'#7E526D', name:'Bordo Mürdüm', emoji:'🪻', mood:'Tutku · Odak', description:'Bordo mürdüm, tutkuyu kontrollü bir yoğunlukla taşır. Bugün önemli bir konuya tam dikkat vermek ve duygusal enerjini bilinçli kullanmak için uygundur.' }
-  ],
-  8: [
-    { color:'#4E8F9D', name:'Petrol Mavisi', emoji:'🌍', mood:'Keşif · Özgürlük', description:'Petrol mavisi Yay’ın keşif duygusunu daha derin ve sofistike bir tona taşır. Bugün yeni bir şey öğrenmek, ufkunu genişletmek ve rutinin dışına çıkmak için ilham vericidir.', element:'Ateş', planet:'Jüpiter' },
-    { color:'#5B9DB7', name:'Ufuk Mavisi', emoji:'🧭', mood:'Macera · Merak', description:'Ufuk mavisi daha ferah bir Yay tonudur. Yeni planlar yapmak, farklı kültürlere veya fikirlere yaklaşmak ve geleceğe iyimser bakmak için kullanılabilir.' },
-    { color:'#D49A58', name:'Kum Altını', emoji:'🏜️', mood:'Yolculuk · İlham', description:'Kum altını, Yay’ın yolculuk ve keşif temasını sıcak bir zemine oturtur. Bugün seyahat, eğitim ve yeni deneyimler için cesaret verici bir eşlikçidir.' }
-  ],
-  9: [
-    { color:'#6E6D70', name:'Grafit Gri', emoji:'🗻', mood:'Disiplin · Kararlılık', description:'Grafit gri Oğlak’ın ciddi, dayanıklı ve hedef odaklı tarafını yansıtır. Bugün plan yapmak, sorumlulukları netleştirmek ve uzun vadeli bir hedefe yaklaşmak için güçlü bir tondur.', element:'Toprak', planet:'Satürn' },
-    { color:'#817A70', name:'Taş Grisi', emoji:'⛰️', mood:'Sabır · Sağlamlık', description:'Taş grisi, Oğlak’ın sakin gücünü temsil eder. Bugün hızlı sonuçtan çok sağlam temel kurmaya, düzenli ilerlemeye ve gereksiz yükleri azaltmaya odaklanabilirsin.' },
-    { color:'#5D6466', name:'Kurşun Gri', emoji:'⌛', mood:'Ciddiyet · Odak', description:'Kurşun gri daha yoğun bir Oğlak tonudur. Özellikle dikkat, sorumluluk ve yapı isteyen işlerde zihinsel bir çerçeve oluşturmak için kullanılabilir.' }
-  ],
-  10: [
-    { color:'#3E86A8', name:'Elektrik Mavisi', emoji:'⚡', mood:'Yenilik · Özgünlük', description:'Elektrik mavisi Kova’nın sıra dışı, bağımsız ve geleceğe dönük tarafını öne çıkarır. Bugün yeni bir yöntem denemek, teknolojiyle ilgilenmek veya alışılmışın dışına çıkmak için canlı bir ton.', element:'Hava', planet:'Uranüs' },
-    { color:'#5C9FC0', name:'Buz Mavisi', emoji:'🧊', mood:'Açıklık · Özgürlük', description:'Buz mavisi daha sakin bir Kova tonudur. Zihni ferahlatmak, farklı bakış açılarını değerlendirmek ve sosyal çevrenle yeni bağlantılar kurmak için kullanılabilir.' },
-    { color:'#426B91', name:'Gece Mavisi', emoji:'🛰️', mood:'Vizyon · Fikir', description:'Gece mavisi Kova’nın vizyoner tarafını destekler. Bugün uzun vadeli fikirler, yaratıcı sistemler ve geleceğe dönük projeler üzerinde düşünmek için uygundur.' }
-  ],
-  11: [
-    { color:'#9B83B5', name:'Lavanta', emoji:'🌊', mood:'Sezgi · Hayal', description:'Lavanta Balık’ın sezgisel, yaratıcı ve hassas tarafını yansıtır. Bugün müzik, sanat, hayal kurma ve duygularınla temas etmek için yumuşak bir atmosfer sağlar.', element:'Su', planet:'Neptün' },
-    { color:'#7E6A9A', name:'Sis Moru', emoji:'🎨', mood:'Yaratıcılık · İçgörü', description:'Sis moru, Balık’ın hayal gücünü daha derin bir tona taşır. Bugün yaratıcı üretim, meditasyon ve zihinsel gürültüden uzaklaşmak için iyi bir seçimdir.' },
-    { color:'#B4A3C7', name:'Orkide Pudrası', emoji:'🪻', mood:'Şefkat · İlham', description:'Orkide pudrası daha hafif bir Balık tonudur. Kendine ve çevrendekilere daha nazik yaklaşmak, ilhamı takip etmek ve duygusal olarak nefes almak için kullanılabilir.' }
-  ]
-};
+  function fmtTarih(d) {
+    const dd = String(d.getUTCDate()).padStart(2, "0");
+    const mm = AY_TR[d.getUTCMonth()];
+    const hh = String(d.getUTCHours()).padStart(2, "0");
+    const mi = String(d.getUTCMinutes()).padStart(2, "0");
+    return `${dd} ${mm}, ${hh}:${mi}`;
+  }
 
-// Her gün aynı rengi göstermemesi için tarih + Ay burcundan deterministik seçim.
-// Böylece sayfa her açılışta gerçek Ay burcunu kullanır; aynı burçta kalınan günlerde
-// renk tonu yine takvim gününe göre değişir.
-function getDayOfYear(date) {
-  const start = new Date(Date.UTC(date.getUTCFullYear(), 0, 0));
-  return Math.floor((date - start) / 86400000);
-}
+  function fmtSaat(d) {
+    return `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')}`;
+  }
 
-function getDailyColorData(signIdx, date) {
-  const palette = COLOR_PALETTES[signIdx] || COLOR_PALETTES[0];
-  const dayIndex = getDayOfYear(date);
-  const variant = palette[dayIndex % palette.length];
-  return {
-    ...variant,
-    sign: `♈ Koç`,
-    signIndex: signIdx,
-    date
+  function findSignWindow(now) {
+    const stepMs = 4 * 3600 * 1000;
+    const curSign = Math.floor(moonLon(now) / 30);
+    let t = now.getTime(),
+      prevT = t,
+      nextCross = null;
+    while (!nextCross) {
+      t += stepMs;
+      const s = Math.floor(moonLon(new Date(t)) / 30);
+      if (s !== curSign) nextCross = findCrossing(new Date(prevT), new Date(t), (s * 30) % 360);
+      prevT = t;
+    }
+    t = now.getTime();
+    prevT = t;
+    let prevCross = null;
+    while (!prevCross) {
+      t -= stepMs;
+      const s = Math.floor(moonLon(new Date(t)) / 30);
+      if (s !== curSign) prevCross = findCrossing(new Date(t), new Date(prevT), (curSign * 30) % 360);
+      prevT = t;
+    }
+    return { start: prevCross, end: nextCross, sign: curSign };
+  }
+
+  const VOC_PLANETS = [Astronomy.Body.Sun, Astronomy.Body.Mercury, Astronomy.Body.Venus, Astronomy.Body.Mars, Astronomy.Body.Jupiter, Astronomy.Body.Saturn];
+  const VOC_ASPECTS = [0, 60, 90, 120, 180];
+
+  function bisectAspect(body, aspectAngle, t1, t2) {
+    function f(t) { return angDist(moonLon(t), planetLon(body, t)) - aspectAngle; }
+    let lo = t1.getTime(),
+      hi = t2.getTime();
+    let loVal = f(new Date(lo));
+    for (let i = 0; i < 30; i++) {
+      const mid = (lo + hi) / 2;
+      const midVal = f(new Date(mid));
+      if ((midVal < 0) === (loVal < 0)) { lo = mid;
+        loVal = midVal; } else hi = mid;
+    }
+    return new Date((lo + hi) / 2);
+  }
+
+  function voidStartOf(period) {
+    const stepMs = 20 * 60 * 1000;
+    const times = [];
+    for (let t = period.start.getTime(); t <= period.end.getTime(); t += stepMs) times.push(new Date(t));
+    const moonVals = times.map(moonLon);
+    let found = [];
+    for (const body of VOC_PLANETS) {
+      const planetVals = times.map(t => planetLon(body, t));
+      let prevDist = angDist(moonVals[0], planetVals[0]);
+      for (let i = 1; i < times.length; i++) {
+        const dist = angDist(moonVals[i], planetVals[i]);
+        for (const asp of VOC_ASPECTS) {
+          const pd = prevDist - asp,
+            cd = dist - asp;
+          if ((pd < 0) !== (cd < 0)) found.push(bisectAspect(body, asp, times[i - 1], times[i]));
+        }
+        prevDist = dist;
+      }
+    }
+    return found.length ? new Date(Math.max(...found.map(d => d.getTime()))) : period.start;
+  }
+
+  function lastNewMoonBefore(date) {
+    let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(new Date(date.getTime() - 40 * 24 * 3600 * 1000)));
+    let last = null;
+    while (q.time.date.getTime() < date.getTime()) {
+      if (q.quarter === 0) last = q.time.date;
+      q = Astronomy.NextMoonQuarter(q);
+    }
+    return last;
+  }
+
+  function phaseDurum(date) {
+    return Astronomy.MoonPhase(date) < 180 ? "büyüyor" : "küçülüyor";
+  }
+
+  // Kategoriler
+  const CATEGORIES = [
+    { slug: "bahcivanlik", title: "Bahçıvanlık & Ekim-Dikim", goodSigns: [3, 7, 11], avoidVOC: true },
+    { slug: "yeni-baslangiclar", title: "Yeni Başlangıçlar", timeRule: "afterNewMoon7", avoidVOC: true },
+    { slug: "detoks", title: "Detoks & Düzen-Temizlik", phasePref: "küçülüyor", bestSign: 5, avoidVOC: false },
+    { slug: "sosyal", title: "Sosyal & İlk Buluşma", goodSigns: [1, 4, 6], avoidVOC: true },
+    { slug: "seyahat", title: "Seyahat", goodSigns: [8], avoidVOC: true },
+    { slug: "imza-sozlesme", title: "Önemli İmza & Sözleşme", bonusSigns: [1, 3, 9], avoidVOC: true },
+    { slug: "sac-bakim", title: "Saç Bakımı & Kesim", goodSigns: [1, 4, 9], avoidVOC: true },
+    { slug: "saglik-tedavi", title: "Sağlık & Tedavi", bonusSigns: [5, 9], avoidVOC: true },
+    { slug: "gida-mutfak", title: "Gıda & Mutfak", goodSigns: [3, 7, 11], avoidVOC: true }
+  ];
+
+  function evaluate(cat, period, voidStart, daysSinceNM) {
+    if (cat.timeRule === "afterNewMoon7" && daysSinceNM > 7) return null;
+    if (cat.phasePref && phaseDurum(period.start) !== cat.phasePref) return null;
+    if (cat.goodSigns && !cat.goodSigns.includes(period.sign)) return null;
+    const windowEnd = cat.avoidVOC ? voidStart : period.end;
+    if (windowEnd <= period.start) return null;
+    let label = "Uygun";
+    if (cat.bestSign !== undefined && period.sign === cat.bestSign) label = "En Uygun";
+    if (cat.bonusSigns && cat.bonusSigns.includes(period.sign)) label = "İdeal";
+    return { start: period.start, end: windowEnd, label };
+  }
+
+  // ===== GÜNÜN RENGİ =====
+  const COLOR_PALETTES = {
+    0: [
+      { color: '#C94B3C', name: 'Kiremit Kırmızısı', emoji: '🔥', mood: 'Cesaret · Hareket', description: 'Bugünün tonu Koç enerjisinden ilham alıyor: sıcak, doğrudan ve harekete geçirici. Başlamak, karar vermek ve ertelediğin bir işi ileri taşımak için güçlü bir atmosfer yaratır.', element: 'Ateş', planet: 'Mars' },
+      { color: '#E06A4F', name: 'Mercan Kırmızısı', emoji: '✨', mood: 'Canlılık · İfade', description: 'Mercan kırmızısı canlılığı ve kendini ortaya koymayı destekleyen bir ton. Bugün net konuşmak, görünür olmak ve enerjini yaratıcı bir işe yönlendirmek iyi gelebilir.', element: 'Ateş', planet: 'Mars' },
+      { color: '#A83A32', name: 'Koyu Nar', emoji: '🌶️', mood: 'Kararlılık · Güç', description: 'Daha derin bir kırmızı olan koyu nar, Koç\'un kararlı tarafını öne çıkarır. Bugün sınır koymak, net bir seçim yapmak ve odağını korumak için kullanılabilir.', element: 'Ateş', planet: 'Mars' }
+    ],
+    1: [
+      { color: '#668F5A', name: 'Adaçayı Yeşili', emoji: '🌿', mood: 'Denge · Sadelik', description: 'Adaçayı yeşili Boğa\'nın sakin, doğal ve güven veren tarafını taşır. Bugün yavaşlamak, bedensel ihtiyaçlarını fark etmek ve hayatına biraz düzenli konfor katmak için güzel bir ton.', element: 'Toprak', planet: 'Venüs' },
+      { color: '#8FA66A', name: 'Zeytin Yeşili', emoji: '🍃', mood: 'Huzur · Dayanıklılık', description: 'Zeytin yeşili istikrarı ve doğayla bağlantıyı hatırlatır. Bugün acele etmek yerine sağlam adımlara, üretime ve uzun ömürlü seçimlere odaklanabilirsin.', element: 'Toprak', planet: 'Venüs' },
+      { color: '#B6A86A', name: 'Yumuşak Haki', emoji: '🌱', mood: 'Güven · Topraklanma', description: 'Yumuşak haki, Boğa\'nın dingin ve gerçekçi doğasına eşlik eder. Günün enerjisini sadeleştirmek ve gereksiz gürültüyü azaltmak için iyi bir seçimdir.', element: 'Toprak', planet: 'Venüs' }
+    ],
+    2: [
+      { color: '#E7B83C', name: 'Safran Sarısı', emoji: '☀️', mood: 'Merak · İletişim', description: 'Safran sarısı İkizler\'in meraklı ve hareketli zihnini çağrıştırır. Bugün konuşmak, yazmak, öğrenmek ve farklı fikirleri birbirine bağlamak için canlı bir atmosfer sunar.', element: 'Hava', planet: 'Merkür' },
+      { color: '#F2C85B', name: 'Limon Sarısı', emoji: '💡', mood: 'Neşe · Fikir', description: 'Limon sarısı daha hafif ve oyunbaz bir İkizler tonudur. Yeni bir fikir denemek, kısa bir yolculuk yapmak veya sosyal bağlantıları canlandırmak için kullanılabilir.', element: 'Hava', planet: 'Merkür' },
+      { color: '#D6A72D', name: 'Hardal Altını', emoji: '📚', mood: 'Odak · Öğrenme', description: 'Hardal altını, merakı biraz daha odaklı bir enerjiye taşır. Bugün bilgi toplamak, not almak ve zihnindeki dağınık parçaları bir araya getirmek için güzel bir eşlikçidir.', element: 'Hava', planet: 'Merkür' }
+    ],
+    3: [
+      { color: '#B9C6CF', name: 'Ay Gümüşü', emoji: '🌙', mood: 'Sezgi · Koruma', description: 'Ay gümüşü Yengeç\'in sezgisel ve koruyucu tarafını yansıtır. Bugün ev, aile, duygusal güven ve iç sesinle temas etmek için daha yumuşak bir ritim seçebilirsin.', element: 'Su', planet: 'Ay' },
+      { color: '#D6DDE1', name: 'İnci Beyazı', emoji: '🫧', mood: 'Sakinlik · Arınma', description: 'İnci beyazı duygusal alanı sadeleştiren, sakin bir ton. Bugün zihnini ve yaşam alanını hafifletmek, dinlenmek ve sana iyi gelen insanlara yaklaşmak için uygun.', element: 'Su', planet: 'Ay' },
+      { color: '#8EA8B8', name: 'Sis Mavisi', emoji: '🌫️', mood: 'İçe Dönüş · Sezgi', description: 'Sis mavisi, Yengeç\'in derin ve sezgisel tarafını öne çıkarır. Dışarıdaki hızdan biraz uzaklaşıp ne hissettiğini anlamak için dingin bir alan yaratır.', element: 'Su', planet: 'Ay' }
+    ],
+    4: [
+      { color: '#D7A63A', name: 'Bal Altını', emoji: '👑', mood: 'Özgüven · Yaratıcılık', description: 'Bal altını Aslan\'ın sıcak, yaratıcı ve görünür olmayı seven doğasını taşır. Bugün kendini ifade etmek, üretimini paylaşmak ve yaptığın işe biraz ışıltı katmak için ideal.', element: 'Ateş', planet: 'Güneş' },
+      { color: '#C8872E', name: 'Kehribar', emoji: '✨', mood: 'Işıltı · Cesaret', description: 'Kehribar, Aslan enerjisini daha sofistike bir sıcaklığa taşır. Dikkat çekmekten çok kendi değerini hatırlamak ve özgün tarafını göstermek için güçlüdür.', element: 'Ateş', planet: 'Güneş' },
+      { color: '#E3C56B', name: 'Şampanya Altını', emoji: '🌟', mood: 'Zarafet · İlham', description: 'Şampanya altını daha yumuşak bir Aslan tonudur. Bugün yaratıcı fikirleri beslemek, estetik seçimler yapmak ve kendine alan açmak için kullanılabilir.', element: 'Ateş', planet: 'Güneş' }
+    ],
+    5: [
+      { color: '#C77A45', name: 'Tarçın', emoji: '🧹', mood: 'Düzen · Odak', description: 'Tarçın tonu Başak\'ın pratik, düzenli ve üretken tarafına eşlik eder. Bugün küçük işleri tamamlamak, yaşam alanını toparlamak ve detaylara dikkat etmek için destekleyici bir renk.', element: 'Toprak', planet: 'Merkür' },
+      { color: '#A88968', name: 'Keten Kahvesi', emoji: '📋', mood: 'Sadelik · Plan', description: 'Keten kahvesi gereksiz karmaşayı azaltan bir Başak tonudur. Bugün yapılacakları sadeleştirmek ve işe yarayan bir düzen kurmak için güzel bir seçim.', element: 'Toprak', planet: 'Merkür' },
+      { color: '#D29A68', name: 'Şeftali Toprağı', emoji: '🪴', mood: 'Bakım · Üretkenlik', description: 'Şeftali toprağı, Başak\'ın bakım verme enerjisini daha sıcak bir hale getirir. Sağlık, rutinler ve günlük yaşamı iyileştiren küçük dokunuşlar için uygundur.', element: 'Toprak', planet: 'Merkür' }
+    ],
+    6: [
+      { color: '#D99AA3', name: 'Gül Pudrası', emoji: '🌸', mood: 'Uyum · Yakınlık', description: 'Gül pudrası Terazi\'nin zarif, ilişkisel ve estetik tarafını yansıtır. Bugün ilişkilerde denge kurmak, güzellik yaratmak ve iletişimi yumuşatmak için hoş bir atmosfer sağlar.', element: 'Hava', planet: 'Venüs' },
+      { color: '#C98598', name: 'Eski Gül', emoji: '💗', mood: 'Aşk · Zarafet', description: 'Eski gül, Terazi\'nin romantik ama ölçülü tarafını öne çıkarır. Bugün kırmadan konuşmak, ortak bir noktada buluşmak ve estetikten ilham almak için kullanılabilir.', element: 'Hava', planet: 'Venüs' },
+      { color: '#E3B8B8', name: 'Pudra Pembe', emoji: '🕊️', mood: 'Huzur · Denge', description: 'Pudra pembe daha sakin bir Terazi tonudur. Günün sertliğini azaltmak, ilişkilerde alan açmak ve kendine nazik davranmak için iyi bir eşlikçidir.', element: 'Hava', planet: 'Venüs' }
+    ],
+    7: [
+      { color: '#68446F', name: 'Mürdüm', emoji: '🔮', mood: 'Derinlik · Dönüşüm', description: 'Mürdüm, Akrep\'in yoğun ve dönüştürücü doğasını yansıtır. Bugün yüzeyde kalmak yerine bir konunun özüne inmek, sezgilerine güvenmek ve gereksiz yükleri bırakmak için kullanılabilir.', element: 'Su', planet: 'Plüton' },
+      { color: '#452B52', name: 'Gece Moru', emoji: '🌌', mood: 'Gizem · İçgörü', description: 'Gece moru Akrep enerjisini daha içe dönük bir hale getirir. Araştırma, sezgi, mahremiyet ve derin düşünme gerektiren işlerde güçlü bir atmosfer yaratır.', element: 'Su', planet: 'Plüton' },
+      { color: '#7E526D', name: 'Bordo Mürdüm', emoji: '🪻', mood: 'Tutku · Odak', description: 'Bordo mürdüm, tutkuyu kontrollü bir yoğunlukla taşır. Bugün önemli bir konuya tam dikkat vermek ve duygusal enerjini bilinçli kullanmak için uygundur.', element: 'Su', planet: 'Plüton' }
+    ],
+    8: [
+      { color: '#4E8F9D', name: 'Petrol Mavisi', emoji: '🌍', mood: 'Keşif · Özgürlük', description: 'Petrol mavisi Yay\'ın keşif duygusunu daha derin ve sofistike bir tona taşır. Bugün yeni bir şey öğrenmek, ufkunu genişletmek ve rutinin dışına çıkmak için ilham vericidir.', element: 'Ateş', planet: 'Jüpiter' },
+      { color: '#5B9DB7', name: 'Ufuk Mavisi', emoji: '🧭', mood: 'Macera · Merak', description: 'Ufuk mavisi daha ferah bir Yay tonudur. Yeni planlar yapmak, farklı kültürlere veya fikirlere yaklaşmak ve geleceğe iyimser bakmak için kullanılabilir.', element: 'Ateş', planet: 'Jüpiter' },
+      { color: '#D49A58', name: 'Kum Altını', emoji: '🏜️', mood: 'Yolculuk · İlham', description: 'Kum altını, Yay\'ın yolculuk ve keşif temasını sıcak bir zemine oturtur. Bugün seyahat, eğitim ve yeni deneyimler için cesaret verici bir eşlikçidir.', element: 'Ateş', planet: 'Jüpiter' }
+    ],
+    9: [
+      { color: '#6E6D70', name: 'Grafit Gri', emoji: '🗻', mood: 'Disiplin · Kararlılık', description: 'Grafit gri Oğlak\'ın ciddi, dayanıklı ve hedef odaklı tarafını yansıtır. Bugün plan yapmak, sorumlulukları netleştirmek ve uzun vadeli bir hedefe yaklaşmak için güçlü bir tondur.', element: 'Toprak', planet: 'Satürn' },
+      { color: '#817A70', name: 'Taş Grisi', emoji: '⛰️', mood: 'Sabır · Sağlamlık', description: 'Taş grisi, Oğlak\'ın sakin gücünü temsil eder. Bugün hızlı sonuçtan çok sağlam temel kurmaya, düzenli ilerlemeye ve gereksiz yükleri azaltmaya odaklanabilirsin.', element: 'Toprak', planet: 'Satürn' },
+      { color: '#5D6466', name: 'Kurşun Gri', emoji: '⌛', mood: 'Ciddiyet · Odak', description: 'Kurşun gri daha yoğun bir Oğlak tonudur. Özellikle dikkat, sorumluluk ve yapı isteyen işlerde zihinsel bir çerçeve oluşturmak için kullanılabilir.', element: 'Toprak', planet: 'Satürn' }
+    ],
+    10: [
+      { color: '#3E86A8', name: 'Elektrik Mavisi', emoji: '⚡', mood: 'Yenilik · Özgünlük', description: 'Elektrik mavisi Kova\'nın sıra dışı, bağımsız ve geleceğe dönük tarafını öne çıkarır. Bugün yeni bir yöntem denemek, teknolojiyle ilgilenmek veya alışılmışın dışına çıkmak için canlı bir ton.', element: 'Hava', planet: 'Uranüs' },
+      { color: '#5C9FC0', name: 'Buz Mavisi', emoji: '🧊', mood: 'Açıklık · Özgürlük', description: 'Buz mavisi daha sakin bir Kova tonudur. Zihni ferahlatmak, farklı bakış açılarını değerlendirmek ve sosyal çevrenle yeni bağlantılar kurmak için kullanılabilir.', element: 'Hava', planet: 'Uranüs' },
+      { color: '#426B91', name: 'Gece Mavisi', emoji: '🛰️', mood: 'Vizyon · Fikir', description: 'Gece mavisi Kova\'nın vizyoner tarafını destekler. Bugün uzun vadeli fikirler, yaratıcı sistemler ve geleceğe dönük projeler üzerinde düşünmek için uygundur.', element: 'Hava', planet: 'Uranüs' }
+    ],
+    11: [
+      { color: '#9B83B5', name: 'Lavanta', emoji: '🌊', mood: 'Sezgi · Hayal', description: 'Lavanta Balık\'ın sezgisel, yaratıcı ve hassas tarafını yansıtır. Bugün müzik, sanat, hayal kurma ve duygularınla temas etmek için yumuşak bir atmosfer sağlar.', element: 'Su', planet: 'Neptün' },
+      { color: '#7E6A9A', name: 'Sis Moru', emoji: '🎨', mood: 'Yaratıcılık · İçgörü', description: 'Sis moru, Balık\'ın hayal gücünü daha derin bir tona taşır. Bugün yaratıcı üretim, meditasyon ve zihinsel gürültüden uzaklaşmak için iyi bir seçimdir.', element: 'Su', planet: 'Neptün' },
+      { color: '#B4A3C7', name: 'Orkide Pudrası', emoji: '🪻', mood: 'Şefkat · İlham', description: 'Orkide pudrası daha hafif bir Balık tonudur. Kendine ve çevrendekilere daha nazik yaklaşmak, ilhamı takip etmek ve duygusal olarak nefes almak için kullanılabilir.', element: 'Su', planet: 'Neptün' }
+    ]
   };
-}
 
-const SIGN_META = [
-  ['♈ Koç','Ateş','Mars'], ['♉ Boğa','Toprak','Venüs'], ['♊ İkizler','Hava','Merkür'],
-  ['♋ Yengeç','Su','Ay'], ['♌ Aslan','Ateş','Güneş'], ['♍ Başak','Toprak','Merkür'],
-  ['♎ Terazi','Hava','Venüs'], ['♏ Akrep','Su','Plüton'], ['♐ Yay','Ateş','Jüpiter'],
-  ['♑ Oğlak','Toprak','Satürn'], ['♒ Kova','Hava','Uranüs'], ['♓ Balık','Su','Neptün']
-];
-
-function updateDailyColor() {
-  const now = new Date();
-  const lon = moonLon(now);
-  const signIdx = Math.floor(lon / 30);
-  const data = getDailyColorData(signIdx, now);
-  const [sign, element, planet] = SIGN_META[signIdx];
-
-  data.sign = sign;
-  data.element = data.element || element;
-  data.planet = data.planet || planet;
-
-  const colorDisplay = document.getElementById('colorDisplay');
-  const colorName = document.getElementById('colorName');
-  const colorSub = document.getElementById('colorSub');
-  const colorHex = document.getElementById('colorHex');
-  const colorMood = document.getElementById('colorMood');
-  const colorDay = document.getElementById('colorDay');
-  const dailyInner = document.querySelector('.daily-color-inner');
-
-  colorDisplay.style.background = data.color;
-  colorName.textContent = `${data.emoji} ${data.name}`;
-  colorSub.textContent = `${data.sign} · ${data.element} · ${data.planet}`;
-  colorHex.textContent = data.color.toUpperCase();
-  colorMood.textContent = data.mood;
-  colorDay.textContent = `Gün ${getDayOfYear(now)}`;
-  dailyInner.style.setProperty('--daily-glow', hexToRgba(data.color, .18));
-  dailyInner.style.setProperty('--daily-soft', hexToRgba(data.color, .10));
-  dailyInner.style.setProperty('--daily-border', hexToRgba(data.color, .38));
-
-  const modalContent = document.getElementById('colorModalContent');
-  document.getElementById('modalColorPreview').style.background = data.color;
-  document.getElementById('modalIcon').textContent = data.emoji;
-  document.getElementById('modalTitle').textContent = `Bugünün Rengi: ${data.name}`;
-  document.getElementById('modalDate').textContent =
-    `${now.getDate()} ${AY_TR[now.getMonth()]} ${now.getFullYear()} · Ay ${SIGNS[signIdx]} burcunda`;
-  document.getElementById('modalDesc').textContent = data.description;
-  document.getElementById('modalSign').textContent = data.sign;
-  document.getElementById('modalElement').textContent = data.element;
-  document.getElementById('modalPlanet').textContent = data.planet;
-  document.getElementById('modalHex').textContent = data.color.toUpperCase();
-  modalContent.style.setProperty('--modal-color', data.color);
-}
-
-function hexToRgba(hex, alpha) {
-  const clean = hex.replace('#','');
-  const n = parseInt(clean, 16);
-  const r = (n >> 16) & 255;
-  const g = (n >> 8) & 255;
-  const b = n & 255;
-  return `rgba(${r},${g},${b},${alpha})`;
-}
-
-// Modal açma/kapama
-document.getElementById('colorInfoBtn').addEventListener('click', function() {
-  document.getElementById('colorModal').classList.add('active');
-  document.body.style.overflow = 'hidden';
-});
-
-document.getElementById('colorModalClose').addEventListener('click', function() {
-  document.getElementById('colorModal').classList.remove('active');
-  document.body.style.overflow = '';
-});
-
-document.getElementById('colorModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    this.classList.remove('active');
-    document.body.style.overflow = '';
+  function getDayOfYear(date) {
+    const start = new Date(Date.UTC(date.getUTCFullYear(), 0, 0));
+    return Math.floor((date - start) / 86400000);
   }
-});
 
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
+  function getDailyColorData(signIdx, date) {
+    const palette = COLOR_PALETTES[signIdx] || COLOR_PALETTES[0];
+    const dayIndex = getDayOfYear(date);
+    const variant = palette[dayIndex % palette.length];
+    return { ...variant, signIndex: signIdx, date };
+  }
+
+  const SIGN_META = [
+    ['♈ Koç', 'Ateş', 'Mars'], ['♉ Boğa', 'Toprak', 'Venüs'], ['♊ İkizler', 'Hava', 'Merkür'],
+    ['♋ Yengeç', 'Su', 'Ay'], ['♌ Aslan', 'Ateş', 'Güneş'], ['♍ Başak', 'Toprak', 'Merkür'],
+    ['♎ Terazi', 'Hava', 'Venüs'], ['♏ Akrep', 'Su', 'Plüton'], ['♐ Yay', 'Ateş', 'Jüpiter'],
+    ['♑ Oğlak', 'Toprak', 'Satürn'], ['♒ Kova', 'Hava', 'Uranüs'], ['♓ Balık', 'Su', 'Neptün']
+  ];
+
+  function hexToRgba(hex, alpha) {
+    const clean = hex.replace('#', '');
+    const n = parseInt(clean, 16);
+    const r = (n >> 16) & 255;
+    const g = (n >> 8) & 255;
+    const b = n & 255;
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+
+  function updateDailyColor() {
+    const now = new Date();
+    const lon = moonLon(now);
+    const signIdx = Math.floor(lon / 30);
+    const data = getDailyColorData(signIdx, now);
+    const [sign, element, planet] = SIGN_META[signIdx];
+
+    data.sign = sign;
+    data.element = element;
+    data.planet = planet;
+
+    document.getElementById('colorDisplay').style.background = data.color;
+    document.getElementById('colorName').textContent = `${data.emoji} ${data.name}`;
+    document.getElementById('colorSub').textContent = `${data.sign} · ${data.element} · ${data.planet}`;
+    document.getElementById('colorHex').textContent = data.color.toUpperCase();
+    document.getElementById('colorMood').textContent = data.mood;
+    document.getElementById('colorDay').textContent = `Gün ${getDayOfYear(now)}`;
+
+    const dailyInner = document.querySelector('.daily-color-inner');
+    dailyInner.style.setProperty('--daily-glow', hexToRgba(data.color, .12));
+    dailyInner.style.setProperty('--daily-soft', hexToRgba(data.color, .08));
+    dailyInner.style.setProperty('--daily-border', hexToRgba(data.color, .30));
+
+    const modalContent = document.getElementById('colorModalContent');
+    document.getElementById('modalColorPreview').style.background = data.color;
+    document.getElementById('modalIcon').textContent = data.emoji;
+    document.getElementById('modalTitle').textContent = `Bugünün Rengi: ${data.name}`;
+    document.getElementById('modalDate').textContent =
+      `${now.getDate()} ${AY_TR[now.getMonth()]} ${now.getFullYear()} · Ay ${SIGNS[signIdx]} burcunda`;
+    document.getElementById('modalDesc').textContent = data.description;
+    document.getElementById('modalSign').textContent = data.sign;
+    document.getElementById('modalElement').textContent = data.element;
+    document.getElementById('modalPlanet').textContent = data.planet;
+    document.getElementById('modalHex').textContent = data.color.toUpperCase();
+    modalContent.style.setProperty('--modal-color', data.color);
+  }
+
+  // Modal kontrol
+  document.getElementById('colorInfoBtn').addEventListener('click', function() {
+    document.getElementById('colorModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+
+  document.getElementById('colorModalClose').addEventListener('click', function() {
     document.getElementById('colorModal').classList.remove('active');
     document.body.style.overflow = '';
-  }
-});
+  });
 
-function render() {
-  const now = new Date();
-
-  const lon = moonLon(now);
-  const signIdx = Math.floor(lon / 30);
-  const degreeInSign = lon - signIdx * 30;
-  const signName = SIGNS[signIdx];
-
-  const phaseAngle = Astronomy.MoonPhase(now);
-  const durum = phaseAngle < 180 ? "büyüyor" : "küçülüyor";
-  const illumPct = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, now).phase_fraction * 100);
-
-  const stepMs = 4 * 60 * 60 * 1000;
-  let t1 = now, sign1 = signIdx, nextTransition = null;
-  for (let t = now.getTime(); t < now.getTime() + 15 * 24 * 60 * 60 * 1000; t += stepMs) {
-    const cur = new Date(t);
-    const s = Math.floor(moonLon(cur) / 30);
-    if (s !== sign1) {
-      const cross = findCrossing(t1, cur, (s * 30) % 360);
-      nextTransition = { time: cross, sign: s };
-      break;
+  document.getElementById('colorModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('active');
+      document.body.style.overflow = '';
     }
-    t1 = cur;
-  }
+  });
 
-  let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
-  while (q.quarter !== 0 && q.quarter !== 2) q = Astronomy.NextMoonQuarter(q);
-  const nextPhaseLabel = q.quarter === 0 ? "Yeniay" : "Dolunay";
-  const nextPhaseTime = toIstanbul(q.time.date);
-
-  const nowIst = toIstanbul(now);
-  document.getElementById("baslik").textContent = `${nowIst.getUTCDate()} ${AY_TR[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} — Ay ${signName} Burcunda`;
-  document.getElementById("alt-yazi").textContent = `Ay şu an ${signName} burcunda, ${durum}. Her gün için burç, faz ve etkileri burada yer alacak.`;
-
-  document.getElementById("stat-next-phase").textContent = nextPhaseLabel;
-
-  let nextFullMoon = null;
-  let q2 = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
-  while (q2.quarter !== 2) q2 = Astronomy.NextMoonQuarter(q2);
-  nextFullMoon = toIstanbul(q2.time.date);
-  document.getElementById("stat-next-fullmoon").textContent = fmtTarih(nextFullMoon);
-
-  let nextNewMoon = null;
-  let q3 = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
-  while (q3.quarter !== 0) q3 = Astronomy.NextMoonQuarter(q3);
-  nextNewMoon = toIstanbul(q3.time.date);
-  document.getElementById("stat-next-newmoon").textContent = fmtTarih(nextNewMoon);
-
-  document.getElementById("card-baslik").textContent =
-    `${nowIst.getUTCDate()} ${AY_TR[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} — ${signName} Burcunda, ${durum}`;
-
-  const period = findSignWindow(now);
-  const voidStart = voidStartOf(period);
-  const daysSinceNM = (period.start - lastNewMoonBefore(period.start)) / (24 * 60 * 60 * 1000);
-  const isVoidNow = now >= voidStart && now < period.end;
-
-  let gridHtml = "";
-  for (const cat of CATEGORIES) {
-    const r = evaluate(cat, period, voidStart, daysSinceNM);
-    let badgeClass = "badge no";
-    let badgeText = "Uygun Değil";
-    let reason = "";
-
-    if (r && now < r.end) {
-      badgeClass = r.label !== "Uygun" ? "badge ideal" : "badge";
-      if (r.label === "En Uygun") badgeClass = "badge en-uygun";
-      badgeText = r.label;
-      reason = `${fmtSaat(toIstanbul(r.end))}'e kadar`;
-    } else if (r && now >= r.end) {
-      badgeText = "Uygun Değil";
-      reason = isVoidNow ? "Ay Boşlukta" : "Süre doldu";
-    } else {
-      reason = isVoidNow ? "Ay Boşlukta" : `Ay ${signName}'da uygun değil`;
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.getElementById('colorModal').classList.remove('active');
+      document.body.style.overflow = '';
     }
+  });
 
-    gridHtml += `<a href="${cat.slug}.html" class="today-cat">
-      <div>
-        <div class="name">${cat.title}</div>
-        <div class="reason">${reason}</div>
-      </div>
-      <span class="${badgeClass}">${badgeText}</span>
-    </a>`;
+  // ===== RENDER ANA SAYFA =====
+  function render() {
+    const now = new Date();
+
+    const lon = moonLon(now);
+    const signIdx = Math.floor(lon / 30);
+    const signName = SIGNS[signIdx];
+
+    const phaseAngle = Astronomy.MoonPhase(now);
+    const durum = phaseAngle < 180 ? "büyüyor" : "küçülüyor";
+
+    const nowIst = toIstanbul(now);
+    document.getElementById("baslik").textContent =
+      `${nowIst.getUTCDate()} ${AY_TR[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} — Ay ${signName} Burcunda`;
+    document.getElementById("alt-yazi").textContent =
+      `Ay şu an ${signName} burcunda, ${durum}. Her gün için burç, faz ve etkileri burada yer alacak.`;
+
+    // Faz bilgisi
+    let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
+    while (q.quarter !== 0 && q.quarter !== 2) q = Astronomy.NextMoonQuarter(q);
+    const nextPhaseLabel = q.quarter === 0 ? "Yeniay" : "Dolunay";
+    document.getElementById("stat-next-phase").textContent = nextPhaseLabel;
+
+    let q2 = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
+    while (q2.quarter !== 2) q2 = Astronomy.NextMoonQuarter(q2);
+    document.getElementById("stat-next-fullmoon").textContent = fmtTarih(toIstanbul(q2.time.date));
+
+    let q3 = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
+    while (q3.quarter !== 0) q3 = Astronomy.NextMoonQuarter(q3);
+    document.getElementById("stat-next-newmoon").textContent = fmtTarih(toIstanbul(q3.time.date));
+
+    document.getElementById("card-baslik").textContent =
+      `${nowIst.getUTCDate()} ${AY_TR[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} — ${signName} Burcunda, ${durum}`;
+
+    const period = findSignWindow(now);
+    const voidStart = voidStartOf(period);
+    const daysSinceNM = (period.start - lastNewMoonBefore(period.start)) / (24 * 60 * 60 * 1000);
+    const isVoidNow = now >= voidStart && now < period.end;
+
+    let gridHtml = "";
+    for (const cat of CATEGORIES) {
+      const r = evaluate(cat, period, voidStart, daysSinceNM);
+      let badgeClass = "badge no";
+      let badgeText = "Uygun Değil";
+      let reason = "";
+
+      if (r && now < r.end) {
+        badgeClass = r.label !== "Uygun" ? "badge ideal" : "badge";
+        if (r.label === "En Uygun") badgeClass = "badge en-uygun";
+        badgeText = r.label;
+        reason = `${fmtSaat(toIstanbul(r.end))}'e kadar`;
+      } else if (r && now >= r.end) {
+        badgeText = "Uygun Değil";
+        reason = isVoidNow ? "Ay Boşlukta" : "Süre doldu";
+      } else {
+        reason = isVoidNow ? "Ay Boşlukta" : `Ay ${signName}'da uygun değil`;
+      }
+
+      gridHtml += `<a href="${cat.slug}.html" class="today-cat">
+        <div>
+          <div class="name">${cat.title}</div>
+          <div class="reason">${reason}</div>
+        </div>
+        <span class="${badgeClass}">${badgeText}</span>
+      </a>`;
+    }
+    document.getElementById("today-cats-grid").innerHTML = gridHtml;
   }
-  document.getElementById("today-cats-grid").innerHTML = gridHtml;
-}
 
-render();
-updateDailyColor();
+  render();
+  updateDailyColor();
 </script>
 </body>
 </html>
