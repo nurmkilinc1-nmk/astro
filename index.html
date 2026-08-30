@@ -250,7 +250,8 @@ function donutSlice(cx, cy, rInner, rOuter, startDeg, endDeg){
   const p3 = polar(cx, cy, rInner, endDeg);
   const p4 = polar(cx, cy, rInner, startDeg);
   const largeArc = (endDeg - startDeg) > 180 ? 1 : 0;
-  return `M ${p1.x} ${p1.y} A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${p2.x} ${p2.y} L ${p3.x} ${p3.y} A ${rInner} ${rInner} 0 ${largeArc} 0 ${p4.x} ${p4.y} Z`;
+  // ✅ DÜZELTİLMİŞ: sweep-flag değerleri değiştirildi
+  return `M ${p1.x} ${p1.y} A ${rOuter} ${rOuter} 0 ${largeArc} 0 ${p2.x} ${p2.y} L ${p3.x} ${p3.y} A ${rInner} ${rInner} 0 ${largeArc} 1 ${p4.x} ${p4.y} Z`;
 }
 function moonLon(date){
   return ((Astronomy.EclipticGeoMoon(date).lon % 360)+360)%360;
@@ -284,6 +285,50 @@ function fmtSaat(d){
 }
 function fmtTarihSaat(d){
   return `${String(d.getUTCDate()).padStart(2,'0')} ${AY_TR_KISA[d.getUTCMonth()]}, ${fmtSaat(d)}`;
+}
+
+// ============================================
+// TUTULMA HESAPLAMA
+// ============================================
+
+function isLunarEclipse(date) {
+  // Ay'ın ekliptik enlemini hesapla
+  const moonLat = Astronomy.EclipticGeoMoon(date).lat;
+  // Tutulma için kritik değer: 1.5 derece
+  return Math.abs(moonLat) < 1.5;
+}
+
+function findNextEclipse(now) {
+  // Önce sıradaki Dolunay'ı bul
+  let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
+  while (q.quarter !== 2) {
+    q = Astronomy.NextMoonQuarter(q);
+  }
+  
+  // Dolunay anını kontrol et
+  let eclipseDate = null;
+  let attempts = 0;
+  const maxAttempts = 24; // 24 ay (2 yıl) kontrol et
+  
+  while (attempts < maxAttempts) {
+    const fullMoonDate = q.time.date;
+    if (isLunarEclipse(fullMoonDate)) {
+      eclipseDate = fullMoonDate;
+      break;
+    }
+    q = Astronomy.NextMoonQuarter(q);
+    while (q.quarter !== 2) {
+      q = Astronomy.NextMoonQuarter(q);
+    }
+    attempts++;
+  }
+  
+  return eclipseDate;
+}
+
+function checkIfEclipse(date) {
+  // Belirtilen tarihin tutulma olup olmadığını kontrol et
+  return isLunarEclipse(date);
 }
 
 function findCrossing(t1, t2, target) {
@@ -518,21 +563,36 @@ function updateHighlights() {
 }
 updateHighlights();
 
-// --- Hero verileri ---
+// --- Hero verileri (GÜNCELLENMİŞ - Tutulma desteği) ---
 const nowIst = toIstanbul(now);
 document.getElementById("eyebrow-date").textContent =
   `${String(nowIst.getUTCDate()).padStart(2,"0")} ${AY_TR_TAM[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} · İstanbul UTC+3`;
 document.getElementById("hero-sign").textContent = signs[activeSignIndex];
 document.getElementById("hero-durum").textContent = durum;
 
+// Sıradaki Faz (Yeniay/Dolunay/Tutulma)
 let phaseQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
 while (phaseQ.quarter !== 0 && phaseQ.quarter !== 2) phaseQ = Astronomy.NextMoonQuarter(phaseQ);
-document.getElementById("stat-next-phase").textContent = phaseQ.quarter === 0 ? "🌑 Yeniay" : "🌕 Dolunay";
 
+let phaseLabel = '';
+if (phaseQ.quarter === 0) {
+  phaseLabel = '🌑 Yeniay';
+} else if (phaseQ.quarter === 2) {
+  const isEclipse = checkIfEclipse(phaseQ.time.date);
+  phaseLabel = isEclipse ? '🌑 Ay Tutulması' : '🌕 Dolunay';
+}
+document.getElementById("stat-next-phase").textContent = phaseLabel;
+
+// Sıradaki Dolunay veya Tutulma
 let fullQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
 while (fullQ.quarter !== 2) fullQ = Astronomy.NextMoonQuarter(fullQ);
-document.getElementById("stat-next-fullmoon").textContent = fmtTarihSaat(toIstanbul(fullQ.time.date));
 
+const fullMoonDate = fullQ.time.date;
+const isEclipseFull = checkIfEclipse(fullMoonDate);
+const fullMoonLabel = isEclipseFull ? '🌑 Ay Tutulması' : fmtTarihSaat(toIstanbul(fullMoonDate));
+document.getElementById("stat-next-fullmoon").textContent = fullMoonLabel;
+
+// Sıradaki Yeniay
 let newQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
 while (newQ.quarter !== 0) newQ = Astronomy.NextMoonQuarter(newQ);
 document.getElementById("stat-next-newmoon").textContent = fmtTarihSaat(toIstanbul(newQ.time.date));
