@@ -311,15 +311,33 @@ function checkIfEclipse(date) {
 // ============================================
 
 function findCrossing(t1, t2, target) {
-  let lo = t1.getTime(), hi = t2.getTime();
-  const loDiff = ((moonLon(new Date(lo)) - target + 180) % 360 + 360) % 360 - 180;
-  for (let i = 0; i < 40; i++) {
-    const mid = (lo + hi) / 2;
-    const diff = ((moonLon(new Date(mid)) - target + 180) % 360 + 360) % 360 - 180;
-    if ((diff < 0) === (loDiff < 0)) lo = mid;
-    else hi = mid;
+  const lo = t1.getTime(), hi = t2.getTime();
+  const targetNorm = ((target % 360) + 360) % 360;
+  
+  function getDiff(t) {
+    return ((moonLon(new Date(t)) - targetNorm + 180) % 360 + 360) % 360 - 180;
   }
-  return new Date((lo + hi) / 2);
+  
+  const loDiff = getDiff(lo);
+  const hiDiff = getDiff(hi);
+  
+  // Geçiş kontrolü
+  if (loDiff * hiDiff >= 0) {
+    // Geçiş yok, orta noktayı döndür (hata yerine)
+    return new Date((lo + hi) / 2);
+  }
+  
+  let loTime = lo, hiTime = hi;
+  for (let i = 0; i < 40; i++) {
+    const mid = (loTime + hiTime) / 2;
+    const diff = getDiff(mid);
+    if (diff * loDiff < 0) {
+      hiTime = mid;
+    } else {
+      loTime = mid;
+    }
+  }
+  return new Date((loTime + hiTime) / 2);
 }
 
 function findSignWindow(now) {
@@ -411,9 +429,11 @@ function findVoc(now) {
     }
   }
   
-  const voidStart = found.length 
-    ? new Date(Math.max(...found.map(d => d.getTime()))) 
-    : win.start;
+  // Aspect'leri sırala
+      found.sort((a, b) => a.getTime() - b.getTime());
+      const voidStart = found.length 
+        ? found[found.length - 1] // En son aspect
+        : win.start;
     
   return { voidStart, voidEnd: win.end, nextSign: win.sign };
 }
