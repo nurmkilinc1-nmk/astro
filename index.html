@@ -447,14 +447,6 @@ function findVoc(now) {
             found.push(crossTime);
           }
         }
-        // Yaklaşma durumu (tolerans içinde ama geçiş yoksa)
-        else if (prevDiff < ORB || curDiff < ORB) {
-          // En yakın noktayı bul
-          const midTime = new Date((times[i-1].getTime() + times[i].getTime()) / 2);
-          if (midTime >= win.start && midTime <= win.end) {
-            found.push(midTime);
-          }
-        }
       }
       prevDist = dist;
     }
