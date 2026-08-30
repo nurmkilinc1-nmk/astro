@@ -80,7 +80,7 @@
       </div>
       <div class="data-item">
         <div class="num" id="stat-next-fullmoon">—</div>
-        <div class="label">Sıradaki Dolunay</div>
+        <div class="label">Sıradaki Tutulma</div>
       </div>
       <div class="data-item">
         <div class="num" id="stat-next-newmoon">—</div>
@@ -327,20 +327,35 @@ function findNextEclipse(now) {
 }
 
 function checkIfEclipse(date) {
-  // Belirtilen tarihin tutulma olup olmadığını kontrol et
+  // Önce Dolunay mı kontrol et
+  const phase = Astronomy.MoonPhase(date);
+  const isFullMoon = Math.abs(phase - 180) < 5; // 5 derece tolerans
+  
+  if (!isFullMoon) return false;
   return isLunarEclipse(date);
 }
 
 function findCrossing(t1, t2, target) {
-  let lo = t1.getTime(), hi = t2.getTime();
+  const lo = t1.getTime(), hi = t2.getTime();
   const loDiff = ((moonLon(new Date(lo)) - target + 180) % 360 + 360) % 360 - 180;
-  for (let i = 0; i < 40; i++) {
-    const mid = (lo + hi) / 2;
-    const diff = ((moonLon(new Date(mid)) - target + 180) % 360 + 360) % 360 - 180;
-    if ((diff < 0) === (loDiff < 0)) lo = mid;
-    else hi = mid;
+  const hiDiff = ((moonLon(new Date(hi)) - target + 180) % 360 + 360) % 360 - 180;
+  
+  // Geçiş yoksa hata fırlat
+  if (loDiff * hiDiff >= 0) {
+    throw new Error("No crossing between times");
   }
-  return new Date((lo + hi) / 2);
+  
+  let loTime = lo, hiTime = hi;
+  for (let i = 0; i < 40; i++) {
+    const mid = (loTime + hiTime) / 2;
+    const diff = ((moonLon(new Date(mid)) - target + 180) % 360 + 360) % 360 - 180;
+    if (diff * loDiff < 0) {
+      hiTime = mid;
+    } else {
+      loTime = mid;
+    }
+  }
+  return new Date((loTime + hiTime) / 2);
 }
 
 function findSignWindow(now) {
@@ -380,7 +395,7 @@ const VOC_PLANETS = [
   Astronomy.Body.Jupiter,
   Astronomy.Body.Saturn
 ];
-const VOC_ASPECTS = [0, 60, 90, 120, 180];
+const ORB = 5; // 5 derece tolerans
 
 function bisectAspect(body, aspectAngle, t1, t2) {
   function f(t) {
@@ -422,8 +437,9 @@ function findVoc(now) {
       for (const asp of VOC_ASPECTS) {
         const prevDiff = prevDist - asp;
         const curDiff = dist - asp;
-        if ((prevDiff < 0) !== (curDiff < 0)) {
-          found.push(bisectAspect(body, asp, times[i - 1], times[i]));
+        if (Math.abs(prevDiff) < ORB || Math.abs(curDiff) < ORB) {
+        // Aspect yakınında
+        found.push(bisectAspect(body, asp, times[i - 1], times[i]));
         }
       }
       prevDist = dist;
@@ -576,10 +592,11 @@ while (phaseQ.quarter !== 0 && phaseQ.quarter !== 2) phaseQ = Astronomy.NextMoon
 
 let phaseLabel = '';
 if (phaseQ.quarter === 0) {
-  phaseLabel = '🌑 Yeniay';
+  const isEclipse = checkIfEclipse(phaseQ.time.date);
+  phaseLabel = isEclipse ? '🌑 Güneş Tutulması' : '🌑 Yeniay';
 } else if (phaseQ.quarter === 2) {
   const isEclipse = checkIfEclipse(phaseQ.time.date);
-  phaseLabel = isEclipse ? '🌑 Ay Tutulması' : '🌕 Dolunay';
+  phaseLabel = isEclipse ? '🌕 Ay Tutulması' : '🌕 Dolunay';
 }
 document.getElementById("stat-next-phase").textContent = phaseLabel;
 
@@ -596,6 +613,31 @@ document.getElementById("stat-next-fullmoon").textContent = fullMoonLabel;
 let newQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
 while (newQ.quarter !== 0) newQ = Astronomy.NextMoonQuarter(newQ);
 document.getElementById("stat-next-newmoon").textContent = fmtTarihSaat(toIstanbul(newQ.time.date));
+
+  // Sıradaki Tutulma (Ay Tutulması)
+function findNextLunarEclipse(now) {
+  let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
+  let attempts = 0;
+  const maxAttempts = 48; // 4 yıl kontrol et
+  
+  while (attempts < maxAttempts) {
+    // Önce Dolunay'ı bul
+    while (q.quarter !== 2) q = Astronomy.NextMoonQuarter(q);
+    
+    const fullMoonDate = q.time.date;
+    if (checkIfEclipse(fullMoonDate)) {
+      return toIstanbul(fullMoonDate);
+    }
+    q = Astronomy.NextMoonQuarter(q);
+    attempts++;
+  }
+  return null;
+}
+
+const nextEclipse = findNextEclipseDate(now);
+document.getElementById("stat-next-fullmoon").textContent = nextEclipse 
+  ? `🌑 ${fmtTarihSaat(nextEclipse)}` 
+  : '—';
 
 // --- VOC Banner ---
 function updateVocBanner(now) {
