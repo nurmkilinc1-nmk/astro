@@ -421,21 +421,36 @@ function findVoc(now) {
       for (const asp of VOC_ASPECTS) {
         const prevDiff = prevDist - asp;
         const curDiff = dist - asp;
+        // Aspect'e yaklaşıyorsa (ORB içinde)
         if (Math.abs(prevDiff) < ORB || Math.abs(curDiff) < ORB) {
-          found.push(bisectAspect(body, asp, times[i - 1], times[i]));
+          // Geçiş noktasını bul
+          const crossTime = bisectAspect(body, asp, times[i - 1], times[i]);
+          // Sadece mevcut pencerenin içindeki aspect'leri al
+          if (crossTime >= win.start && crossTime <= win.end) {
+            found.push(crossTime);
+          }
         }
       }
       prevDist = dist;
     }
   }
   
-  // Aspect'leri sırala
-      found.sort((a, b) => a.getTime() - b.getTime());
-      const voidStart = found.length 
-        ? found[found.length - 1] // En son aspect
-        : win.start;
-    
-  return { voidStart, voidEnd: win.end, nextSign: win.sign };
+  // Aspect'leri zamana göre sırala
+  found.sort((a, b) => a.getTime() - b.getTime());
+  
+  // Ay Boşluğu: son aspect'ten sonra başlar
+  const voidStart = found.length > 0 
+    ? found[found.length - 1] // En son aspect
+    : win.start;
+  
+  // Eğer voidStart win.start'tan önceyse, win.start'ı kullan
+  const finalVoidStart = voidStart < win.start ? win.start : voidStart;
+  
+  return { 
+    voidStart: finalVoidStart, 
+    voidEnd: win.end, 
+    nextSign: win.sign 
+  };
 }
 
 // ============================================
