@@ -385,9 +385,17 @@ function bisectAspect(body, aspectAngle, t1, t2) {
   function f(t) {
     return angDist(moonLon(t), planetLon(body, t)) - aspectAngle;
   }
+  
   let lo = t1.getTime(), hi = t2.getTime();
   let loVal = f(new Date(lo));
-  for (let i = 0; i < 30; i++) {
+  let hiVal = f(new Date(hi));
+  
+  // Eğer uç noktalar aynı işaretteyse, orta noktayı döndür
+  if (loVal * hiVal >= 0) {
+    return new Date((lo + hi) / 2);
+  }
+  
+  for (let i = 0; i < 40; i++) {
     const mid = (lo + hi) / 2;
     const midVal = f(new Date(mid));
     if ((midVal < 0) === (loVal < 0)) {
@@ -395,6 +403,7 @@ function bisectAspect(body, aspectAngle, t1, t2) {
       loVal = midVal;
     } else {
       hi = mid;
+      hiVal = midVal;
     }
   }
   return new Date((lo + hi) / 2);
