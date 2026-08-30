@@ -33,9 +33,7 @@
       <a href="kayit.html" class="btn-ghost highlight">Kaydol</a>
       <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
         <span class="theme-icon">
-          <!-- GÜNEŞ/AY SVG İKONU -->
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-            <!-- Güneş ikonu (varsayılan) -->
             <circle cx="12" cy="12" r="5"/>
             <line x1="12" y1="1" x2="12" y2="3"/>
             <line x1="12" y1="21" x2="12" y2="23"/>
@@ -187,12 +185,13 @@
   });
 })();
 
-// ===== TEMA DEĞİŞTİRME (SVG ikonlu) =====
+// ============================================
+// TEMA DEĞİŞTİRME
+// ============================================
 (function() {
   const themeToggle = document.getElementById('themeToggle');
   const themeIcon = themeToggle.querySelector('.theme-icon svg');
   
-  // Güneş ve Ay SVG'leri
   const sunSVG = `
     <circle cx="12" cy="12" r="5"/>
     <line x1="12" y1="1" x2="12" y2="3"/>
@@ -227,7 +226,6 @@
   });
 })();
 
-
 // ============================================
 // ASTRONOMİ HESAPLAMALARI
 // ============================================
@@ -241,30 +239,35 @@ const svg = document.getElementById('wheel');
 const cx = 200, cy = 200, rOuter = 175, rDeco = 188, rLabel = 140;
 
 function polar(cx, cy, r, angleDeg){
-  const rad = angleDeg * Math.PI / 180;
-  return { x: cx - r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
+
 function donutSlice(cx, cy, rInner, rOuter, startDeg, endDeg){
   const p1 = polar(cx, cy, rOuter, startDeg);
   const p2 = polar(cx, cy, rOuter, endDeg);
   const p3 = polar(cx, cy, rInner, endDeg);
   const p4 = polar(cx, cy, rInner, startDeg);
   const largeArc = (endDeg - startDeg) > 180 ? 1 : 0;
-  // ✅ DÜZELTİLMİŞ: sweep-flag değerleri değiştirildi
   return `M ${p1.x} ${p1.y} A ${rOuter} ${rOuter} 0 ${largeArc} 0 ${p2.x} ${p2.y} L ${p3.x} ${p3.y} A ${rInner} ${rInner} 0 ${largeArc} 1 ${p4.x} ${p4.y} Z`;
 }
+
 function moonLon(date){
   return ((Astronomy.EclipticGeoMoon(date).lon % 360)+360)%360;
 }
+
 function planetLon(body, date){
   const vec = Astronomy.GeoVector(body, date, true);
   return ((Astronomy.Ecliptic(vec).elon % 360)+360)%360;
 }
+
 function angDist(a,b){
   let d = Math.abs(a-b) % 360;
   return d>180 ? 360-d : d;
 }
+
 function toIstanbul(date){ return new Date(date.getTime() + TZ_OFFSET_MS); }
+
 function lastFullMoon(now){
   let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(new Date(now.getTime() - 40*24*60*60*1000)));
   let lastFull = null;
@@ -274,15 +277,18 @@ function lastFullMoon(now){
   }
   return lastFull;
 }
+
 function fmtDegree(deg){
   let d = Math.floor(deg);
   let m = Math.round((deg - d) * 60);
   if(m === 60){ m = 0; d += 1; }
   return `${d}°${String(m).padStart(2,'0')}′`;
 }
+
 function fmtSaat(d){
   return `${String(d.getUTCHours()).padStart(2,'0')}:${String(d.getUTCMinutes()).padStart(2,'0')}`;
 }
+
 function fmtTarihSaat(d){
   return `${String(d.getUTCDate()).padStart(2,'0')} ${AY_TR_KISA[d.getUTCMonth()]}, ${fmtSaat(d)}`;
 }
@@ -292,70 +298,28 @@ function fmtTarihSaat(d){
 // ============================================
 
 function isLunarEclipse(date) {
-  // Ay'ın ekliptik enlemini hesapla
   const moonLat = Astronomy.EclipticGeoMoon(date).lat;
-  // Tutulma için kritik değer: 1.5 derece
   return Math.abs(moonLat) < 1.5;
 }
 
-function findNextEclipse(now) {
-  // Önce sıradaki Dolunay'ı bul
-  let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
-  while (q.quarter !== 2) {
-    q = Astronomy.NextMoonQuarter(q);
-  }
-  
-  // Dolunay anını kontrol et
-  let eclipseDate = null;
-  let attempts = 0;
-  const maxAttempts = 24; // 24 ay (2 yıl) kontrol et
-  
-  while (attempts < maxAttempts) {
-    const fullMoonDate = q.time.date;
-    if (isLunarEclipse(fullMoonDate)) {
-      eclipseDate = fullMoonDate;
-      break;
-    }
-    q = Astronomy.NextMoonQuarter(q);
-    while (q.quarter !== 2) {
-      q = Astronomy.NextMoonQuarter(q);
-    }
-    attempts++;
-  }
-  
-  return eclipseDate;
-}
-
 function checkIfEclipse(date) {
-  // Önce Dolunay mı kontrol et
-  const phase = Astronomy.MoonPhase(date);
-  const isFullMoon = Math.abs(phase - 180) < 5; // 5 derece tolerans
-  
-  if (!isFullMoon) return false;
   return isLunarEclipse(date);
 }
 
+// ============================================
+// AY BOŞLUĞU (VOC) HESAPLAMA
+// ============================================
+
 function findCrossing(t1, t2, target) {
-  const lo = t1.getTime(), hi = t2.getTime();
+  let lo = t1.getTime(), hi = t2.getTime();
   const loDiff = ((moonLon(new Date(lo)) - target + 180) % 360 + 360) % 360 - 180;
-  const hiDiff = ((moonLon(new Date(hi)) - target + 180) % 360 + 360) % 360 - 180;
-  
-  // Geçiş yoksa hata fırlat
-  if (loDiff * hiDiff >= 0) {
-    throw new Error("No crossing between times");
-  }
-  
-  let loTime = lo, hiTime = hi;
   for (let i = 0; i < 40; i++) {
-    const mid = (loTime + hiTime) / 2;
+    const mid = (lo + hi) / 2;
     const diff = ((moonLon(new Date(mid)) - target + 180) % 360 + 360) % 360 - 180;
-    if (diff * loDiff < 0) {
-      hiTime = mid;
-    } else {
-      loTime = mid;
-    }
+    if ((diff < 0) === (loDiff < 0)) lo = mid;
+    else hi = mid;
   }
-  return new Date((loTime + hiTime) / 2);
+  return new Date((lo + hi) / 2);
 }
 
 function findSignWindow(now) {
@@ -395,7 +359,9 @@ const VOC_PLANETS = [
   Astronomy.Body.Jupiter,
   Astronomy.Body.Saturn
 ];
-const ORB = 5; // 5 derece tolerans
+
+const VOC_ASPECTS = [0, 60, 90, 120, 180];
+const ORB = 5;
 
 function bisectAspect(body, aspectAngle, t1, t2) {
   function f(t) {
@@ -438,8 +404,7 @@ function findVoc(now) {
         const prevDiff = prevDist - asp;
         const curDiff = dist - asp;
         if (Math.abs(prevDiff) < ORB || Math.abs(curDiff) < ORB) {
-        // Aspect yakınında
-        found.push(bisectAspect(body, asp, times[i - 1], times[i]));
+          found.push(bisectAspect(body, asp, times[i - 1], times[i]));
         }
       }
       prevDist = dist;
@@ -453,7 +418,10 @@ function findVoc(now) {
   return { voidStart, voidEnd: win.end, nextSign: win.sign };
 }
 
-// --- Hesaplamalar ---
+// ============================================
+// HESAPLAMALAR
+// ============================================
+
 const now = new Date();
 const lon = moonLon(now);
 const activeSignIndex = Math.floor(lon / 30);
@@ -464,7 +432,10 @@ const durum = phaseAngle < 180 ? "büyüyor" : "küçülüyor";
 const illumPct = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, now).phase_fraction * 100);
 const lastFull = toIstanbul(lastFullMoon(now));
 
-// --- Çember çizimi ---
+// ============================================
+// ÇEMBER ÇİZİMİ
+// ============================================
+
 let html = "";
 html += `<g class="ring-rotator"><circle class="ring-decorative" cx="${cx}" cy="${cy}" r="${rDeco}"/></g>`;
 html += `<path class="sign-arc-active" d="${donutSlice(cx, cy, rOuter-60, rOuter, activeSignIndex*30, activeSignIndex*30+30)}"/>`;
@@ -505,7 +476,10 @@ html += `<text class="center-label" x="${cx}" y="${cy + 42}" text-anchor="middle
 
 svg.innerHTML = html;
 
-// --- Highlights ---
+// ============================================
+// HIGHLIGHTS GÜNCELLE
+// ============================================
+
 function updateHighlights() {
   const now = new Date();
   const lon = moonLon(now);
@@ -579,7 +553,10 @@ function updateHighlights() {
 }
 updateHighlights();
 
-// --- Hero verileri (GÜNCELLENMİŞ - Tutulma desteği) ---
+// ============================================
+// HERO VERİLERİ
+// ============================================
+
 const nowIst = toIstanbul(now);
 document.getElementById("eyebrow-date").textContent =
   `${String(nowIst.getUTCDate()).padStart(2,"0")} ${AY_TR_TAM[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} · İstanbul UTC+3`;
@@ -600,28 +577,13 @@ if (phaseQ.quarter === 0) {
 }
 document.getElementById("stat-next-phase").textContent = phaseLabel;
 
-// Sıradaki Dolunay veya Tutulma
-let fullQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
-while (fullQ.quarter !== 2) fullQ = Astronomy.NextMoonQuarter(fullQ);
-
-const fullMoonDate = fullQ.time.date;
-const isEclipseFull = checkIfEclipse(fullMoonDate);
-const fullMoonLabel = isEclipseFull ? '🌑 Ay Tutulması' : fmtTarihSaat(toIstanbul(fullMoonDate));
-document.getElementById("stat-next-fullmoon").textContent = fullMoonLabel;
-
-// Sıradaki Yeniay
-let newQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
-while (newQ.quarter !== 0) newQ = Astronomy.NextMoonQuarter(newQ);
-document.getElementById("stat-next-newmoon").textContent = fmtTarihSaat(toIstanbul(newQ.time.date));
-
-  // Sıradaki Tutulma (Ay Tutulması)
+// Sıradaki Tutulma (Ay Tutulması)
 function findNextLunarEclipse(now) {
   let q = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
   let attempts = 0;
-  const maxAttempts = 48; // 4 yıl kontrol et
+  const maxAttempts = 48;
   
   while (attempts < maxAttempts) {
-    // Önce Dolunay'ı bul
     while (q.quarter !== 2) q = Astronomy.NextMoonQuarter(q);
     
     const fullMoonDate = q.time.date;
@@ -634,12 +596,20 @@ function findNextLunarEclipse(now) {
   return null;
 }
 
-const nextEclipse = findNextEclipseDate(now);
+const nextEclipse = findNextLunarEclipse(now);
 document.getElementById("stat-next-fullmoon").textContent = nextEclipse 
   ? `🌑 ${fmtTarihSaat(nextEclipse)}` 
   : '—';
 
-// --- VOC Banner ---
+// Sıradaki Yeniay
+let newQ = Astronomy.SearchMoonQuarter(Astronomy.MakeTime(now));
+while (newQ.quarter !== 0) newQ = Astronomy.NextMoonQuarter(newQ);
+document.getElementById("stat-next-newmoon").textContent = fmtTarihSaat(toIstanbul(newQ.time.date));
+
+// ============================================
+// VOC BANNER
+// ============================================
+
 function updateVocBanner(now) {
   const voc = findVoc(now);
   const nextSignIndex = (voc.nextSign + 1) % 12;
