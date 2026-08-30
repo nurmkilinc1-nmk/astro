@@ -402,9 +402,10 @@ function bisectAspect(body, aspectAngle, t1, t2) {
 
 function findVoc(now) {
   const win = findSignWindow(now);
-  const stepMs = 20 * 60 * 1000;
+  const stepMs = 10 * 60 * 1000; // 10 dakika adım
   const times = [];
   
+  // Burç penceresini 10 dakikalık adımlarla tara
   for (let t = win.start.getTime(); t <= win.end.getTime(); t += stepMs) {
     times.push(new Date(t));
   }
@@ -418,16 +419,31 @@ function findVoc(now) {
     
     for (let i = 1; i < times.length; i++) {
       const dist = angDist(moonVals[i], planetVals[i]);
+      
       for (const asp of VOC_ASPECTS) {
-        const prevDiff = prevDist - asp;
-        const curDiff = dist - asp;
-        // Aspect'e yaklaşıyorsa (ORB içinde)
-        if (Math.abs(prevDiff) < ORB || Math.abs(curDiff) < ORB) {
-          // Geçiş noktasını bul
+        // Aspekt farkları
+        const prevDiff = Math.abs(prevDist - asp);
+        const curDiff = Math.abs(dist - asp);
+        
+        // Aspekt geçişi var mı? (fark azalıp artıyorsa veya tam geçiş varsa)
+        const prevDiffSigned = prevDist - asp;
+        const curDiffSigned = dist - asp;
+        
+        // Geçiş noktası: işaret değişimi varsa
+        if ((prevDiffSigned < 0) !== (curDiffSigned < 0)) {
+          // Tam geçiş noktasını bul
           const crossTime = bisectAspect(body, asp, times[i - 1], times[i]);
-          // Sadece mevcut pencerenin içindeki aspect'leri al
+          // Sadece mevcut pencerenin içindeki aspektleri al
           if (crossTime >= win.start && crossTime <= win.end) {
             found.push(crossTime);
+          }
+        }
+        // Yaklaşma durumu (tolerans içinde ama geçiş yoksa)
+        else if (prevDiff < ORB || curDiff < ORB) {
+          // En yakın noktayı bul
+          const midTime = new Date((times[i-1].getTime() + times[i].getTime()) / 2);
+          if (midTime >= win.start && midTime <= win.end) {
+            found.push(midTime);
           }
         }
       }
@@ -435,19 +451,30 @@ function findVoc(now) {
     }
   }
   
-  // Aspect'leri zamana göre sırala
+  // Aspektleri zamana göre sırala ve benzersiz yap
   found.sort((a, b) => a.getTime() - b.getTime());
   
-  // Ay Boşluğu: son aspect'ten sonra başlar
-  const voidStart = found.length > 0 
-    ? found[found.length - 1] // En son aspect
+  // Benzersizleştir (çok yakın olanları birleştir)
+  const uniqueFound = [];
+  for (const f of found) {
+    if (uniqueFound.length === 0 || (f.getTime() - uniqueFound[uniqueFound.length - 1].getTime()) > 60000) {
+      uniqueFound.push(f);
+    }
+  }
+  
+  // Ay Boşluğu: son aspektten sonra başlar
+  const voidStart = uniqueFound.length > 0 
+    ? uniqueFound[uniqueFound.length - 1] // En son aspekt
     : win.start;
   
-  // Eğer voidStart win.start'tan önceyse, win.start'ı kullan
+  // voidStart win.start'tan önceyse, win.start'ı kullan
   const finalVoidStart = voidStart < win.start ? win.start : voidStart;
   
+  // Eğer voidStart win.end'den büyükse, voidStart = win.start
+  const finalVoidStart2 = finalVoidStart > win.end ? win.start : finalVoidStart;
+  
   return { 
-    voidStart: finalVoidStart, 
+    voidStart: finalVoidStart2, 
     voidEnd: win.end, 
     nextSign: win.sign 
   };
