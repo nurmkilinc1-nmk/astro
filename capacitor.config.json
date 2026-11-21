@@ -1,0 +1,8 @@
+{
+  "appId": "com.astrotakvim.app",
+  "appName": "astro.takvim",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
