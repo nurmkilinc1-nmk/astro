@@ -71,6 +71,10 @@ for (const entry of fs.readdirSync(outDir)) {
   `<head><script>if(localStorage.getItem('astro-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>`
 );
 
+if (!html.includes('js/app.js')) {
+    html = html.replace(/<\/body>/i, '  <script src="js/app.js" defer></script>\n</body>');
+  }
+  
   html = html.replace(/href="\/favicon\.ico"/g, 'href="favicon.svg" type="image/svg+xml"');
   fs.writeFileSync(filePath, html, 'utf8');
 }
