@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="alternate icon" href="/favicon.ico">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
@@ -369,6 +370,17 @@ function findSignWindow(now) {
   return { start: prevCross, end: nextCross, sign: curSign };
 }
 
+if (typeof Astronomy === 'undefined') {
+  const vocEl = document.getElementById('voc-text');
+  if (vocEl) vocEl.textContent = 'Astronomi verisi şu an yüklenemedi.';
+} else {
+  try {
+    // Mevcut Astronomy hesaplama kodları buraya gelecek
+  } catch (err) {
+    console.error('Hesaplama hatasi:', err);
+  }
+}
+  
 const VOC_PLANETS = [
   Astronomy.Body.Sun,
   Astronomy.Body.Mercury,
