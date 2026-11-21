@@ -2,7 +2,364 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Profil &amp; Giriş — astro.takvim</title>
+  <script>if(localStorage.getItem('astro-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .auth-shell {
+      max-width: 540px;
+      margin: 28px auto 96px;
+      padding: 0 16px;
+    }
+    .auth-card {
+      background: var(--card-bg, rgba(255, 255, 255, 0.72));
+      border: 1px solid var(--border, rgba(184, 124, 94, 0.22));
+      border-radius: 20px;
+      padding: 24px 20px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+    }
+    .auth-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
+      margin: 0 0 6px;
+    }
+    .auth-sub {
+      color: var(--text-muted, #6f665f);
+      font-size: 0.95rem;
+      margin: 0 0 20px;
+      line-height: 1.5;
+    }
+    .google-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border, rgba(0, 0, 0, 0.14));
+      background: var(--bg, #fbf9f4);
+      color: var(--text, #1c1b1a);
+      font-size: 0.98rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .google-btn:active {
+      transform: scale(0.99);
+    }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0;
+      color: var(--text-muted, #8a7b6d);
+      font-size: 0.85rem;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border, rgba(184, 124, 94, 0.2));
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group input[type="time"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border, rgba(184, 124, 94, 0.28));
+      background: var(--bg, #fbf9f4);
+      color: var(--text, #1c1b1a);
+      font-size: 1rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 480px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text-muted, #6f665f);
+      margin-top: 6px;
+      cursor: pointer;
+    }
+    .primary-btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 12px;
+      background: var(--highlight, #b87c5e);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .secondary-btn {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border, rgba(184, 124, 94, 0.35));
+      background: transparent;
+      color: var(--text, #1c1b1a);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .status-msg {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      background: rgba(184, 124, 94, 0.12);
+      display: none;
+    }
+    .status-msg.visible { display: block; }
+    .profile-summary {
+      display: none;
+    }
+    .profile-summary.visible { display: block; }
+    .profile-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(184, 124, 94, 0.16);
+      color: var(--highlight, #b87c5e);
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+    }
+    .profile-grid {
+      display: grid;
+      gap: 10px;
+      margin: 16px 0 20px;
+      padding: 14px;
+      border-radius: 14px;
+      background: var(--bg, #fbf9f4);
+      border: 1px solid var(--border, rgba(184, 124, 94, 0.18));
+    }
+    .profile-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.93rem;
+      gap: 12px;
+    }
+    .profile-item span:first-child {
+      color: var(--text-muted, #6f665f);
+    }
+    .profile-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <header id="mainHeader">
+    <a href="index.html" class="brand">astro.takvim</a>
+    <button id="hamburgerBtn" class="hamburger" aria-label="Menü" aria-expanded="false">☰</button>
+    <nav id="mainNav">
+      <a href="index.html">Ana Sayfa</a>
+      <a href="gunluk.html">Günlük</a>
+      <a href="aylik-takvim.html">Aylık Takvim</a>
+      <a href="ozel-takvimler.html">Özel Takvimler</a>
+      <a href="astrosozluk.html">Astrosözlük</a>
+      <a href="hakkimda.html">Hakkımda</a>
+    </nav>
+    <div class="header-actions">
+      <button id="themeToggle" class="theme-toggle" aria-label="Tema değiştir">◐</button>
+      <a href="kayit.html" class="cta-btn">Profil</a>
+    </div>
+  </header>
+
+  <main class="auth-shell">
+    <section class="auth-card" id="authFormCard">
+      <h1 class="auth-title">Astro-Profilin</h1>
+      <p class="auth-sub">Doğum bilgilerini kaydet; günlük yorumların ve takvimin sana göre kişiselleştirilsin.</p>
+
+      <button type="button" id="googleSignInBtn" class="google-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5c-.3 1.5-1.1 2.8-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.7z"/>
+          <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1C3.3 21.3 7.4 24 12 24z"/>
+          <path fill="#FBBC05" d="M5.3 14.2c-.2-.7-.4-1.5-.4-2.2s.1-1.5.4-2.2V6.7H1.3C.5 8.3 0 10.1 0 12s.5 3.7 1.3 5.3l4-3.1z"/>
+          <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.3 2.7 1.3 6.7l4 3.1c.9-2.9 3.6-5 6.7-5z"/>
+        </svg>
+        Google ile Devam Et
+      </button>
+
+      <div id="googleStatus" class="status-msg" role="status"></div>
+
+      <div class="auth-divider">veya doğum bilgilerini yerel kaydet</div>
+
+      <form id="profileForm">
+        <div class="form-group">
+          <label for="fullName">Adın veya Takma Adın</label>
+          <input type="text" id="fullName" placeholder="Örn. Zeynep" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="birthDate">Doğum Tarihi</label>
+            <input type="date" id="birthDate" required>
+          </div>
+          <div class="form-group">
+            <label for="birthTime">Doğum Saati</label>
+            <input type="time" id="birthTime">
+            <label class="checkbox-row">
+              <input type="checkbox" id="unknownTime">
+              Saatimi bilmiyorum
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="birthPlace">Doğum Şehri</label>
+          <input type="text" id="birthPlace" placeholder="Örn. İstanbul, Türkiye" required>
+        </div>
+
+        <button type="submit" class="primary-btn">Profilimi Kaydet</button>
+      </form>
+    </section>
+
+    <section class="auth-card profile-summary" id="profileSummaryCard">
+      <div class="profile-badge" id="sunSignBadge">Güneş Burcu</div>
+      <h2 class="auth-title" id="summaryName">Hoş geldin</h2>
+      <p class="auth-sub">Doğum bilgilerin cihazında güvenle saklanıyor.</p>
+
+      <div class="profile-grid">
+        <div class="profile-item"><span>Doğum Tarihi</span><strong id="summaryDate">-</strong></div>
+        <div class="profile-item"><span>Doğum Saati</span><strong id="summaryTime">-</strong></div>
+        <div class="profile-item"><span>Doğum Şehri</span><strong id="summaryPlace">-</strong></div>
+      </div>
+
+      <div class="profile-actions">
+        <button type="button" id="editProfileBtn" class="secondary-btn">Bilgileri Düzenle</button>
+        <button type="button" id="clearProfileBtn" class="secondary-btn">Profili Sıfırla</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    (function () {
+      const STORAGE_KEY = 'astro-profile';
+      const formCard = document.getElementById('authFormCard');
+      const summaryCard = document.getElementById('profileSummaryCard');
+      const form = document.getElementById('profileForm');
+      const unknownTimeEl = document.getElementById('unknownTime');
+      const birthTimeEl = document.getElementById('birthTime');
+      const googleBtn = document.getElementById('googleSignInBtn');
+      const googleStatus = document.getElementById('googleStatus');
+
+      function getSunSign(dateStr) {
+        if (!dateStr) return 'Güneş Burcu';
+        const [, mStr, dStr] = dateStr.split('-');
+        const m = Number(mStr);
+        const d = Number(dStr);
+        const signs = [
+          [1, 19, 'Oğlak ♑'], [2, 18, 'Kova ♒'], [3, 20, 'Balık ♓'],
+          [4, 19, 'Koç ♈'], [5, 20, 'Boğa ♉'], [6, 20, 'İkizler ♊'],
+          [7, 22, 'Yengeç ♋'], [8, 22, 'Aslan ♌'], [9, 22, 'Başak ♍'],
+          [10, 22, 'Terazi ♎'], [11, 21, 'Akrep ♏'], [12, 21, 'Yay ♐'],
+          [12, 31, 'Oğlak ♑']
+        ];
+        for (const [sm, sd, name] of signs) {
+          if (m < sm || (m === sm && d <= sd)) return name;
+        }
+        return 'Oğlak ♑';
+      }
+
+      function renderProfile(profile) {
+        if (!profile) {
+          formCard.style.display = 'block';
+          summaryCard.classList.remove('visible');
+          return;
+        }
+        document.getElementById('sunSignBadge').textContent = 'Güneş Burcu: ' + getSunSign(profile.birthDate);
+        document.getElementById('summaryName').textContent = 'Merhaba, ' + profile.fullName;
+        document.getElementById('summaryDate').textContent = profile.birthDate || '-';
+        document.getElementById('summaryTime').textContent = profile.unknownTime ? 'Bilinmiyor' : (profile.birthTime || '-');
+        document.getElementById('summaryPlace').textContent = profile.birthPlace || '-';
+        formCard.style.display = 'none';
+        summaryCard.classList.add('visible');
+      }
+
+      unknownTimeEl.addEventListener('change', () => {
+        birthTimeEl.disabled = unknownTimeEl.checked;
+        if (unknownTimeEl.checked) birthTimeEl.value = '';
+      });
+
+      googleBtn.addEventListener('click', () => {
+        googleStatus.textContent = 'Google ile giriş özelliği Firebase/OAuth anahtarları bağlandığında aktif olacak. Şimdilik aşağıdaki formdan profilini hemen kaydedebilirsin.';
+        googleStatus.classList.add('visible');
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const profile = {
+          fullName: document.getElementById('fullName').value.trim(),
+          birthDate: document.getElementById('birthDate').value,
+          birthTime: birthTimeEl.value,
+          unknownTime: unknownTimeEl.checked,
+          birthPlace: document.getElementById('birthPlace').value.trim()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+        renderProfile(profile);
+      });
+
+      document.getElementById('editProfileBtn').addEventListener('click', () => {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        if (saved) {
+          document.getElementById('fullName').value = saved.fullName || '';
+          document.getElementById('birthDate').value = saved.birthDate || '';
+          unknownTimeEl.checked = Boolean(saved.unknownTime);
+          birthTimeEl.disabled = unknownTimeEl.checked;
+          birthTimeEl.value = saved.birthTime || '';
+          document.getElementById('birthPlace').value = saved.birthPlace || '';
+        }
+        formCard.style.display = 'block';
+        summaryCard.classList.remove('visible');
+      });
+
+      document.getElementById('clearProfileBtn').addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_KEY);
+        form.reset();
+        birthTimeEl.disabled = false;
+        renderProfile(null);
+      });
+
+      try {
+        renderProfile(JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'));
+      } catch {
+        renderProfile(null);
+      }
+    })();
+  </script>
+</body>
+</html>
   <title>Kaydol — astro.takvim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
