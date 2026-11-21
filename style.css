@@ -963,3 +963,15 @@ footer .mono {
 @media (max-width: 700px){
   .today-cats-grid{ grid-template-columns: 1fr; }
 }
+
+html, body {
+  overflow-x: hidden;
+}
+
+header {
+  padding-top: max(env(safe-area-inset-top), 0px);
+}
+
+footer {
+  padding-bottom: max(env(safe-area-inset-bottom), 16px);
+}
