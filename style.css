@@ -1017,4 +1017,17 @@ footer {
     color: var(--highlight, #b87c5e);
     font-weight: 600;
   }
+  footer,
+header .hamburger,
+header #mainNav,
+header .btn-ghost {
+display: none !important;
+}
+header .header-inner {
+padding: 10px 16px;
+min-height: 52px;
+}
+header .nav-wrapper {
+gap: 0;
+}
 }
