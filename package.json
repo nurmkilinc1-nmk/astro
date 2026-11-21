@@ -1,0 +1,17 @@
+{
+  "name": "astro-takvim",
+  "version": "0.1.0",
+  "private": true,
+  "description": "astro.takvim - Ay Takvimi Mobil Uygulamasi",
+  "scripts": {
+    "build": "node scripts/build-www.mjs",
+    "cap:sync": "npm run build && npx cap sync"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0"
+  }
+}
