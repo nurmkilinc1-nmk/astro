@@ -39,4 +39,35 @@ for (const entry of fs.readdirSync(root)) {
   copyRecursive(path.join(root, entry), path.join(outDir, entry));
 }
 
-console.log('www klasoru basariyla hazirlandi.');
+// astronomy-engine kütüphanesini yerelleştir
+const astroSrc = path.join(root, 'node_modules', 'astronomy-engine', 'astronomy.browser.min.js');
+const vendorDir = path.join(outDir, 'vendor');
+if (fs.existsSync(astroSrc)) {
+  fs.mkdirSync(vendorDir, { recursive: true });
+  fs.copyFileSync(astroSrc, path.join(vendorDir, 'astronomy.browser.min.js'));
+}
+
+// www içindeki HTML dosyalarında CDN ve viewport ayarını güncelle
+for (const entry of fs.readdirSync(outDir)) {
+  if (!entry.endsWith('.html')) continue;
+  const filePath = path.join(outDir, entry);
+  let html = fs.readFileSync(filePath, 'utf8');
+
+  html = html.replace(
+    /https:\/\/cdn\.jsdelivr\.net\/npm\/astronomy-engine[^"']*\/astronomy\.browser\.min\.js/g,
+    'vendor/astronomy.browser.min.js'
+  );
+
+  html = html.replace(
+    /<meta\s+name="viewport"\s+content="([^"]*)"\s*\/?>/i,
+    (match, content) =>
+      content.includes('viewport-fit=cover')
+        ? match
+        : `<meta name="viewport" content="${content}, viewport-fit=cover">`
+  );
+
+  html = html.replace(/href="\/favicon\.ico"/g, 'href="favicon.svg" type="image/svg+xml"');
+  fs.writeFileSync(filePath, html, 'utf8');
+}
+
+console.log('www klasoru ve yerel varliklar basariyla hazirlandi.');
