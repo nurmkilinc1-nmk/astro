@@ -283,6 +283,7 @@
       <div class="form-group">
         <label for="email">E-posta Adresi</label>
         <input type="email" id="email" placeholder="ornek@email.com" disabled>
+        <a href="index.html" class="cta-btn" style="display:inline-block;margin-top:16px;">Ana Sayfaya Dön</a>
       </div>
       <div class="form-group">
         <label for="password">Şifre</label>
@@ -353,6 +354,26 @@
   }
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
+<script>
+  (function () {
+    const root = document.documentElement;
+    const saved = localStorage.getItem('astro-theme');
+    if (saved === 'dark') root.setAttribute('data-theme', 'dark');
 
+    const toggle = document.getElementById('themeToggle');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        if (next === 'dark') {
+          root.setAttribute('data-theme', 'dark');
+        } else {
+          root.removeAttribute('data-theme');
+        }
+        localStorage.setItem('astro-theme', next);
+      });
+    }
+  })();
+</script>
 </body>
 </html>
