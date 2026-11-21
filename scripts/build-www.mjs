@@ -66,6 +66,11 @@ for (const entry of fs.readdirSync(outDir)) {
         : `<meta name="viewport" content="${content}, viewport-fit=cover">`
   );
 
+  html = html.replace(
+  /<head>/i,
+  `<head><script>if(localStorage.getItem('astro-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>`
+);
+
   html = html.replace(/href="\/favicon\.ico"/g, 'href="favicon.svg" type="image/svg+xml"');
   fs.writeFileSync(filePath, html, 'utf8');
 }
