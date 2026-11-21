@@ -1,17 +1,8 @@
 (function () {
-  const NAV_ITEMS = [
-    { href: 'index.html', label: 'Ana Sayfa' },
-    { href: 'gunluk.html', label: 'Günlük' },
-    { href: 'aylik-takvim.html', label: 'Aylık Takvim' },
-    { href: 'ozel-takvimler.html', label: 'Özel Takvimler' },
-    { href: 'astrosozluk.html', label: 'Astrosözlük' },
-    { href: 'hakkimda.html', label: 'Hakkımda' }
-  ];
-
   const BOTTOM_TABS = [
-    { href: 'index.html', label: 'Bugün', icon: '🌙' },
     { href: 'gunluk.html', label: 'Günlük', icon: '✨' },
     { href: 'aylik-takvim.html', label: 'Takvim', icon: '📅' },
+    { href: 'index.html', label: 'Bugün', icon: '🌙', center: true },
     { href: 'ozel-takvimler.html', label: 'Özel', icon: '🌿' },
     { href: 'kayit.html', label: 'Profil', icon: '👤' }
   ];
@@ -71,7 +62,8 @@
     bar.setAttribute('aria-label', 'Alt Menü');
     bar.innerHTML = BOTTOM_TABS.map((t) => {
       const active = currentPage === t.href ? ' active' : '';
-      return `<a href="${t.href}" class="bottom-tab${active}"><span class="tab-icon">${t.icon}</span><span class="tab-label">${t.label}</span></a>`;
+      const center = t.center ? ' bottom-tab-center' : '';
+      return `<a href="${t.href}" class="bottom-tab${active}${center}"><span class="tab-icon">${t.icon}</span><span class="tab-label">${t.label}</span></a>`;
     }).join('');
     document.body.appendChild(bar);
   }
