@@ -1,0 +1,43 @@
+name: Android Test APK Build
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu indir
+        uses: actions/checkout@v4
+
+      - name: Node.js kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Java 21 kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Bagimliliklari kur ve www olustur
+        run: |
+          npm install
+          npm run build
+
+      - name: Capacitor Android projesini olustur ve derle
+        run: |
+          npx cap add android
+          npx cap sync android
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Debug APK dosyasini yukle
+        uses: actions/upload-artifact@v4
+        with:
+          name: astro-takvim-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
