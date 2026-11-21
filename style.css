@@ -458,7 +458,7 @@ nav a.active {
 }
 .voc-banner.not-void .voc-text .voc-time {
   background: rgba(184, 124, 94, 0.06);
-  color: #8a7b6d;
+  color: var(--text-muted);
 }
 .voc-banner.not-void .voc-text .voc-sign { color: var(--highlight); }
 
