@@ -1,6 +1,6 @@
 {
-  "appId": "com.astrotakvim.app",
-  "appName": "astro.takvim",
+  "appId": "com.lunagram.app",
+  "appName": "luna.gram",
   "webDir": "www",
   "server": {
     "androidScheme": "https"
