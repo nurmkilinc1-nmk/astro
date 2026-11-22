@@ -15,6 +15,7 @@ const skipNames = new Set([
   'android',
   'ios',
   'scripts',
+  'plugins',
   'package.json',
   'package-lock.json',
   'capacitor.config.json',

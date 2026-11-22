@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@capacitor/core": "^7.0.0",
-    "astronomy-engine": "^2.1.19"
+    "astronomy-engine": "^2.1.19",
+    "luna-alarm": "file:./plugins/luna-alarm"
   },
   "devDependencies": {
     "@capacitor/android": "^7.0.0",

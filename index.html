@@ -3,20 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anasayfa — astro.takvim</title>
+  <title>Bugün — luna.gram</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="alternate icon" href="/favicon.ico">
   <link rel="manifest" href="manifest.json">
 </head>
-<body>
+<body class="home-page">
 
-<!-- SABİT HEADER -->
 <header id="mainHeader">
   <div class="header-inner">
-    <a href="index.html" class="logo">astro<span>.</span>takvim</a>
+    <a href="index.html" class="logo">luna<span>.</span>gram</a>
 
     <div class="nav-wrapper">
       <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
@@ -51,447 +49,159 @@
   </div>
 </header>
 
-<!-- VOC BANNER -->
-<div class="voc-banner not-void" id="voc-banner">
-  <div class="voc-inner">
-    <div class="voc-icon">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M20 13.2A8.2 8.2 0 1 1 10.8 4a6.4 6.4 0 0 0 9.2 9.2Z" fill="currentColor"/>
-      </svg>
-    </div>
-    <div class="voc-copy">
-      <span class="voc-label" id="voc-label">—</span>
-      <span class="voc-text" id="voc-text">Hesaplanıyor...</span>
-    </div>
-  </div>
-</div>
+<main class="home" id="home">
 
-<!-- HERO -->
-<section class="hero">
-  <div>
-    <div class="eyebrow" id="eyebrow-date">Hesaplanıyor...</div>
-    <h1>Ay şu an <em id="hero-sign">—</em><br>burcunda, <span id="hero-durum">—</span>.</h1>
-
-    <div class="hero-data">
-      <div class="data-item">
-        <div class="num" id="stat-next-phase">—</div>
-        <div class="label">Sıradaki Faz</div>
-      </div>
-      <div class="data-item">
-        <div class="num" id="stat-next-eclipse">—</div>
-        <div class="label">Sıradaki Tutulma</div>
-      </div>
-      <div class="data-item">
-        <div class="num" id="stat-next-newmoon">—</div>
-        <div class="label">Sıradaki Yeniay</div>
-      </div>
+  <!-- CANLI AY -->
+  <section class="home-moon" aria-label="Canlı Ay">
+    <p class="home-date" id="homeDate">&nbsp;</p>
+    <div class="moon-canvas-wrap">
+      <div class="moon-halo" id="moonHalo"></div>
+      <canvas id="liveMoonCanvas" role="img" aria-label="Canlı Ay"></canvas>
     </div>
-
-    <div class="cta-row">
-      <a href="aylik-takvim.html" class="btn btn-ghost-light">
-        <span>Aylık Takvime Bak</span>
-      </a>
-      <a href="gunluk.html" class="btn btn-primary">
-        <span>Bugünün Detayını Gör</span>
-        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
-      </a>
+    <h1 class="home-phase" id="liveMoonPhase">Ay hesaplanıyor…</h1>
+    <div class="moon-chips">
+      <span class="moon-chip" id="moonSignText">—</span>
+      <span class="moon-chip" id="moonIllumText">—</span>
+      <span class="moon-chip" id="moonTrendText">—</span>
     </div>
-  </div>
-
-  <div class="wheel-wrap">
-    <div class="wheel-frame">
-      <svg viewBox="0 0 400 400" id="wheel"></svg>
-    </div>
-  </div>
-</section>
-
-<!-- HIGHLIGHTS -->
-<section class="today-highlights">
-  <div class="highlights-inner">
-    <div class="highlights-header">
-      <div class="highlights-eyebrow">☽ Bugünün Öne Çıkanları</div>
-      <h2 class="highlights-title">Ay <span id="highlight-sign">—</span> burcunda</h2>
-      <p class="highlights-sub" id="highlight-desc">Hesaplanıyor...</p>
-    </div>
-
-    <div class="highlights-grid">
-      <div class="highlight-card">
-        <div class="hc-icon">♃</div>
-        <div class="hc-content">
-          <div class="hc-label">Sonraki Geçiş</div>
-          <div class="hc-value" id="hc-next-sign">—</div>
-          <div class="hc-time" id="hc-next-time">—</div>
-        </div>
-      </div>
-      <div class="highlight-card">
-        <div class="hc-icon">🌓</div>
-        <div class="hc-content">
-          <div class="hc-label">Ay Fazı</div>
-          <div class="hc-value" id="hc-phase">—</div>
-          <div class="hc-time" id="hc-illum">—</div>
-        </div>
-      </div>
-      <div class="highlight-card">
-        <div class="hc-icon">✦</div>
-        <div class="hc-content">
-          <div class="hc-label">Bugün İçin Uygun</div>
-          <div class="hc-value" id="hc-suitable">—</div>
-          <div class="hc-time" id="hc-suitable-detail">—</div>
-        </div>
-      </div>
-      <div class="highlight-card" id="hc-voc">
-        <div class="hc-icon">◎</div>
-        <div class="hc-content">
-          <div class="hc-label">Ay Boşluğu</div>
-          <div class="hc-value" id="hc-voc-status">—</div>
-          <div class="hc-time" id="hc-voc-time">—</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- LUNA.GRAM KEŞFET & ASTROLOGLAR -->
-  <section class="home-discover" aria-label="Keşfet">
-    <a href="astrologlar.html" class="astro-cta-banner">
-      <div>
-<div class="astro-cta-eyebrow">Birebir Danışmanlık</div>
-<h3>Astrologlara Sor</h3>
-<p>Doğum haritanı, ilişki uyumunu veya merak ettiğin dönemleri uzman astrologlara doğrudan sor.</p>
-      </div>
-      <span class="astro-cta-pill">Profilleri Gör →</span>
-</a>
-
-<div class="quick-grid">
-  <a href="gunluk.html" class="quick-card">
-<span class="quick-card-tag">Bugün</span>
-<h4>Günlük Rehber</h4>
-<p>Günün rengi, ilişkiler, odak ve bakım önerileri.</p>
-</a>
-<a href="aylik-takvim.html" class="quick-card">
-<span class="quick-card-tag">45 Gün</span>
-<h4>Gökyüzü Takvimi</h4>
-<p>Yeniay, Dolunay, retro durumu ve burç geçişleri.</p>
-</a>
-  
-<a href="ozel-takvimler.html" class="quick-card">
-<span class="quick-card-tag">Zamanlama</span>
-<h4>Özel Takvimler</h4>
-<p>Bakım, imza, seyahat ve yeni başlangıç günleri.</p>
-</a>
-<a href="astrosozluk.html" class="quick-card">
-<span class="quick-card-tag">Rehber</span>
-<h4>Astro Sözlük</h4>
-<p>Burçlar, evler ve temel astroloji kavramları.</p>
-</a>
-</div>
   </section>
-  <footer>
+
+  <!-- AY BOŞLUĞU -->
+  <section class="voc-card glass" id="vocCard" aria-labelledby="vocTitle">
+    <div class="voc-card-head">
+      <div>
+        <p class="voc-kicker">Ay Boşluğu</p>
+        <h2 class="voc-title" id="vocTitle">
+          <span class="voc-dot" aria-hidden="true"></span>
+          <span id="vocStatusText">Hesaplanıyor…</span>
+        </h2>
+      </div>
+      <button type="button" class="icon-btn voc-info-btn" id="vocInfoBtn" aria-expanded="false" aria-controls="vocExplain" aria-label="Ay boşluğu nedir?">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".9" fill="currentColor" stroke="none"/></svg>
+      </button>
+    </div>
+
+    <div class="voc-explain" id="vocExplain" hidden>
+      <p>Ay, bulunduğu burçta diğer gezegenlerle son majör açısını yaptıktan sonra yeni burca geçene kadar “boşlukta” sayılır. Bu aralık yeni başlangıçlar, imza ve önemli kararlar için uygun görülmez; rutin işler, dinlenme ve yarım kalanları tamamlamak için idealdir.</p>
+    </div>
+
+    <div class="voc-countdown">
+      <span class="voc-countdown-label" id="vocCountdownLabel">—</span>
+      <strong class="voc-countdown-value" id="vocCountdown">—</strong>
+    </div>
+
+    <div class="voc-progress" aria-hidden="true"><span class="voc-progress-fill" id="vocProgress"></span></div>
+
+    <div class="voc-times">
+      <div class="voc-time-block">
+        <span class="voc-time-label">Başlangıç</span>
+        <span class="voc-time-clock" id="vocStartClock">--:--</span>
+        <span class="voc-time-day" id="vocStartDay">—</span>
+        <button type="button" class="alarm-btn" id="alarmStartBtn" data-kind="start">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="7.5"/><path d="M12 9.5V13l2.3 1.6M4.5 5.5l3-2.4M19.5 5.5l-3-2.4"/></svg>
+          <span>Alarm kur</span>
+        </button>
+      </div>
+      <div class="voc-time-sep" aria-hidden="true">
+        <span id="vocDuration">—</span>
+        <svg viewBox="0 0 40 10" aria-hidden="true"><path d="M1 5h36M33 1.5 37 5l-4 3.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="voc-time-block">
+        <span class="voc-time-label">Bitiş</span>
+        <span class="voc-time-clock" id="vocEndClock">--:--</span>
+        <span class="voc-time-day" id="vocEndDay">—</span>
+        <button type="button" class="alarm-btn" id="alarmEndBtn" data-kind="end">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="7.5"/><path d="M12 9.5V13l2.3 1.6M4.5 5.5l3-2.4M19.5 5.5l-3-2.4"/></svg>
+          <span>Alarm kur</span>
+        </button>
+      </div>
+    </div>
+
+    <p class="voc-foot" id="vocFoot">&nbsp;</p>
+
+    <details class="voc-upcoming">
+      <summary>
+        <span>Sonraki boşluklar</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <ul id="vocUpcoming"></ul>
+    </details>
+  </section>
+
+  <!-- GÖKYÜZÜ ÖZETİ -->
+  <section class="home-section" aria-labelledby="skyTitle">
+    <h2 class="home-section-title" id="skyTitle">Gökyüzü özeti</h2>
+    <div class="sky-tiles">
+      <a href="aylik-takvim.html" class="sky-tile glass">
+        <span class="sky-tile-label" id="tilePhaseLabel">Sıradaki faz</span>
+        <span class="sky-tile-value" id="tilePhaseValue">—</span>
+        <span class="sky-tile-sub" id="tilePhaseSub">—</span>
+      </a>
+      <a href="aylik-takvim.html" class="sky-tile glass">
+        <span class="sky-tile-label">Ay'ın sıradaki burcu</span>
+        <span class="sky-tile-value" id="tileSignValue">—</span>
+        <span class="sky-tile-sub" id="tileSignSub">—</span>
+      </a>
+      <a href="aylik-takvim.html" class="sky-tile glass">
+        <span class="sky-tile-label">Sıradaki tutulma</span>
+        <span class="sky-tile-value" id="tileEclipseValue">—</span>
+        <span class="sky-tile-sub" id="tileEclipseSub">—</span>
+      </a>
+      <a href="gunluk.html" class="sky-tile glass">
+        <span class="sky-tile-label">Bugün için uygun</span>
+        <span class="sky-tile-value sky-tile-value--text" id="tileGoodValue">—</span>
+        <span class="sky-tile-sub" id="tileGoodSub">—</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- KEŞFET -->
+  <section class="home-section" aria-label="Keşfet">
+    <a href="astrologlar.html" class="home-cta glass">
+      <span class="home-cta-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.6c0 4.3-3.8 7.6-8.5 7.6-1.2 0-2.3-.2-3.3-.6L4 20l1.2-3.6a7.2 7.2 0 0 1-1.7-4.8C3.5 7.3 7.3 4 12 4s8.5 3.3 8.5 7.6z"/><path d="M12 8.2l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <span class="home-cta-text">
+        <strong>Astrologlara sor</strong>
+        <span>Doğum haritan, ilişkilerin ve önündeki dönem için uzman yorumu al.</span>
+      </span>
+      <svg class="home-cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+    </a>
+    <a href="astrosozluk.html" class="home-link glass">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5h10.5a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10.5"/></svg>
+      <span>Astro Sözlük</span>
+      <svg class="home-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+    </a>
+    <p class="home-credit">Ay görseli: NASA/GSFC Scientific Visualization Studio, LRO verisi.</p>
+  </section>
+</main>
+
+<!-- Alarm seçenekleri -->
+<div class="sheet-backdrop" id="alarmSheet" hidden>
+  <div class="sheet glass" role="dialog" aria-modal="true" aria-labelledby="alarmSheetTitle">
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <p class="sheet-kicker" id="alarmSheetKicker">Ay boşluğu</p>
+    <h3 class="sheet-title" id="alarmSheetTitle">—</h3>
+    <p class="sheet-when" id="alarmSheetWhen">—</p>
+    <p class="sheet-note" id="alarmSheetNote"></p>
+    <div class="sheet-actions">
+      <button type="button" class="sheet-btn sheet-btn--primary" id="alarmSheetAlarm">Saat uygulamasına alarm kur</button>
+      <button type="button" class="sheet-btn" id="alarmSheetCalendar">Takvime alarmlı hatırlatıcı ekle</button>
+      <button type="button" class="sheet-btn sheet-btn--ghost" id="alarmSheetClose">Vazgeç</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<footer>
   <div>© 2026 luna.gram</div>
   <div class="mono">İstanbul</div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
 <script src="js/astro-core.js"></script>
-<script>
-// ============================================
-// HEADER + HAMBURGER
-// ============================================
-(function() {
-  const header = document.getElementById('mainHeader');
-  const hamburger = document.getElementById('hamburgerBtn');
-  const nav = document.getElementById('mainNav');
-
-  window.addEventListener('scroll', function() {
-    header.classList.toggle('scrolled', window.pageYOffset > 12);
-  });
-
-  hamburger.addEventListener('click', function() {
-    this.classList.toggle('active');
-    nav.classList.toggle('open');
-  });
-
-  nav.querySelectorAll('a').forEach(function(link) {
-    link.addEventListener('click', function() {
-      hamburger.classList.remove('active');
-      nav.classList.remove('open');
-    });
-  });
-})();
-
-// ============================================
-// TEMA DEĞİŞTİRME
-// ============================================
-(function() {
-  const themeToggle = document.getElementById('themeToggle');
-  const themeIcon = themeToggle.querySelector('.theme-icon svg');
-  
-  const sunSVG = `
-    <circle cx="12" cy="12" r="5"/>
-    <line x1="12" y1="1" x2="12" y2="3"/>
-    <line x1="12" y1="21" x2="12" y2="23"/>
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-    <line x1="1" y1="12" x2="3" y2="12"/>
-    <line x1="21" y1="12" x2="23" y2="12"/>
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-  `;
-  
-  const moonSVG = `
-    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-  `;
-  
-  const savedTheme = localStorage.getItem('astro-theme');
-  if (savedTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    themeIcon.innerHTML = sunSVG;
-  } else {
-    themeIcon.innerHTML = moonSVG;
-  }
-  
-  themeToggle.addEventListener('click', function() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('astro-theme', newTheme);
-    themeIcon.innerHTML = newTheme === 'dark' ? sunSVG : moonSVG;
-  });
-})();
-
-// ============================================
-// ASTRONOMİ HESAPLAMALARI
-// ============================================
-if (typeof Astronomy === 'undefined' || typeof AstroCore === 'undefined') {
-  const vocEl = document.getElementById('voc-text');
-  if (vocEl) vocEl.textContent = 'Astronomi verisi şu an yüklenemedi.';
-}
-const { SIGNS: signs, SYMBOLS: symbols, AY_TR: AY_TR_TAM, moonLon, toIstanbul, findCrossing, findVoc, nextQuarter, eclipseAt, nextEclipse, phaseEmoji, fmtSaat, fmtTarihSaat } = AstroCore;
-
-const svg = document.getElementById('wheel');
-const cx = 200, cy = 200, rOuter = 175, rDeco = 188, rLabel = 140;
-
-function polar(cx, cy, r, angleDeg){
-  const rad = angleDeg * Math.PI / 180;
-  return { x: cx - r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-}
-
-function donutSlice(cx, cy, rInner, rOuter, startDeg, endDeg){
-  const p1 = polar(cx, cy, rOuter, startDeg);
-  const p2 = polar(cx, cy, rOuter, endDeg);
-  const p3 = polar(cx, cy, rInner, endDeg);
-  const p4 = polar(cx, cy, rInner, startDeg);
-  const largeArc = (endDeg - startDeg) > 180 ? 1 : 0;
-  return `M ${p1.x} ${p1.y} A ${rOuter} ${rOuter} 0 ${largeArc} 0 ${p2.x} ${p2.y} L ${p3.x} ${p3.y} A ${rInner} ${rInner} 0 ${largeArc} 1 ${p4.x} ${p4.y} Z`;
-}
-
-// ============================================
-// HESAPLAMALAR
-// ============================================
-
-const now = new Date();
-const lon = moonLon(now);
-const activeSignIndex = Math.floor(lon / 30);
-const degreeInSign = lon - activeSignIndex * 30;
-const moonAngleDeg = lon;
-const phaseAngle = Astronomy.MoonPhase(now);
-const durum = phaseAngle < 180 ? "büyüyor" : "küçülüyor";
-const illumPct = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, now).phase_fraction * 100);
-
-// ============================================
-// ÇEMBER ÇİZİMİ
-// ============================================
-
-let html = "";
-html += `<g class="ring-rotator"><circle class="ring-decorative" cx="${cx}" cy="${cy}" r="${rDeco}"/></g>`;
-html += `<path class="sign-arc-active" d="${donutSlice(cx, cy, rOuter-60, rOuter, activeSignIndex*30, activeSignIndex*30+30)}"/>`;
-html += `<circle class="ring-outer" cx="${cx}" cy="${cy}" r="${rOuter}"/>`;
-html += `<circle class="ring-inner" cx="${cx}" cy="${cy}" r="${rOuter-60}"/>`;
-
-for(let deg=0; deg<360; deg+=10){
-  const isMajor = deg % 30 === 0;
-  const p1 = polar(cx, cy, rOuter, deg);
-  const p2 = polar(cx, cy, isMajor ? rOuter-18 : rOuter-10, deg);
-  html += `<line class="${isMajor?'tick-major':'tick-minor'}" x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}"/>`;
-}
-
-for(let deg=0; deg<360; deg+=30){
-  const p = polar(cx, cy, rOuter+8, deg);
-  html += `<circle class="cusp-dot major" cx="${p.x}" cy="${p.y}" r="3.5"/>`;
-}
-
-signs.forEach((s, i)=>{
-  const midAngle = i*30 + 15;
-  const p = polar(cx, cy, rLabel, midAngle);
-  const isActive = i === activeSignIndex;
-  html += `<text class="sign-label${isActive?' active':''}" x="${p.x}" y="${p.y}" text-anchor="middle" dominant-baseline="middle">${s.toUpperCase()}</text>`;
-});
-
-const moonPos = polar(cx, cy, rOuter-30, moonAngleDeg);
-html += `<circle class="moon-marker" cx="${moonPos.x}" cy="${moonPos.y}" r="11"/>`;
-html += `<circle cx="${moonPos.x}" cy="${moonPos.y}" r="4" fill="var(--bg)" opacity="0.6"/>`;
-
-const activeSymbol = symbols[activeSignIndex];
-const moonEmoji = phaseEmoji(phaseAngle);
-
-html += `<text class="center-symbol" x="${cx}" y="${cy - 28}" text-anchor="middle" dominant-baseline="central">${activeSymbol}</text>`;
-html += `<text class="center-symbol" x="${cx}" y="${cy + 8}" text-anchor="middle" dominant-baseline="central" style="font-size:24px; fill:var(--text-subtle);">${moonEmoji}</text>`;
-html += `<text class="center-label" x="${cx}" y="${cy + 42}" text-anchor="middle" dominant-baseline="central">${signs[activeSignIndex]}</text>`;
-
-svg.innerHTML = html;
-
-// ============================================
-// HIGHLIGHTS GÜNCELLE
-// ============================================
-
-function updateHighlights() {
-  const now = new Date();
-  const lon = moonLon(now);
-  const signIdx = Math.floor(lon / 30);
-  const signName = signs[signIdx];
-  const phaseAngle = Astronomy.MoonPhase(now);
-  const durum = phaseAngle < 180 ? "Büyüyor" : "Küçülüyor";
-  const illumPct = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, now).phase_fraction * 100);
-
-  document.getElementById('highlight-sign').textContent = signName;
-  document.getElementById('highlight-desc').textContent = 
-    `Ay ${signName} burcunda ve şu an ${durum.toLowerCase()}. Bugünün enerjisini keşfet.`;
-
-  const stepMs = 4 * 60 * 60 * 1000;
-  let t1 = now, sign1 = signIdx, nextTransition = null;
-  for (let t = now.getTime(); t < now.getTime() + 15 * 24 * 60 * 60 * 1000; t += stepMs) {
-    const cur = new Date(t);
-    const s = Math.floor(moonLon(cur) / 30);
-    if (s !== sign1) {
-      const cross = findCrossing(t1, cur, (s * 30) % 360);
-      nextTransition = { time: cross, sign: s };
-      break;
-    }
-    t1 = cur;
-  }
-  if (nextTransition) {
-    const tIst = toIstanbul(nextTransition.time);
-    document.getElementById('hc-next-sign').textContent = signs[nextTransition.sign];
-    document.getElementById('hc-next-time').textContent = fmtTarihSaat(tIst);
-  } else {
-    document.getElementById('hc-next-sign').textContent = '—';
-    document.getElementById('hc-next-time').textContent = '';
-  }
-
-  const phaseEmoji = durum === 'Büyüyor' ? '🌙' : '🌘';
-  document.getElementById('hc-phase').textContent = `${phaseEmoji} ${durum}`;
-  document.getElementById('hc-illum').textContent = `%${illumPct} aydınlanma`;
-
-  const suitableMap = {
-    0: 'Yeni başlangıçlar, kariyer planı',
-    1: 'Finans, değerler, keyif',
-    2: 'İletişim, yazışmalar, seyahat',
-    3: 'Ev, aile, duygusal bağlar',
-    4: 'Yaratıcılık, aşk, eğlence',
-    5: 'Sağlık, düzen, detaylar',
-    6: 'İlişkiler, iş birlikleri',
-    7: 'Dönüşüm, araştırma, derinlik',
-    8: 'Keşif, seyahat, felsefe',
-    9: 'Kariyer, otorite, hedefler',
-    10: 'Yenilik, topluluk, gelecek',
-    11: 'Ruhsallık, sanat, hayaller'
-  };
-  document.getElementById('hc-suitable').textContent = suitableMap[signIdx] || 'Günü gözlemle';
-  document.getElementById('hc-suitable-detail').textContent = `${signName} burcu enerjisi`;
-
-  const voc = findVoc(now);
-  const isVoidNow = now >= voc.voidStart && now < voc.voidEnd;
-  const vocCard = document.getElementById('hc-voc');
-  const vocStatus = document.getElementById('hc-voc-status');
-  const vocTime = document.getElementById('hc-voc-time');
-
-  if (isVoidNow) {
-    vocCard.classList.add('voc-active');
-    vocStatus.textContent = '🔴 Aktif';
-    vocTime.textContent = `${fmtSaat(toIstanbul(voc.voidEnd))}'e kadar`;
-  } else {
-    vocCard.classList.remove('voc-active');
-    vocStatus.textContent = '✅ Değil';
-    vocTime.textContent = `Sıradaki: ${fmtTarihSaat(toIstanbul(voc.voidStart))}`;
-  }
-}
-updateHighlights();
-
-// ============================================
-// HERO VERİLERİ
-// ============================================
-
-const nowIst = toIstanbul(now);
-document.getElementById("eyebrow-date").textContent =
-  `${String(nowIst.getUTCDate()).padStart(2,"0")} ${AY_TR_TAM[nowIst.getUTCMonth()]} ${nowIst.getUTCFullYear()} · İstanbul UTC+3`;
-document.getElementById("hero-sign").textContent = signs[activeSignIndex];
-document.getElementById("hero-durum").textContent = durum;
-
-// Sıradaki Faz (Yeniay/Dolunay — tutulmaya denk geliyorsa belirtilir)
-const nextNewMoon = nextQuarter(now, 0);
-const nextFullMoon = nextQuarter(now, 2);
-const nextIsFull = nextFullMoon < nextNewMoon;
-const nextPhaseDate = nextIsFull ? nextFullMoon : nextNewMoon;
-const phaseEclipse = eclipseAt(nextPhaseDate, nextIsFull ? 2 : 0);
-document.getElementById("stat-next-phase").textContent = phaseEclipse
-  ? `${nextIsFull ? '🌕' : '🌑'} ${phaseEclipse.label}`
-  : (nextIsFull ? '🌕 Dolunay' : '🌑 Yeniay');
-
-// Sıradaki Tutulma (Ay veya Güneş)
-const upcomingEclipse = nextEclipse(now);
-const eclipseEl = document.getElementById("stat-next-eclipse");
-eclipseEl.textContent = `${upcomingEclipse.type === 'lunar' ? '🌕' : '🌑'} ${fmtTarihSaat(toIstanbul(upcomingEclipse.date))}`;
-eclipseEl.title = upcomingEclipse.label;
-
-// Sıradaki Yeniay
-document.getElementById("stat-next-newmoon").textContent = fmtTarihSaat(toIstanbul(nextNewMoon));
-
-// ============================================
-// VOC BANNER
-// ============================================
-
-function updateVocBanner(now) {
-  const voc = findVoc(now);
-  const nextSignIndex = voc.nextSign;
-  const vocStartIst = toIstanbul(voc.voidStart);
-  const vocEndIst = toIstanbul(voc.voidEnd);
-  const isVoidNow = now >= voc.voidStart && now < voc.voidEnd;
-  
-  const banner = document.getElementById('voc-banner');
-  const label = document.getElementById('voc-label');
-  const text = document.getElementById('voc-text');
-  
-  function formatTime(date) { return fmtTarihSaat(date); }
-  
-  if (isVoidNow) {
-    banner.classList.remove('not-void');
-    banner.classList.add('is-void');
-    label.textContent = ' Ay Boşlukta ';
-    text.innerHTML = `
-      <span class="voc-sign">${signs[nextSignIndex]}</span> 
-      burcuna geçene kadar 
-      <span class="voc-time"> ${formatTime(vocEndIst)}</span> 
-      — yeni başlangıçlar için uygun değil.
-    `;
-  } else {
-    banner.classList.remove('is-void');
-    banner.classList.add('not-void');
-    label.textContent = ' Ay Boşlukta Değil ';
-    text.innerHTML = `
-      Sıradaki boşluk: 
-      <span class="voc-time">${formatTime(vocStartIst)}</span> 
-      – 
-      <span class="voc-time">${formatTime(vocEndIst)}</span> 
-      (<span class="voc-sign">${signs[nextSignIndex]}</span>'a geçişte)
-    `;
-  }
-}
-updateVocBanner(now);
-</script>
+<script src="js/home.js" defer></script>
 <script src="js/app.js" defer></script>
-  <script src="js/sky-moon.js" defer></script>
+<script src="js/sky-moon.js" defer></script>
 </body>
 </html>
