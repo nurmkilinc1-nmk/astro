@@ -1,8 +1,8 @@
 {
-  "name": "astro-takvim",
+  "name": "luna-gram",
   "version": "0.1.0",
   "private": true,
-  "description": "astro.takvim - Ay Takvimi Mobil Uygulamasi",
+  "description": "luna.gram - Astroloji Sosyal Agi ve Ay Takvimi",
   "scripts": {
     "build": "node scripts/build-www.mjs",
     "cap:sync": "npm run build && npx cap sync"
