@@ -1092,3 +1092,173 @@ header .brand {
   letter-spacing: 0.4px;
   line-height: 1;
 }
+/* ===== ANA SAYFA RÜTUŞLARI (VOC BANNER + TEMİZ ÖZET + KEŞFET) ===== */
+.voc-banner {
+  margin: 12px auto 6px !important;
+  max-width: 1120px;
+  padding: 0 16px !important;
+  background: transparent !important;
+  border: none !important;
+}
+.voc-banner .voc-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-radius: 16px;
+  background: var(--card-bg, rgba(255, 255, 255, 0.72));
+  border: 1px solid rgba(184, 124, 94, 0.28);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(10px);
+}
+.voc-banner.is-void .voc-inner,
+.voc-banner.void .voc-inner {
+  border-color: rgba(192, 90, 67, 0.48);
+  background: rgba(192, 90, 67, 0.1);
+}
+.voc-banner .voc-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(184, 124, 94, 0.14);
+  color: var(--highlight, #b87c5e);
+}
+.voc-banner .voc-icon svg {
+  width: 18px !important;
+  height: 18px !important;
+  display: block;
+}
+.voc-banner .voc-copy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  min-width: 0;
+}
+.voc-banner .voc-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--highlight, #b87c5e);
+}
+.voc-banner .voc-text {
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--text, #1c1b1a);
+}
+
+/* Tekrarlı başlık ve 2. Ay Boşluğu kartını JS bozmadan gizle */
+.today-highlights .highlights-title,
+.today-highlights #hc-voc {
+  display: none !important;
+}
+.today-highlights .highlights-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width: 820px) {
+  .today-highlights .highlights-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+/* Ana Sayfa Altı: luna.gram Keşfet & Astrolog Alanı */
+.home-discover {
+  max-width: 1120px;
+  margin: 12px auto 40px;
+  padding: 0 20px;
+}
+.astro-cta-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(184, 124, 94, 0.16), rgba(184, 124, 94, 0.05));
+  border: 1px solid rgba(184, 124, 94, 0.32);
+  text-decoration: none;
+  color: var(--text, #1c1b1a);
+  margin-bottom: 18px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.astro-cta-banner:active { transform: scale(0.99); }
+.astro-cta-eyebrow {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--highlight, #b87c5e);
+  margin-bottom: 4px;
+}
+.astro-cta-banner h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.28rem;
+  margin: 0 0 4px;
+}
+.astro-cta-banner p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted, #6f665f);
+  line-height: 1.45;
+}
+.astro-cta-pill {
+  flex-shrink: 0;
+  padding: 11px 16px;
+  border-radius: 999px;
+  background: var(--highlight, #b87c5e);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+@media (max-width: 820px) {
+  .astro-cta-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .quick-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.quick-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--card-bg, rgba(255, 255, 255, 0.76));
+  border: 1px solid var(--border, rgba(184, 124, 94, 0.22));
+  text-decoration: none;
+  color: var(--text, #1c1b1a);
+  transition: transform 0.14s ease, border-color 0.14s ease;
+}
+.quick-card:active { transform: scale(0.97); }
+.quick-card-tag {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--highlight, #b87c5e);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.quick-card h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.04rem;
+  margin: 0;
+}
+.quick-card p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted, #6f665f);
+  line-height: 1.4;
+}
