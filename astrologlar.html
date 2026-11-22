@@ -2,504 +2,121 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Astrologlar — astro.takvim</title>
-  <script>if(localStorage.getItem('astro-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astrologlar — luna.gram</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    .astro-shell {
-      max-width: 960px;
-      margin: 28px auto 100px;
-      padding: 0 18px;
-    }
-    .astro-hero {
-      margin-bottom: 20px;
-    }
-    .astro-hero h1 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.85rem;
-      margin: 0 0 8px;
-    }
-    .astro-hero p {
-      color: var(--text-muted, #6f665f);
-      font-size: 0.95rem;
-      line-height: 1.55;
-      margin: 0;
-    }
-    .filter-bar {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 4px 0 14px;
-      margin-bottom: 12px;
-      scrollbar-width: none;
-    }
-    .filter-bar::-webkit-scrollbar { display: none; }
-    .filter-chip {
-      flex-shrink: 0;
-      min-height: 40px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.28));
-      background: var(--card-bg, rgba(255, 255, 255, 0.65));
-      color: var(--text, #1c1b1a);
-      font-size: 0.86rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-    }
-    .filter-chip.active {
-      background: var(--highlight, #b87c5e);
-      border-color: var(--highlight, #b87c5e);
-      color: #fff;
-      font-weight: 600;
-    }
-    .astro-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-    @media (max-width: 720px) {
-      .astro-grid { grid-template-columns: 1fr; }
-    }
-    .astro-card {
-      background: var(--card-bg, rgba(255, 255, 255, 0.78));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.22));
-      border-radius: 20px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.05);
-    }
-    .astro-card-top {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .astro-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      background: rgba(184, 124, 94, 0.15);
-      border: 1px solid rgba(184, 124, 94, 0.35);
-      color: var(--highlight, #b87c5e);
-    }
-    .astro-name {
-      font-family: 'Fraunces', serif;
-      font-size: 1.15rem;
-      margin: 0 0 3px;
-    }
-    .astro-role {
-      font-size: 0.84rem;
-      color: var(--highlight, #b87c5e);
-      font-weight: 600;
-    }
-    .astro-bio {
-      margin: 0;
-      font-size: 0.91rem;
-      line-height: 1.55;
-      color: var(--text-muted, #6f665f);
-    }
-    .astro-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .astro-tag {
-      font-size: 0.78rem;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: var(--bg, #fbf9f4);
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.22));
-      color: var(--text, #1c1b1a);
-    }
-    .astro-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.82rem;
-      color: var(--text-muted, #6f665f);
-      padding-top: 8px;
-      border-top: 1px solid var(--border, rgba(184, 124, 94, 0.16));
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .astro-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: auto;
-    }
-    .ask-btn {
-      flex: 1;
-      min-height: 44px;
-      border: none;
-      border-radius: 12px;
-      background: var(--highlight, #b87c5e);
-      color: #fff;
-      font-size: 0.94rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .my-questions {
-      margin-top: 32px;
-    }
-    .my-questions h2 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.3rem;
-      margin: 0 0 12px;
-    }
-    .q-list {
-      display: grid;
-      gap: 10px;
-    }
-    .q-item {
-      background: var(--card-bg, rgba(255, 255, 255, 0.72));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.2));
-      border-radius: 14px;
-      padding: 14px 16px;
-      font-size: 0.9rem;
-    }
-    .q-item-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 6px;
-      font-size: 0.82rem;
-      color: var(--highlight, #b87c5e);
-      font-weight: 600;
-    }
-    .q-empty {
-      color: var(--text-muted, #6f665f);
-      font-size: 0.9rem;
-    }
-    .ask-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.52);
-      z-index: 1200;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 16px;
-    }
-    .ask-modal-backdrop.open { display: flex; }
-    @media (min-width: 640px) {
-      .ask-modal-backdrop { align-items: center; }
-    }
-    .ask-modal {
-      width: 100%;
-      max-width: 480px;
-      background: var(--bg, #fbf9f4);
-      color: var(--text, #1c1b1a);
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.28));
-      border-radius: 20px;
-      padding: 22px 20px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-    }
-    .ask-modal-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .ask-modal-head h3 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.25rem;
-      margin: 0;
-    }
-    .modal-close {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.28));
-      background: transparent;
-      color: var(--text, #1c1b1a);
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-    .ask-modal textarea,
-    .ask-modal select {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.3));
-      background: var(--card-bg, rgba(255, 255, 255, 0.8));
-      color: var(--text, #1c1b1a);
-      font-family: inherit;
-      font-size: 0.95rem;
-      margin-bottom: 12px;
-    }
-    .profile-hint {
-      font-size: 0.82rem;
-      color: var(--text-muted, #6f665f);
-      margin: 0 0 12px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: rgba(184, 124, 94, 0.1);
-    }
-    .theme-toggle svg {
-      width: 20px !important;
-      height: 20px !important;
-    }
-  </style>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="manifest" href="manifest.json">
 </head>
-<body>
-  <header id="mainHeader">
-    <div class="header-inner">
-      <a href="index.html" class="logo">astro<span>.</span>takvim</a>
-      <div class="nav-wrapper">
-        <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
-          <span></span><span></span><span></span>
-        </button>
-        <nav id="mainNav">
-          <a href="gunluk.html">Günlük</a>
-          <a href="aylik-takvim.html">Aylık Takvim</a>
-          <a href="ozel-takvimler.html">Özel Takvimler</a>
-          <a href="astrologlar.html">Astrologlar</a>
-          <a href="astrosozluk.html">Astro Sözlük</a>
-          <a href="hakkimda.html">Hakkımda</a>
-        </nav>
-        <a href="kayit.html" class="btn-ghost highlight">Profil</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
-          <span class="theme-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-              <circle cx="12" cy="12" r="5"/>
-              <line x1="12" y1="1" x2="12" y2="3"/>
-              <line x1="12" y1="21" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="3" y2="12"/>
-              <line x1="21" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            </svg>
-          </span>
-        </button>
-      </div>
-    </div>
-  </header>
+<body class="weather-sky-home astro-page">
 
-  <main class="astro-shell">
-    <section class="astro-hero">
-      <h1>Astrologlar</h1>
-      <p>Doğum haritanı, ilişki uyumunu veya önündeki dönemleri uzman astrologlara doğrudan sor ve danışmanlık talebi oluştur.</p>
-    </section>
+<header id="mainHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo">luna<span>.</span>gram</a>
 
-    <div class="filter-bar" id="filterBar" role="tablist" aria-label="Uzmanlık Filtresi">
-      <button type="button" class="filter-chip active" data-cat="all">Tümü</button>
-      <button type="button" class="filter-chip" data-cat="natal">Doğum Haritası</button>
-      <button type="button" class="filter-chip" data-cat="sinastri">İlişki / Sinastri</button>
-      <button type="button" class="filter-chip" data-cat="kariyer">Kariyer &amp; Öngörü</button>
-      <button type="button" class="filter-chip" data-cat="ay">Ay Takvimi</button>
-    </div>
+    <div class="nav-wrapper">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
+        <span></span><span></span><span></span>
+      </button>
 
-    <section class="astro-grid" id="astroGrid"></section>
+      <nav id="mainNav">
+        <a href="gunluk.html">Günlük</a>
+        <a href="aylik-takvim.html">Aylık Takvim</a>
+        <a href="ozel-takvimler.html">Özel Takvimler</a>
+        <a href="astrosozluk.html">Astro Sözlük</a>
+        <a href="hakkimda.html">Hakkımda</a>
+      </nav>
 
-    <section class="my-questions">
-      <h2>Gönderdiğim Sorular</h2>
-      <div class="q-list" id="questionList"></div>
-    </section>
-  </main>
-
-  <div class="ask-modal-backdrop" id="askModal" role="dialog" aria-modal="true" aria-labelledby="askModalTitle">
-    <div class="ask-modal">
-      <div class="ask-modal-head">
-        <h3 id="askModalTitle">Soru Sor</h3>
-        <button type="button" class="modal-close" id="closeAskModal" aria-label="Kapat">×</button>
-      </div>
-      <div class="profile-hint" id="profileHint"></div>
-      <form id="askForm">
-        <select id="askTopic" aria-label="Danışmanlık Konusu">
-          <option value="Yazılı Soru">Tek Soru (Yazılı Yanıt)</option>
-          <option value="Doğum Haritası Yorumu">Doğum Haritası Analizi</option>
-          <option value="İlişki / Sinastri">İlişki &amp; Sinastri Uyumu</option>
-          <option value="Yıllık Öngörü">Yıllık Transit &amp; Öngörü</option>
-        </select>
-        <textarea id="askText" rows="4" placeholder="Merak ettiğin konuyu veya dönemle ilgili sorunu kısaca yaz..." required></textarea>
-        <button type="submit" class="ask-btn" style="width:100%;">Soruyu Kaydet ve Gönder</button>
-      </form>
+      <a href="kayit.html" class="btn-ghost highlight">Kaydol</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
+        <span class="theme-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </span>
+      </button>
     </div>
   </div>
+</header>
 
-  <script src="js/app.js" defer></script>
-  <script>
-    (function () {
-      const ASTROLOGERS = [
-        {
-          id: 'natal-1',
-          icon: '☉',
-          name: 'Astrolog Profili #1',
-          role: 'Klasik & Natal Astrolog',
-          categories: ['natal'],
-          tags: ['Doğum Haritası', 'Yükselen & Evler', 'Transitler'],
-          bio: 'Doğum haritasındaki temel potansiyeller, hayat döngüleri ve güncel gezegen geçişleri üzerine detaylı analizler.',
-          responseTime: 'Genelde 24 saat içinde',
-          format: 'Yazılı Soru · Görüşme'
-        },
-        {
-          id: 'sinastri-2',
-          icon: '♀',
-          name: 'Astrolog Profili #2',
-          role: 'İlişki & Sinastri Uzmanı',
-          categories: ['sinastri', 'natal'],
-          tags: ['İlişki / Sinastri', 'Kompozit Harita', 'Venüs Döngüleri'],
-          bio: 'Partner uyumu, ilişki dinamikleri, bağlanma kalıpları ve ilişkide önemli dönemeçler üzerine odaklanır.',
-          responseTime: 'Genelde 12–24 saat içinde',
-          format: 'Yazılı Soru · Sesli Yanıt'
-        },
-        {
-          id: 'kariyer-3',
-          icon: '♄',
-          name: 'Astrolog Profili #3',
-          role: 'Kariyer & Öngörü Astroloğu',
-          categories: ['kariyer', 'natal'],
-          tags: ['Kariyer & Öngörü', 'Solar Return', 'Seçim Astrolojisi'],
-          bio: 'İş değişikliği, yeni girişimler, önemli imza tarihleri ve yıllık öngörü planlamasında rehberlik sunar.',
-          responseTime: 'Genelde 24–48 saat içinde',
-          format: 'Yazılı Soru · Görüşme'
-        },
-        {
-          id: 'ay-4',
-          icon: '☾',
-          name: 'Astrolog Profili #4',
-          role: 'Ay Takvimi & Ritüel Rehberi',
-          categories: ['ay'],
-          tags: ['Ay Takvimi', 'Yeniay & Dolunay', 'Günlük Planlama'],
-          bio: 'Ay fazları, Ay boşluğu (VOC) saatleri ve kişisel haritana göre aylık niyet/bakım zamanlamaları hazırlar.',
-          responseTime: 'Aynı gün içinde',
-          format: 'Hızlı Soru · Mini Yorum'
-        }
-      ];
+<main class="ast" id="astPage">
 
-      const Q_KEY = 'astro-questions';
-      const grid = document.getElementById('astroGrid');
-      const filterBar = document.getElementById('filterBar');
-      const modal = document.getElementById('askModal');
-      const modalTitle = document.getElementById('askModalTitle');
-      const profileHint = document.getElementById('profileHint');
-      const askForm = document.getElementById('askForm');
-      const askText = document.getElementById('askText');
-      const askTopic = document.getElementById('askTopic');
-      const qList = document.getElementById('questionList');
+  <section class="ast-intro">
+    <h1 class="ast-title">Astrologlara sor</h1>
+    <p class="ast-lead">Ne merak ediyorsun? Konunu seç, sana uygun astroloğu bul.</p>
+  </section>
 
-      let activeCategory = 'all';
-      let selectedAstrologer = null;
+  <div class="ast-topics" id="topicChips" role="radiogroup" aria-label="Konu"></div>
 
-      function renderAstrologers() {
-        const list = activeCategory === 'all'
-          ? ASTROLOGERS
-          : ASTROLOGERS.filter((a) => a.categories.includes(activeCategory));
+  <section class="ast-list" id="astroList" aria-live="polite"></section>
 
-        grid.innerHTML = list.map((a) => `
-          <article class="astro-card">
-            <div class="astro-card-top">
-              <div class="astro-avatar" aria-hidden="true">${a.icon}</div>
-              <div>
-                <h2 class="astro-name">${a.name}</h2>
-                <div class="astro-role">${a.role}</div>
-              </div>
-            </div>
-            <p class="astro-bio">${a.bio}</p>
-            <div class="astro-tags">
-              ${a.tags.map((t) => `<span class="astro-tag">${t}</span>`).join('')}
-            </div>
-            <div class="astro-meta">
-              <span>⏱ ${a.responseTime}</span>
-              <span>${a.format}</span>
-            </div>
-            <div class="astro-actions">
-              <button type="button" class="ask-btn" data-id="${a.id}">Soru Sor / Danışmanlık Al</button>
-            </div>
-          </article>
-        `).join('');
+  <section class="ast-steps glass" aria-labelledby="stepsTitle">
+    <h2 id="stepsTitle" class="ast-h2">Nasıl çalışır?</h2>
+    <ol>
+      <li><span class="step-n">1</span><span><b>Astroloğunu seç</b><small>Konuna göre uzmanlık alanlarını karşılaştır.</small></span></li>
+      <li><span class="step-n">2</span><span><b>Sorunu yaz</b><small>Doğum bilgilerin profilinden otomatik eklenir.</small></span></li>
+      <li><span class="step-n">3</span><span><b>Yanıtını al</b><small>Yanıt geldiğinde uygulamada bildirim alırsın.</small></span></li>
+    </ol>
+  </section>
 
-        grid.querySelectorAll('.ask-btn').forEach((btn) => {
-          btn.addEventListener('click', () => {
-            selectedAstrologer = ASTROLOGERS.find((x) => x.id === btn.dataset.id);
-            openModal();
-          });
-        });
-      }
+  <section class="ast-questions" aria-labelledby="myqTitle">
+    <div class="ast-q-head">
+      <h2 id="myqTitle" class="ast-h2">Sorularım</h2>
+      <span class="ast-q-count" id="qCount"></span>
+    </div>
+    <div class="ast-q-list" id="questionList"></div>
+  </section>
 
-      function openModal() {
-        if (!selectedAstrologer) return;
-        modalTitle.textContent = selectedAstrologer.role + ' — Soru Sor';
-        let profile = null;
-        try { profile = JSON.parse(localStorage.getItem('astro-profile') || 'null'); } catch {}
-        if (profile && profile.birthDate) {
-          profileHint.textContent = `Profilinden otomatik eklenecek: ${profile.fullName || 'Kullanıcı'} · ${profile.birthDate}${profile.birthTime ? ' ' + profile.birthTime : ''} · ${profile.birthPlace || ''}`;
-        } else {
-          profileHint.innerHTML = 'Doğum bilgilerini henüz kaydetmedin. Daha net yorum için <a href="kayit.html" style="color:var(--highlight,#b87c5e);font-weight:600;">Profil</a> sekmesinden ekleyebilirsin.';
-        }
-        modal.classList.add('open');
-      }
+  <section class="pro-card" aria-labelledby="proTitle">
+    <span class="pro-badge">PRO · Yakında</span>
+    <h2 id="proTitle">Birebir astroloji danışmanlığı</h2>
+    <ul>
+      <li>Uzman astrologlarla yazılı, sesli ve görüntülü görüşme</li>
+      <li>Haritana özel yorumlar ve öncelikli yanıt</li>
+      <li>Kişisel Ay takvimi ve özel gün hatırlatmaları</li>
+    </ul>
+    <button type="button" class="pro-btn" id="proBtn">İlgileniyorum</button>
+  </section>
+</main>
 
-      function closeModal() {
-        modal.classList.remove('open');
-        askText.value = '';
-      }
+<div class="sheet-backdrop" id="askSheet" hidden>
+  <div class="sheet glass ask-sheet" role="dialog" aria-modal="true" aria-labelledby="askTitle">
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <form id="askForm" novalidate>
+      <div class="ask-who" id="askWho"></div>
+      <p class="ds-label">Konu</p>
+      <div class="ask-topics" id="askTopics" role="radiogroup" aria-label="Soru konusu"></div>
+      <label class="ds-label" for="askText">Sorun</label>
+      <textarea id="askText" class="ask-text" rows="5" maxlength="600" required></textarea>
+      <div class="ask-count"><span id="askCount">0</span>/600</div>
+      <div class="ask-birth" id="askBirth"></div>
+      <p class="ask-note">Danışmanlık hizmeti yakında açılıyor. Sorun şimdilik cihazında saklanır; hizmet açıldığında tek dokunuşla gönderebilirsin.</p>
+      <div class="sheet-actions">
+        <button type="submit" class="sheet-btn sheet-btn--primary" id="askSubmit">Soruyu kaydet</button>
+        <button type="button" class="sheet-btn sheet-btn--ghost" id="askClose">Vazgeç</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-      function renderQuestions() {
-        let items = [];
-        try { items = JSON.parse(localStorage.getItem(Q_KEY) || '[]'); } catch {}
-        if (!items.length) {
-          qList.innerHTML = '<p class="q-empty">Henüz gönderilmiş bir sorun yok. Yukarıdaki profillerden birini seçip ilk sorunu oluşturabilirsin.</p>';
-          return;
-        }
-        qList.innerHTML = items.map((q) => `
-          <div class="q-item">
-            <div class="q-item-head">
-              <span>${q.astrologer} · ${q.topic}</span>
-              <span>${q.date}</span>
-            </div>
-            <div>${q.text.replace(/</g, '&lt;')}</div>
-          </div>
-        `).join('');
-      }
+<footer>
+  <div>© 2026 luna.gram</div>
+  <div class="mono">İstanbul</div>
+</footer>
 
-      filterBar.querySelectorAll('.filter-chip').forEach((chip) => {
-        chip.addEventListener('click', () => {
-          filterBar.querySelectorAll('.filter-chip').forEach((c) => c.classList.remove('active'));
-          chip.classList.add('active');
-          activeCategory = chip.dataset.cat;
-          renderAstrologers();
-        });
-      });
-
-      document.getElementById('closeAskModal').addEventListener('click', closeModal);
-      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-
-      askForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (!selectedAstrologer) return;
-        let items = [];
-        try { items = JSON.parse(localStorage.getItem(Q_KEY) || '[]'); } catch {}
-        items.unshift({
-          astrologer: selectedAstrologer.role,
-          topic: askTopic.value,
-          text: askText.value.trim(),
-          date: new Date().toLocaleDateString('tr-TR')
-        });
-        localStorage.setItem(Q_KEY, JSON.stringify(items));
-        closeModal();
-        renderQuestions();
-      });
-
-      renderAstrologers();
-      renderQuestions();
-    })();
-  </script>
+<script src="js/astrologers.js"></script>
+<script src="js/device.js" defer></script>
+<script src="js/astrologlar.js" defer></script>
+<script src="js/app.js" defer></script>
 </body>
 </html>
