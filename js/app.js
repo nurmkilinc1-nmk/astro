@@ -8,7 +8,20 @@
   ];
 
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-
+  function applyBrand() {
+    document.querySelectorAll('.logo, .brand').forEach((el) => {
+      el.innerHTML = 'luna<span>.</span>gram';
+    });
+    if (document.title && document.title.includes('astro.takvim')) {
+      document.title = document.title.replace(/astro\.takvim/gi, 'luna.gram');
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyBrand);
+  } else {
+    applyBrand();
+  }
+  
   document.querySelectorAll('#mainNav a').forEach((link) => {
     if (link.getAttribute('href') === currentPage) {
       link.classList.add('active');
