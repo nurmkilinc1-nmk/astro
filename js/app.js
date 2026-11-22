@@ -8,10 +8,9 @@
   };
 
   const BOTTOM_TABS = [
-    { href: 'index.html', label: 'Bugün', icon: ICONS.bugun },
-    { href: 'gunluk.html', label: 'Günlük', icon: ICONS.gunluk },
-    { href: 'astrologlar.html', label: 'Astrologlar', icon: ICONS.astrologlar },
-    { href: 'kayit.html', label: 'Profil', icon: ICONS.profil }
+      { href: 'gunluk.html', label: 'Günlük', icon: ICONS.gunluk },
+    { href: 'index.html', label: 'Bugün', icon: ICONS.bugun, center: true },
+    { href: 'astrologlar.html', label: 'Astrologlar', icon: ICONS.astrologlar }
   ];
 
   const rawPath = window.location.pathname.split('?')[0].split('#')[0];
@@ -29,7 +28,9 @@
 
   function initAppChrome() {
     applyBrand();
-
+    const headerInner = document.querySelector('.header-inner');
+    if (headerInner && !document.getElementById('headerProfileBtn')) headerInner.insertAdjacentHTML('afterbegin', `<a href="kayit.html" id="headerProfileBtn" class="header-profile-btn" aria-label="Profil">${ICONS.profil}</a>`);
+    
     document.querySelectorAll('#mainNav a').forEach((link) => {
       const href = (link.getAttribute('href') || '').toLowerCase();
       if (href === currentPage) {
