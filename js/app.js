@@ -5,12 +5,8 @@
 
   // ---- Alt menü: yazısız, özgün çizgi ikonlar (24px ızgara, 1.6 kalınlık) ----
   const NAV_ICONS = {
-    // Günlük rehber: ufuktan doğan güneş + küçük yıldız
-    gunluk: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 16.5a5.5 5.5 0 0 1 11 0"/><path d="M3 16.5h18M6 20h12"/><path d="M12 6.5v2M5.4 9.6l1.4 1.4M18.6 9.6l-1.4 1.4"/><path class="nav-accent" d="M19 3.2l.5 1.3 1.3.5-1.3.5-.5 1.3-.5-1.3-1.3-.5 1.3-.5z" fill="currentColor" stroke="none"/></svg>',
     // Gökyüzü takvimi: takvim yaprağı + içinde hilal
     takvim: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="4"/><path d="M8 3v3.5M16 3v3.5M3.5 10h17"/><path class="nav-accent" d="M13.9 12.9a3 3 0 1 0 0 4.6 2.4 2.4 0 0 1 0-4.6z" fill="currentColor" stroke="none"/></svg>',
-    // Özel takvimler (zamanlama): kum saati + yıldız tozu
-    ozel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3.5h10M7 20.5h10"/><path d="M8 3.5v2.2a4 4 0 0 0 1.6 3.2L12 11l2.4-2.1A4 4 0 0 0 16 5.7V3.5"/><path d="M8 20.5v-2.2a4 4 0 0 1 1.6-3.2L12 13l2.4 2.1a4 4 0 0 1 1.6 3.2v2.2"/><circle class="nav-accent" cx="12" cy="17.6" r="1.1" fill="currentColor" stroke="none"/><circle class="nav-accent" cx="10.3" cy="18.9" r=".6" fill="currentColor" stroke="none"/><circle class="nav-accent" cx="13.7" cy="18.9" r=".6" fill="currentColor" stroke="none"/></svg>',
     // Astrologlara sor: konuşma balonu + dört köşeli yıldız
     astrologlar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.6c0 4.3-3.8 7.6-8.5 7.6-1.2 0-2.3-.2-3.3-.6L4 20l1.2-3.6a7.2 7.2 0 0 1-1.7-4.8C3.5 7.3 7.3 4 12 4s8.5 3.3 8.5 7.6z"/><path class="nav-accent" d="M12 8.2l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z" fill="currentColor" stroke="none"/></svg>'
   };
@@ -45,19 +41,18 @@
   }
 
   const BOTTOM_TABS = [
-    { href: 'gunluk.html', label: 'Günlük rehber', icon: NAV_ICONS.gunluk },
-    { href: 'aylik-takvim.html', label: 'Gökyüzü takvimi', icon: NAV_ICONS.takvim },
+    { href: 'aylik-takvim.html', label: 'Takvim', icon: NAV_ICONS.takvim },
     { href: 'index.html', label: 'Bugün', center: true },
-    { href: 'ozel-takvimler.html', label: 'Özel takvimler', icon: NAV_ICONS.ozel },
-    { href: 'astrologlar.html', label: 'Astrologlara sor', icon: NAV_ICONS.astrologlar }
+    { href: 'astrologlar.html', label: 'Astrologlar', icon: NAV_ICONS.astrologlar }
   ];
   // Alt sayfalar ait oldukları sekmeyi aktif gösterir
   const TAB_ALIASES = {
-    'bahcivanlik.html': 'ozel-takvimler.html', 'detoks.html': 'ozel-takvimler.html',
-    'gida-mutfak.html': 'ozel-takvimler.html', 'imza-sozlesme.html': 'ozel-takvimler.html',
-    'sac-bakim.html': 'ozel-takvimler.html', 'saglik-tedavi.html': 'ozel-takvimler.html',
-    'seyahat.html': 'ozel-takvimler.html', 'sosyal.html': 'ozel-takvimler.html',
-    'yeni-baslangiclar.html': 'ozel-takvimler.html', 'danismanlik.html': 'astrologlar.html'
+    'ozel-takvimler.html': 'aylik-takvim.html', 'gunluk.html': 'aylik-takvim.html',
+    'bahcivanlik.html': 'aylik-takvim.html', 'detoks.html': 'aylik-takvim.html',
+    'gida-mutfak.html': 'aylik-takvim.html', 'imza-sozlesme.html': 'aylik-takvim.html',
+    'sac-bakim.html': 'aylik-takvim.html', 'saglik-tedavi.html': 'aylik-takvim.html',
+    'seyahat.html': 'aylik-takvim.html', 'sosyal.html': 'aylik-takvim.html',
+    'yeni-baslangiclar.html': 'aylik-takvim.html', 'danismanlik.html': 'astrologlar.html'
   };
 
   const rawPath = window.location.pathname.split('?')[0].split('#')[0];
