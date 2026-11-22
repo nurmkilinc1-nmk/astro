@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap');
 /* ============================================
    style.css — astro.takvim Ana Tema
    ============================================ */
@@ -1050,4 +1051,12 @@ gap: 0;
     font-weight: 600;
     color: var(--highlight, #b87c5e);
   }
+}
+header .logo,
+header .brand {
+  font-family: 'Grand Hotel', cursive !important;
+  font-size: 2rem !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.4px;
+  line-height: 1;
 }
