@@ -1,0 +1,16 @@
+{
+  "name": "luna-alarm",
+  "version": "0.1.0",
+  "private": true,
+  "description": "luna.gram: telefonun saat uygulamasına alarm ve takvime hatırlatıcı ekleyen yerel Capacitor eklentisi",
+  "main": "index.js",
+  "license": "UNLICENSED",
+  "capacitor": {
+    "android": {
+      "src": "android"
+    }
+  },
+  "peerDependencies": {
+    "@capacitor/core": ">=7.0.0"
+  }
+}

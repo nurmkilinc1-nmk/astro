@@ -73,10 +73,34 @@
     }
   }
 
+  // Kayıtlı profil varsa baş harfler, yoksa sade kişi ikonu
+  function profileAvatar() {
+    let p = null;
+    try { p = JSON.parse(localStorage.getItem('astro-profile') || 'null'); } catch (e) {}
+    const name = p && typeof p.fullName === 'string' ? p.fullName.trim() : '';
+    if (!name) return { hasProfile: false, label: 'Profil oluştur', html: ICONS.profil };
+    const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toLocaleUpperCase('tr-TR');
+    const safe = initials.replace(/[<>&"']/g, '');
+    const safeName = name.replace(/[<>&"']/g, '');
+    return { hasProfile: true, label: `Profilim: ${safeName}`, html: `<span class="avatar-initials">${safe}</span>` };
+  }
+
+  // Güneş ↔ Ay arasında yumuşak geçiş yapan tema simgesi
+  const THEME_ICON = `<svg class="theme-morph" viewBox="0 0 24 24" aria-hidden="true">
+      <defs><mask id="themeMorphMask"><rect width="24" height="24" fill="#fff"/><circle class="tm-cut" cx="17.5" cy="6.5" r="6.6" fill="#000"/></mask></defs>
+      <circle class="tm-core" cx="12" cy="12" r="5" fill="currentColor" mask="url(#themeMorphMask)"/>
+      <g class="tm-rays" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+        <path d="M12 2.6v1.9M12 19.5v1.9M21.4 12h-1.9M4.5 12H2.6M18.65 5.35l-1.35 1.35M6.7 17.3l-1.35 1.35M18.65 18.65 17.3 17.3M6.7 6.7 5.35 5.35"/>
+      </g>
+    </svg>`;
+
   function initAppChrome() {
     applyBrand();
     const headerInner = document.querySelector('.header-inner');
-    if (headerInner && !document.getElementById('headerProfileBtn')) headerInner.insertAdjacentHTML('afterbegin', `<a href="kayit.html" id="headerProfileBtn" class="header-profile-btn" aria-label="Profil">${ICONS.profil}</a>`);
+    if (headerInner && !document.getElementById('headerProfileBtn')) {
+      const av = profileAvatar();
+      headerInner.insertAdjacentHTML('beforeend', `<a href="kayit.html" id="headerProfileBtn" class="header-profile-btn${av.hasProfile ? ' has-profile' : ''}" aria-label="${av.label}" title="${av.label}">${av.html}</a>`);
+    }
     
     document.querySelectorAll('#mainNav a').forEach((link) => {
       const href = (link.getAttribute('href') || '').toLowerCase();
@@ -124,20 +148,30 @@
     
     const oldThemeBtn = document.getElementById('themeToggle');
     if (oldThemeBtn && !oldThemeBtn.dataset.themeBound) {
-      const themeToggle = oldThemeBtn.cloneNode(true);
+      const themeToggle = oldThemeBtn.cloneNode(false);
       themeToggle.dataset.themeBound = '1';
+      themeToggle.innerHTML = THEME_ICON;
       oldThemeBtn.replaceWith(themeToggle);
+      const syncLabel = () => {
+        const dark = root.getAttribute('data-theme') === 'dark';
+        themeToggle.setAttribute('aria-label', dark ? 'Gündüz temasına geç' : 'Gece temasına geç');
+        themeToggle.setAttribute('aria-pressed', String(dark));
+        themeToggle.title = dark ? 'Gündüz teması' : 'Gece teması';
+      };
+      syncLabel();
       themeToggle.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const isDark = root.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        root.removeAttribute('data-theme');
-        localStorage.setItem('astro-theme', 'light');
+        e.preventDefault();
+        e.stopPropagation();
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          root.removeAttribute('data-theme');
+          localStorage.setItem('astro-theme', 'light');
         } else {
-        root.setAttribute('data-theme', 'dark');
-        localStorage.setItem('astro-theme', 'dark');
-      }
+          root.setAttribute('data-theme', 'dark');
+          localStorage.setItem('astro-theme', 'dark');
+        }
+        syncLabel();
+        if (navigator.vibrate) navigator.vibrate(6);
       });
     }
 
