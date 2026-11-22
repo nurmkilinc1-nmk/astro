@@ -1,6 +1,6 @@
 {
-  "name": "astro.takvim — Ay Takvimi",
-  "short_name": "astro.takvim",
+  "name": "luna.gram — Astroloji & Ay Takvimi",
+  "short_name": "luna.gram",
   "description": "Gerçek Ay konumuna dayalı, dakikası dakikasına hesaplanmış burç ve faz takvimi",
   "start_url": "/",
   "display": "standalone",
