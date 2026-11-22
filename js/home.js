@@ -153,130 +153,17 @@
     $('tileGoodSub').textContent = vocNow ? 'Boşluk sürerken yeni işe başlama' : `Ay ${C.SIGNS[sign]} burcunda`;
   }
 
-  // ---------- Alarm ----------
-  const Cap = window.Capacitor;
-  const isNative = !!(Cap && typeof Cap.isNativePlatform === 'function' && Cap.isNativePlatform());
-  let alarmPlugin = null;
-  function getPlugin() {
-    if (!isNative) return null;
-    if (!alarmPlugin) {
-      try {
-        alarmPlugin = (typeof Cap.registerPlugin === 'function') ? Cap.registerPlugin('LunaAlarm') : (Cap.Plugins && Cap.Plugins.LunaAlarm);
-      } catch (e) { alarmPlugin = (Cap.Plugins && Cap.Plugins.LunaAlarm) || null; }
-    }
-    return alarmPlugin;
-  }
-
-  let toastTimer;
-  function toast(msg) {
-    const t = $('toast');
-    t.textContent = msg;
-    t.hidden = false;
-    requestAnimationFrame(() => t.classList.add('show'));
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      t.classList.remove('show');
-      setTimeout(() => { t.hidden = true; }, 300);
-    }, 3200);
-  }
-
+  // ---------- Alarm (ortak: js/device.js) ----------
   function alarmText(kind, sign, next) {
     return kind === 'start'
       ? { title: 'Ay boşluğu başlıyor', body: `Ay ${C.SIGNS[sign]} burcunda boşluğa giriyor. Yeni başlangıçları erteleyin. — luna.gram` }
       : { title: 'Ay boşluğu bitti', body: `Ay ${signTo(next)} geçti; boşluk sona erdi. — luna.gram` };
   }
-
-  async function setClockAlarm(date, title) {
-    const p = getPlugin();
-    // Alarm telefonun kendi saat dilimine göre kurulur
-    await p.setAlarm({ hour: date.getHours(), minute: date.getMinutes(), message: `luna.gram · ${title}`, skipUi: true });
-  }
-
-  async function addCalendar(date, title, body) {
-    const p = getPlugin();
-    if (p) {
-      await p.addCalendarEvent({ begin: date.getTime(), end: date.getTime() + 15 * 60000, title: `🌙 ${title}`, description: body });
-      return;
-    }
-    // Web: alarmlı .ics dosyası (iPhone/Android/masaüstü takvimleri açar)
-    const stamp = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-    const esc = (s) => s.replace(/[\\;,]/g, (m) => '\\' + m);
-    const ics = [
-      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//luna.gram//Ay Bosluğu//TR', 'CALSCALE:GREGORIAN',
-      'BEGIN:VEVENT',
-      `UID:${date.getTime()}-${title.length}@luna.gram`,
-      `DTSTAMP:${stamp(new Date())}`,
-      `DTSTART:${stamp(date)}`,
-      `DTEND:${stamp(new Date(date.getTime() + 15 * 60000))}`,
-      `SUMMARY:${esc(title)}`,
-      `DESCRIPTION:${esc(body)}`,
-      'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${esc(title)}`, 'TRIGGER:PT0M', 'END:VALARM',
-      'END:VEVENT', 'END:VCALENDAR'
-    ].join('\r\n');
-    const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `ay-boslugu-${dayKey(date)}.ics`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 4000);
-  }
-
-  // Ana akış: 24 saat içindeyse doğrudan saat uygulamasına; değilse seçenekler
-  async function handleAlarm(kind, date, sign, next) {
-    const now = new Date();
-    if (date <= now) { toast('Bu an geçti.'); return; }
+  function handleAlarm(kind, date, sign, next) {
+    const D = window.LunaDevice;
+    if (!D) return;
     const { title, body } = alarmText(kind, sign, next);
-    const within24h = date - now < 23.9 * 3600 * 1000;
-
-    if (isNative && within24h && getPlugin()) {
-      try {
-        await setClockAlarm(date, title);
-        toast(`⏰ Alarm kuruldu: ${dayLabel(date, now)} ${clock(date)}`);
-      } catch (e) {
-        openSheet(kind, date, sign, next, 'Saat uygulaması açılamadı. Takvime alarmlı hatırlatıcı ekleyebilirsin.');
-      }
-      return;
-    }
-    openSheet(kind, date, sign, next);
-  }
-
-  let sheetCtx = null;
-  function openSheet(kind, date, sign, next, note) {
-    const now = new Date();
-    const { title, body } = alarmText(kind, sign, next);
-    sheetCtx = { kind, date, title, body };
-    $('alarmSheetKicker').textContent = kind === 'start' ? 'Boşluk başlangıcı' : 'Boşluk bitişi';
-    $('alarmSheetTitle').textContent = `${dayLabel(date, now)}, ${clock(date)}`;
-    $('alarmSheetWhen').textContent = `${longDate(date)} · ${relDays(date, now) === 'Bugün' ? duration(date - now) + ' sonra' : relDays(date, now)}`;
-
-    const alarmBtn = $('alarmSheetAlarm');
-    const within24h = date - now < 23.9 * 3600 * 1000;
-    if (!isNative) {
-      alarmBtn.hidden = true;
-      $('alarmSheetNote').textContent = note || 'Saat uygulamasına alarm, luna.gram telefon uygulamasında kurulur. Buradan takvimine alarmlı bir hatırlatıcı ekleyebilirsin.';
-    } else if (!within24h) {
-      alarmBtn.hidden = false;
-      alarmBtn.disabled = true;
-      alarmBtn.textContent = '24 saat kala alarm kurulabilir';
-      $('alarmSheetNote').textContent = note || 'Telefonun saat uygulaması alarmları tarih değil yalnızca saat olarak tutar; bu an 24 saatten uzak olduğu için alarm yanlış gün çalar. Şimdilik takvime tam tarihli, alarmlı bir hatırlatıcı ekle.';
-    } else {
-      alarmBtn.hidden = false;
-      alarmBtn.disabled = false;
-      alarmBtn.textContent = 'Saat uygulamasına alarm kur';
-      $('alarmSheetNote').textContent = note || '';
-    }
-
-    const sheet = $('alarmSheet');
-    sheet.hidden = false;
-    requestAnimationFrame(() => sheet.classList.add('open'));
-    $('alarmSheetCalendar').focus({ preventScroll: true });
-  }
-  function closeSheet() {
-    const sheet = $('alarmSheet');
-    sheet.classList.remove('open');
-    setTimeout(() => { sheet.hidden = true; }, 260);
+    D.alarmFlow({ date, title, body, kicker: kind === 'start' ? 'Boşluk başlangıcı' : 'Boşluk bitişi' });
   }
 
   function bindUi() {
@@ -297,25 +184,6 @@
       info.setAttribute('aria-expanded', String(open));
     });
 
-    $('alarmSheetClose').addEventListener('click', closeSheet);
-    $('alarmSheet').addEventListener('click', (e) => { if (e.target.id === 'alarmSheet') closeSheet(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('alarmSheet').hidden) closeSheet(); });
-    $('alarmSheetAlarm').addEventListener('click', async () => {
-      if (!sheetCtx) return;
-      try {
-        await setClockAlarm(sheetCtx.date, sheetCtx.title);
-        closeSheet();
-        toast(`⏰ Alarm kuruldu: ${clock(sheetCtx.date)}`);
-      } catch (e) { toast('Alarm kurulamadı.'); }
-    });
-    $('alarmSheetCalendar').addEventListener('click', async () => {
-      if (!sheetCtx) return;
-      try {
-        await addCalendar(sheetCtx.date, sheetCtx.title, sheetCtx.body);
-        closeSheet();
-        toast(isNative ? 'Takvim açıldı; kaydetmeyi unutma.' : 'Takvim dosyası indirildi.');
-      } catch (e) { toast('Takvim açılamadı.'); }
-    });
   }
 
   function tick() {

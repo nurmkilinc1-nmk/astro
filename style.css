@@ -2069,3 +2069,262 @@ body.weather-sky-home > div.toast[hidden] { display: none; }
   .home { padding-top: 28px; }
   body > div.toast, body.weather-sky-home > div.toast { bottom: 32px; }
 }
+
+/* =========================================================
+   AYLIK TAKVİM — camsı, etkinlik filtreli
+   ========================================================= */
+.cal-page .cal {
+  --ink: #1d2433;
+  --ink-soft: rgba(29, 36, 51, 0.62);
+  --ink-faint: rgba(29, 36, 51, 0.1);
+  --good: #3f9a6e;
+  --good-bg: rgba(78, 178, 122, 0.2);
+  --good-line: rgba(63, 154, 110, 0.45);
+  --bad: #c8503d;
+  --bad-bg: rgba(226, 96, 78, 0.16);
+  --bad-line: rgba(200, 80, 61, 0.4);
+  --voc: #7d63d6;
+  --accent: var(--highlight, #b87c5e);
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 8px 14px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--ink);
+}
+html[data-theme="dark"] .cal-page .cal {
+  --ink: #f2eee6;
+  --ink-soft: rgba(242, 238, 230, 0.64);
+  --ink-faint: rgba(255, 255, 255, 0.09);
+  --good: #7fd6a6;
+  --good-bg: rgba(90, 200, 140, 0.18);
+  --good-line: rgba(127, 214, 166, 0.4);
+  --bad: #ff8e7a;
+  --bad-bg: rgba(255, 110, 90, 0.15);
+  --bad-line: rgba(255, 142, 122, 0.38);
+  --voc: #a993ff;
+}
+
+.cal-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 6px; }
+.cal-title { margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 1.6rem; text-align: center; flex: 1; }
+.cal-nav:disabled { opacity: 0.3; cursor: default; }
+
+/* Etkinlik seçici */
+.act-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 0 -14px;
+  padding: 2px 14px 6px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+}
+.act-chips::-webkit-scrollbar { display: none; }
+.act-chip {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 14px 0 11px;
+  border-radius: 999px;
+  font: 600 0.84rem/1 'Inter', system-ui, sans-serif;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+html[data-theme="dark"] .act-chip { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.12); }
+.act-chip:active { transform: scale(0.95); }
+.act-chip-ico { width: 19px; height: 19px; color: var(--accent); }
+.act-chip.on { color: #fff; background: linear-gradient(150deg, #cf9677, #a5674a); border-color: rgba(255, 255, 255, 0.4); box-shadow: 0 8px 18px -10px rgba(165, 103, 74, 0.9); }
+.act-chip.on .act-chip-ico { color: #fff; }
+html[data-theme="dark"] .act-chip.on { color: #1b2035; background: linear-gradient(150deg, #e0bd6c, #9c7a2c); }
+html[data-theme="dark"] .act-chip.on .act-chip-ico { color: #1b2035; }
+.act-summary { margin: -4px 2px 0; font-size: 0.86rem; line-height: 1.45; color: var(--ink-soft); min-height: 1.3em; }
+.act-summary b { color: var(--ink); font-weight: 600; }
+.act-summary .t-good { color: var(--good); }
+.act-summary .t-bad { color: var(--bad); }
+
+/* Izgara */
+.cal-card { border-radius: 26px; padding: 12px 10px 12px; }
+.cal-weekdays, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.cal-weekdays span { text-align: center; font: 600 0.66rem/1 'IBM Plex Mono', ui-monospace, monospace; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); padding: 4px 0 8px; }
+.cal-grid { min-height: 300px; transition: opacity 0.2s ease; }
+.cal-grid.loading { opacity: 0.35; }
+.cal-day {
+  position: relative;
+  aspect-ratio: 1 / 1.12;
+  min-height: 46px;
+  padding: 5px 0 9px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.34);
+  border: 1px solid transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+}
+html[data-theme="dark"] .cal-day { background: rgba(255, 255, 255, 0.045); }
+.cal-day:active { transform: scale(0.93); }
+.cal-day.blank,
+html[data-theme="dark"] .cal-day.blank { background: none; border: 0; cursor: default; }
+.cal-day.past { opacity: 0.45; }
+.cal-day.today { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.cal-day.is-good { background: var(--good-bg); border-color: var(--good-line); }
+.cal-day.is-bad { background: var(--bad-bg); border-color: var(--bad-line); }
+.cal-day.is-good.today, .cal-day.is-bad.today { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.cal-day.is-best::after {
+  content: '★';
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  font-size: 0.58rem;
+  color: var(--good);
+}
+.cd-num { font: 600 0.95rem/1.1 'Inter', system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+.cal-day.is-good .cd-num { color: var(--good); }
+.cal-day.is-bad .cd-num { color: var(--bad); }
+.cd-sign { font-size: 0.78rem; line-height: 1; color: var(--ink-soft); font-family: 'Noto Sans Symbols 2', 'Segoe UI Symbol', sans-serif; }
+.cd-phase { display: inline-flex; color: var(--accent); }
+.cd-phase .ph-ico { width: 13px; height: 13px; }
+.cd-phase.eclipse { color: var(--bad); }
+.cd-dot { position: absolute; top: 5px; left: 6px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); opacity: 0.8; }
+/* 24 saatlik Ay boşluğu şeridi */
+.cd-voc {
+  position: absolute;
+  left: 7px;
+  right: 7px;
+  bottom: 5px;
+  height: 5px;
+  border-radius: 4px;
+  background: var(--ink-faint);
+  overflow: hidden;
+}
+.cd-voc i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 4px;
+  background: var(--voc);
+  box-shadow: 0 0 6px var(--voc);
+}
+
+.cal-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; margin-top: 12px; font-size: 0.74rem; color: var(--ink-soft); }
+.cal-legend .lg { display: inline-flex; align-items: center; gap: 6px; }
+.cal-legend .lg::before { content: ''; width: 12px; height: 12px; border-radius: 4px; }
+.cal-legend .lg-good::before { background: var(--good-bg); border: 1px solid var(--good-line); }
+.cal-legend .lg-bad::before { background: var(--bad-bg); border: 1px solid var(--bad-line); }
+.cal-legend .lg-voc::before { width: 16px; height: 4px; border-radius: 4px; background: var(--voc); }
+.cal-legend.no-act .lg-good, .cal-legend.no-act .lg-bad { display: none; }
+
+/* Ay boşlukları listesi */
+.voc-month { border-radius: 26px; padding: 16px 14px 10px; }
+.voc-month-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 0 4px 10px; }
+.voc-month-head h2 { margin: 0; font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: 1.2rem; }
+.voc-month-meta { font-size: 0.76rem; color: var(--ink-soft); }
+.voc-month-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.voc-month-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 9px 9px 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.34);
+  border-left: 3px solid var(--voc);
+}
+html[data-theme="dark"] .voc-month-list li { background: rgba(255, 255, 255, 0.05); }
+.voc-month-list li.past { opacity: 0.5; }
+.voc-month-list li.active { background: rgba(125, 99, 214, 0.16); }
+.voc-month-list li.empty { border-left-color: transparent; justify-content: center; color: var(--ink-soft); font-size: 0.84rem; }
+.vm-date { display: flex; flex-direction: column; align-items: center; min-width: 34px; line-height: 1; }
+.vm-date b { font-family: 'Fraunces', Georgia, serif; font-size: 1.25rem; font-weight: 500; }
+.vm-date small { margin-top: 2px; font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); }
+.vm-main { flex: 1; display: grid; gap: 2px; min-width: 0; }
+.vm-range { font: 500 0.95rem/1.2 'IBM Plex Mono', ui-monospace, monospace; }
+.vm-range small { font: 400 0.7rem 'Inter', sans-serif; color: var(--ink-soft); }
+.vm-sub { font-size: 0.74rem; color: var(--ink-soft); }
+.vm-sub b { color: var(--voc); }
+.voc-month-list .alarm-mini { color: var(--voc); }
+.voc-month-more {
+  display: block;
+  margin: 8px auto 2px;
+  padding: 8px 14px;
+  font: 600 0.82rem 'Inter', sans-serif;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Gün detayı */
+.day-sheet { max-height: min(86vh, 760px); overflow-y: auto; overscroll-behavior: contain; }
+.day-sheet .sheet-title { margin-top: 6px; }
+.verdict {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(120, 120, 130, 0.08);
+  border: 1px solid rgba(120, 120, 130, 0.16);
+}
+.verdict.v-good { background: rgba(78, 178, 122, 0.14); border-color: rgba(63, 154, 110, 0.35); }
+.verdict.v-bad { background: rgba(226, 96, 78, 0.12); border-color: rgba(200, 80, 61, 0.32); }
+.verdict-head { display: flex; align-items: center; gap: 11px; }
+.verdict-ico { width: 30px; height: 30px; padding: 6px; border-radius: 10px; background: rgba(255, 255, 255, 0.55); flex-shrink: 0; }
+html[data-theme="dark"] .verdict-ico { background: rgba(255, 255, 255, 0.08); }
+.verdict-head div { display: grid; gap: 2px; }
+.verdict-act { font-size: 0.74rem; opacity: 0.7; }
+.verdict-head strong { font-size: 1.02rem; }
+.v-good .verdict-head strong, .v-good .verdict-ico { color: #3f9a6e; }
+.v-bad .verdict-head strong, .v-bad .verdict-ico { color: #c8503d; }
+html[data-theme="dark"] .v-good .verdict-head strong, html[data-theme="dark"] .v-good .verdict-ico { color: #7fd6a6; }
+html[data-theme="dark"] .v-bad .verdict-head strong, html[data-theme="dark"] .v-bad .verdict-ico { color: #ff8e7a; }
+.verdict-why { margin: 10px 0 0; font-size: 0.86rem; }
+.verdict-sub { margin: 10px 0 4px; font: 600 0.64rem/1 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.65; }
+.verdict-wins, .ds-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.verdict-wins li, .ds-list li { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; min-height: 28px; }
+.w-time { font: 500 0.86rem 'IBM Plex Mono', ui-monospace, monospace; min-width: 110px; }
+.w-sign { opacity: 0.75; }
+.verdict-rule { margin: 8px 0 0; font-size: 0.78rem; opacity: 0.7; line-height: 1.45; }
+.ds-block { margin-top: 14px; }
+.ds-label { display: block; margin: 0 0 6px; font: 600 0.64rem/1 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.65; }
+.ds-voc .ds-list li { padding-left: 8px; border-left: 3px solid #7d63d6; }
+.ds-voc .ds-list li span:nth-child(2) { opacity: 0.7; font-size: 0.8rem; flex: 1; }
+.ds-voc .alarm-mini { width: 32px; height: 32px; color: #7d63d6; }
+html[data-theme="dark"] .ds-voc .ds-list li { border-left-color: #a993ff; }
+html[data-theme="dark"] .ds-voc .alarm-mini { color: #a993ff; }
+.ds-add { margin-top: 16px; }
+.ds-input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 14px;
+  font: 500 0.95rem 'Inter', system-ui, sans-serif;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(120, 120, 130, 0.22);
+  outline: none;
+}
+.ds-input:focus { border-color: var(--highlight); box-shadow: 0 0 0 3px rgba(184, 124, 94, 0.18); }
+html[data-theme="dark"] .ds-input { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.14); }
+.ds-hint { margin: 6px 2px 0; font-size: 0.76rem; opacity: 0.65; }
+.sheet-btn--link { display: flex; align-items: center; justify-content: center; text-decoration: none; }
+
+@media (min-width: 821px) {
+  .cal-page .cal { padding-top: 28px; }
+  .cal-day { aspect-ratio: 1 / 0.9; }
+}
+
+.ds-glyph { display: inline-block; width: 1.2em; text-align: center; color: var(--highlight); font-family: 'Noto Sans Symbols 2', 'Segoe UI Symbol', sans-serif; }

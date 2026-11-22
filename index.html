@@ -176,23 +176,6 @@
   </section>
 </main>
 
-<!-- Alarm seçenekleri -->
-<div class="sheet-backdrop" id="alarmSheet" hidden>
-  <div class="sheet glass" role="dialog" aria-modal="true" aria-labelledby="alarmSheetTitle">
-    <span class="sheet-grip" aria-hidden="true"></span>
-    <p class="sheet-kicker" id="alarmSheetKicker">Ay boşluğu</p>
-    <h3 class="sheet-title" id="alarmSheetTitle">—</h3>
-    <p class="sheet-when" id="alarmSheetWhen">—</p>
-    <p class="sheet-note" id="alarmSheetNote"></p>
-    <div class="sheet-actions">
-      <button type="button" class="sheet-btn sheet-btn--primary" id="alarmSheetAlarm">Saat uygulamasına alarm kur</button>
-      <button type="button" class="sheet-btn" id="alarmSheetCalendar">Takvime alarmlı hatırlatıcı ekle</button>
-      <button type="button" class="sheet-btn sheet-btn--ghost" id="alarmSheetClose">Vazgeç</button>
-    </div>
-  </div>
-</div>
-<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
-
 <footer>
   <div>© 2026 luna.gram</div>
   <div class="mono">İstanbul</div>
@@ -200,6 +183,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
 <script src="js/astro-core.js"></script>
+<script src="js/device.js" defer></script>
 <script src="js/home.js" defer></script>
 <script src="js/app.js" defer></script>
 <script src="js/sky-moon.js" defer></script>

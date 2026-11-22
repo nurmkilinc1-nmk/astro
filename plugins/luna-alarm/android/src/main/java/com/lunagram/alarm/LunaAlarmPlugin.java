@@ -63,6 +63,7 @@ public class LunaAlarmPlugin extends Plugin {
         Double end = call.getDouble("end", begin + 15 * 60 * 1000);
         String title = call.getString("title", "Ay Boşluğu");
         String description = call.getString("description", "");
+        boolean allDay = Boolean.TRUE.equals(call.getBoolean("allDay", false));
 
         Intent intent = new Intent(Intent.ACTION_INSERT)
             .setData(CalendarContract.Events.CONTENT_URI)
@@ -70,7 +71,8 @@ public class LunaAlarmPlugin extends Plugin {
             .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end.longValue())
             .putExtra(CalendarContract.Events.TITLE, title)
             .putExtra(CalendarContract.Events.DESCRIPTION, description)
-            .putExtra(CalendarContract.Events.HAS_ALARM, 1)
+            .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, allDay)
+            .putExtra(CalendarContract.Events.HAS_ALARM, allDay ? 0 : 1)
             .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
