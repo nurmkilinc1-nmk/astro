@@ -7,8 +7,8 @@
   const NAV_ICONS = {
     // Gökyüzü takvimi: takvim yaprağı + içinde hilal
     takvim: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="4"/><path d="M8 3v3.5M16 3v3.5M3.5 10h17"/><path class="nav-accent" d="M13.9 12.9a3 3 0 1 0 0 4.6 2.4 2.4 0 0 1 0-4.6z" fill="currentColor" stroke="none"/></svg>',
-    // Astrologlara sor: konuşma balonu + dört köşeli yıldız
-    astrologlar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.6c0 4.3-3.8 7.6-8.5 7.6-1.2 0-2.3-.2-3.3-.6L4 20l1.2-3.6a7.2 7.2 0 0 1-1.7-4.8C3.5 7.3 7.3 4 12 4s8.5 3.3 8.5 7.6z"/><path class="nav-accent" d="M12 8.2l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z" fill="currentColor" stroke="none"/></svg>'
+    // Profil: kişi silueti + küçük yıldız
+    profil: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="8.5" r="3.8"/><path d="M4 20a7 7 0 0 1 12.4-4.4"/><path class="nav-accent" d="M18.5 14.2l.7 1.9 1.9.7-1.9.7-.7 1.9-.7-1.9-1.9-.7 1.9-.7z" fill="currentColor" stroke="none"/></svg>'
   };
 
   // Ortadaki düğme: Ay'ın o anki gerçek fazı (kütüphanesiz yaklaşık hesap, ±1 gün)
@@ -43,7 +43,7 @@
   const BOTTOM_TABS = [
     { href: 'aylik-takvim.html', label: 'Takvim', icon: NAV_ICONS.takvim },
     { href: 'index.html', label: 'Bugün', center: true },
-    { href: 'astrologlar.html', label: 'Astrologlar', icon: NAV_ICONS.astrologlar }
+    { href: 'kayit.html', label: 'Profil', icon: NAV_ICONS.profil, profile: true }
   ];
   // Alt sayfalar ait oldukları sekmeyi aktif gösterir
   const TAB_ALIASES = {
@@ -52,7 +52,7 @@
     'gida-mutfak.html': 'aylik-takvim.html', 'imza-sozlesme.html': 'aylik-takvim.html',
     'sac-bakim.html': 'aylik-takvim.html', 'saglik-tedavi.html': 'aylik-takvim.html',
     'seyahat.html': 'aylik-takvim.html', 'sosyal.html': 'aylik-takvim.html',
-    'yeni-baslangiclar.html': 'aylik-takvim.html', 'danismanlik.html': 'astrologlar.html'
+    'yeni-baslangiclar.html': 'aylik-takvim.html'
   };
 
   const rawPath = window.location.pathname.split('?')[0].split('#')[0];
@@ -92,10 +92,6 @@
   function initAppChrome() {
     applyBrand();
     const headerInner = document.querySelector('.header-inner');
-    if (headerInner && !document.getElementById('headerProfileBtn')) {
-      const av = profileAvatar();
-      headerInner.insertAdjacentHTML('beforeend', `<a href="kayit.html" id="headerProfileBtn" class="header-profile-btn${av.hasProfile ? ' has-profile' : ''}" aria-label="${av.label}" title="${av.label}">${av.html}</a>`);
-    }
     
     document.querySelectorAll('#mainNav a').forEach((link) => {
       const href = (link.getAttribute('href') || '').toLowerCase();
@@ -200,9 +196,14 @@
     bar.innerHTML = indicator + BOTTOM_TABS.map((t, i) => {
       const isActive = i === activeIndex;
       const cls = ['bottom-tab', isActive ? 'active' : '', t.center ? 'bottom-tab-center' : ''].filter(Boolean).join(' ');
-      const icon = t.center ? moonIconSvg(moonPhaseFraction(new Date())) : t.icon;
+      let icon = t.center ? moonIconSvg(moonPhaseFraction(new Date())) : t.icon;
+      let label = t.label;
+      if (t.profile) {
+        const av = profileAvatar();
+        if (av.hasProfile) { icon = `<span class="nav-avatar">${av.html}</span>`; label = av.label; }
+      }
       const aria = isActive ? ' aria-current="page"' : '';
-      return `<a href="${t.href}" class="${cls}" aria-label="${t.label}" title="${t.label}"${aria}><span class="tab-icon">${icon}</span></a>`;
+      return `<a href="${t.href}" class="${cls}" aria-label="${label}" title="${label}"${aria}><span class="tab-icon">${icon}</span></a>`;
     }).join('');
     document.body.appendChild(bar);
 
