@@ -994,7 +994,7 @@ footer {
     height: calc(64px + env(safe-area-inset-bottom)) !important;
     padding: 6px 6px calc(6px + env(safe-area-inset-bottom)) !important;
     display: grid !important;
-    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
     align-items: center !important;
     background: var(--bg, #fbf9f4) !important;
     border-top: 1px solid rgba(184, 124, 94, 0.22) !important;
