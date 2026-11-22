@@ -47,11 +47,15 @@
       }, { passive: true });
     }
 
-    const hamburger = document.getElementById('hamburgerBtn');
+    const old_hamburger = document.getElementById('hamburgerBtn');
     const nav = document.getElementById('mainNav');
-    if (hamburger && nav && !hamburger.dataset.menuBound) {
+    if (old_hamburger && nav && !old_hamburger.dataset.menuBound) {
+      const hamburger = old_hamburger.cloneNode(true);
       hamburger.dataset.menuBound = '1';
-      hamburger.addEventListener('click', () => {
+      old_hamburger.replaceWith(hamburger);
+      hamburger.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         const isOpen = nav.classList.toggle('open');
         hamburger.setAttribute('aria-expanded', String(isOpen));
       });
@@ -63,18 +67,30 @@
       });
     }
 
+    const savedTheme = localStorage.getItem('astro-theme');
     const root = document.documentElement;
-    if (localStorage.getItem('astro-theme') === 'dark') {
+    if (savedTheme === 'dark') {
       root.setAttribute('data-theme', 'dark');
+    } else {
+      root.removeAttribute('data-theme');
     }
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle && !themeToggle.dataset.themeBound) {
+    
+    const oldThemeBtn = document.getElementById('themeToggle');
+    if (oldThemeBtn && !oldThemeBtn.dataset.themeBound) {
+      const themeToggle = oldThemeBtn.cloneNode(true);
       themeToggle.dataset.themeBound = '1';
-      themeToggle.addEventListener('click', () => {
-        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        if (next === 'dark') root.setAttribute('data-theme', 'dark');
-        else root.removeAttribute('data-theme');
-        localStorage.setItem('astro-theme', next);
+      oldThemeBtn.replaceWith(themeToggle);
+      themeToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        root.removeAttribute('data-theme');
+        localStorage.setItem('astro-theme', 'light');
+        } else {
+        root.setAttribute('data-theme', 'dark');
+        localStorage.setItem('astro-theme', 'dark');
+      }
       });
     }
 
