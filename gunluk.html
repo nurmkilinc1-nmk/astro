@@ -12,250 +12,274 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
+    /* Gündüz & Gece Camsı Gökyüzü Arka Planı */
+    body.glass-daily {
+      background: linear-gradient(180deg, #dce8f4 0%, #eef2f6 38%, #f6f3ed 100%) !important;
+      background-attachment: fixed;
+    }
+    html[data-theme="dark"] body.glass-daily {
+      background: linear-gradient(180deg, #070d1b 0%, #0e172e 42%, #121c36 100%) !important;
+      color: #f6f2e9;
+    }
     .daily-shell {
       max-width: 820px;
-      margin: 20px auto 104px;
+      margin: 18px auto 104px;
       padding: 0 16px;
     }
-    /* Tarih Geçiş Çubuğu */
-    .day-switcher {
+    /* Üst Satır: Tarih Seçici + Sağ Köşede Aylık Takvim Kısayolu */
+    .top-utility-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      background: var(--card-bg, rgba(255, 255, 255, 0.78));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.24));
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .day-switcher {
+      flex: 1;
+      min-width: 230px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-radius: 16px;
-      padding: 8px 10px;
-      margin-bottom: 16px;
+      padding: 6px 8px;
+    }
+    html[data-theme="dark"] .day-switcher {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.14);
     }
     .day-nav-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.26));
-      background: var(--bg, #fbf9f4);
-      color: var(--text, #1c1b1a);
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      border: 1px solid rgba(184, 124, 94, 0.22);
+      background: rgba(255, 255, 255, 0.45);
+      color: inherit;
       font-size: 1.2rem;
       cursor: pointer;
       flex-shrink: 0;
     }
-    .day-center {
-      text-align: center;
-      min-width: 0;
+    html[data-theme="dark"] .day-nav-btn {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.14);
     }
-    .day-center-title {
-      font-family: 'Fraunces', serif;
-      font-size: 1.15rem;
-      font-weight: 600;
-    }
+    .day-center { text-align: center; min-width: 0; }
+    .day-center-title { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 600; }
     .day-center-sub {
-      font-size: 0.82rem;
-      color: var(--text-muted, #6f665f);
+      font-size: 0.78rem;
+      opacity: 0.72;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      margin-top: 2px;
+      gap: 6px;
     }
     .today-jump {
       border: none;
-      background: rgba(184, 124, 94, 0.16);
+      background: rgba(184, 124, 94, 0.2);
       color: var(--highlight, #b87c5e);
-      font-size: 0.76rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 999px;
       cursor: pointer;
     }
-    /* Kişisel Karşılama Bandı */
-    .personal-banner {
-      display: none;
-      padding: 12px 16px;
-      border-radius: 14px;
-      background: rgba(184, 124, 94, 0.12);
-      border: 1px solid rgba(184, 124, 94, 0.25);
-      font-size: 0.88rem;
-      line-height: 1.5;
-      margin-bottom: 16px;
+    .monthly-link-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 48px;
+      padding: 0 15px;
+      border-radius: 16px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: inherit;
+      background: rgba(255, 255, 255, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      white-space: nowrap;
     }
-    .personal-banner.visible { display: block; }
-    /* Ana Gökyüzü Özet Kartı */
-    .sky-hero-card {
-      background: var(--card-bg, rgba(255, 255, 255, 0.8));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.24));
+    html[data-theme="dark"] .monthly-link-pill {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.16);
+      color: #f6f2e9;
+    }
+    .monthly-link-pill svg { width: 17px !important; height: 17px !important; }
+    /* Sade Camsı Gün Özeti + Minimal Renk Satırı */
+    .daily-glass-hero {
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
       border-radius: 22px;
-      padding: 22px 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 32px rgba(15, 28, 56, 0.07);
     }
-    .sky-hero-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 14px;
-      margin-bottom: 14px;
+    html[data-theme="dark"] .daily-glass-hero {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 14px 36px rgba(3, 6, 16, 0.35);
     }
-    .sky-badge {
-      display: inline-block;
-      padding: 5px 12px;
-      border-radius: 999px;
-      background: rgba(184, 124, 94, 0.15);
-      color: var(--highlight, #b87c5e);
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .sky-hero-card h1 {
+    .daily-glass-hero h1 {
       font-family: 'Fraunces', serif;
       font-size: 1.65rem;
+      font-weight: 500;
       margin: 0 0 6px;
     }
-    .sky-hero-desc {
-      margin: 0;
+    .daily-glass-hero p {
+      margin: 0 0 14px;
       font-size: 0.94rem;
-      line-height: 1.6;
-      color: var(--text-muted, #6f665f);
+      line-height: 1.55;
+      opacity: 0.8;
     }
-    .moon-orb {
-      width: 58px;
-      height: 58px;
+    /* Minimal Günün Rengi Şeridi */
+    .color-strip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px 7px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.52);
+      border: 1px solid rgba(184, 124, 94, 0.22);
+      font-size: 0.83rem;
+    }
+    html[data-theme="dark"] .color-strip {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .color-dot {
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.9rem;
-      background: var(--bg, #fbf9f4);
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.28));
+      border: 1.5px solid rgba(255, 255, 255, 0.8);
     }
-    .sky-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 16px;
-    }
-    @media (max-width: 520px) {
-      .sky-metrics { grid-template-columns: 1fr 1fr; }
-    }
-    .metric-box {
-      padding: 12px;
-      border-radius: 14px;
-      background: var(--bg, #fbf9f4);
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.18));
-    }
-    .metric-label {
+    .color-info-mini {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid rgba(184, 124, 94, 0.3);
+      background: transparent;
+      color: inherit;
       font-size: 0.76rem;
-      color: var(--text-muted, #6f665f);
-      margin-bottom: 4px;
-    }
-    .metric-val {
       font-weight: 700;
-      font-size: 0.94rem;
+      cursor: pointer;
     }
-    /* Günün Rengi Kartı */
-    .color-card {
-      background: var(--card-bg, rgba(255, 255, 255, 0.78));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.22));
-      border-radius: 18px;
-      padding: 16px;
+    /* Bölüm Başlıkları */
+    .group-title {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-    .color-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      min-width: 0;
-    }
-    .color-swatch {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      flex-shrink: 0;
-      border: 2px solid rgba(255, 255, 255, 0.65);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-    }
-    .color-title {
+      font-size: 0.8rem;
       font-weight: 700;
-      font-size: 0.98rem;
-      margin-bottom: 2px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.72;
+      margin: 20px 2px 10px;
     }
-    .color-sub {
-      font-size: 0.83rem;
-      color: var(--text-muted, #6f665f);
-    }
-    .info-circle-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.3));
-      background: var(--bg, #fbf9f4);
-      color: var(--text, #1c1b1a);
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    /* 4 Kategori Rehber Kartları */
-    .guide-grid {
+    /* Önerilen (Hafif Yeşil) ve Uyarı (Hafif Kırmızı) Camsı Kartlar */
+    .topic-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
-      margin-bottom: 18px;
     }
-    @media (max-width: 640px) {
-      .guide-grid { grid-template-columns: 1fr; }
+    @media (max-width: 620px) {
+      .topic-grid { grid-template-columns: 1fr; }
     }
-    .guide-card {
-      background: var(--card-bg, rgba(255, 255, 255, 0.78));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.22));
+    .topic-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px 17px;
       border-radius: 18px;
-      padding: 16px;
+      text-decoration: none;
+      color: inherit;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: transform 0.14s ease, border-color 0.14s ease;
     }
-    .guide-card h2 {
+    .topic-card:active { transform: scale(0.98); }
+
+    /* Çok hafif yeşil ışıltı (Önerilen) */
+    .topic-card.is-good {
+      background: rgba(52, 199, 128, 0.12);
+      border: 1px solid rgba(52, 199, 128, 0.34);
+      box-shadow: 0 8px 24px rgba(34, 150, 94, 0.08), inset 0 1px 0 rgba(160, 245, 200, 0.28);
+    }
+    html[data-theme="dark"] .topic-card.is-good {
+      background: rgba(52, 199, 128, 0.11);
+      border-color: rgba(74, 222, 148, 0.28);
+      box-shadow: 0 10px 28px rgba(10, 42, 28, 0.35), inset 0 1px 0 rgba(134, 239, 172, 0.16);
+    }
+
+    /* Çok hafif kırmızı ışıltı (Sakınılmalı / Uyarı) */
+    .topic-card.is-warn {
+      background: rgba(235, 87, 87, 0.11);
+      border: 1px solid rgba(235, 87, 87, 0.32);
+      box-shadow: 0 8px 24px rgba(190, 55, 55, 0.08), inset 0 1px 0 rgba(255, 195, 195, 0.25);
+    }
+    html[data-theme="dark"] .topic-card.is-warn {
+      background: rgba(235, 87, 87, 0.11);
+      border-color: rgba(248, 113, 113, 0.28);
+      box-shadow: 0 10px 28px rgba(48, 14, 18, 0.35), inset 0 1px 0 rgba(252, 165, 165, 0.16);
+    }
+
+    .topic-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .topic-title {
       font-family: 'Fraunces', serif;
-      font-size: 1.06rem;
-      margin: 0 0 6px;
-    }
-    .guide-card p {
+      font-size: 1.08rem;
+      font-weight: 600;
       margin: 0;
-      font-size: 0.9rem;
-      line-height: 1.55;
-      color: var(--text-muted, #6f665f);
     }
-    /* Desteklenenler & Dikkat */
-    .do-dont-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 20px;
+    .topic-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
     }
-    @media (max-width: 600px) {
-      .do-dont-grid { grid-template-columns: 1fr; }
+    .is-good .topic-pill {
+      background: rgba(34, 168, 102, 0.16);
+      color: #16794a;
     }
-    .list-card {
-      background: var(--card-bg, rgba(255, 255, 255, 0.78));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.22));
-      border-radius: 18px;
-      padding: 16px;
+    html[data-theme="dark"] .is-good .topic-pill {
+      background: rgba(74, 222, 148, 0.18);
+      color: #86efac;
     }
-    .list-card h3 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.02rem;
-      margin: 0 0 10px;
+    .is-warn .topic-pill {
+      background: rgba(220, 68, 68, 0.16);
+      color: #a62b2b;
     }
-    .list-card ul {
+    html[data-theme="dark"] .is-warn .topic-pill {
+      background: rgba(248, 113, 113, 0.18);
+      color: #fca5a5;
+    }
+    .topic-desc {
       margin: 0;
-      padding-left: 18px;
-      display: grid;
-      gap: 6px;
-      font-size: 0.89rem;
-      color: var(--text-muted, #6f665f);
-      line-height: 1.45;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      opacity: 0.82;
+    }
+    .topic-foot {
+      margin-top: auto;
+      padding-top: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      opacity: 0.68;
+      display: flex;
+      justify-content: flex-end;
     }
     /* Modal */
     .modal-backdrop {
@@ -272,13 +296,13 @@
     @media (min-width: 640px) { .modal-backdrop { align-items: center; } }
     .modal-box {
       width: 100%;
-      max-width: 440px;
+      max-width: 420px;
       background: var(--bg, #fbf9f4);
       color: var(--text, #1c1b1a);
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.28));
+      border: 1px solid rgba(184, 124, 94, 0.28);
       border-radius: 20px;
       padding: 20px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.26);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
     }
     .modal-head {
       display: flex;
@@ -286,11 +310,21 @@
       align-items: center;
       margin-bottom: 10px;
     }
-    .modal-head h3 { font-family: 'Fraunces', serif; margin: 0; font-size: 1.2rem; }
+    .modal-head h3 { font-family: 'Fraunces', serif; margin: 0; font-size: 1.15rem; }
+    .modal-close-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(184, 124, 94, 0.3);
+      background: transparent;
+      color: inherit;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
     .theme-toggle svg { width: 20px !important; height: 20px !important; }
   </style>
 </head>
-<body>
+<body class="glass-daily">
   <header id="mainHeader">
     <div class="header-inner">
       <a href="index.html" class="logo">luna<span>.</span>gram</a>
@@ -327,64 +361,51 @@
   </header>
 
   <main class="daily-shell">
-    <div class="day-switcher">
-      <button type="button" class="day-nav-btn" id="prevDayBtn" aria-label="Önceki Gün">‹</button>
-      <div class="day-center">
-        <div class="day-center-title" id="dateTitle">Yükleniyor...</div>
-        <div class="day-center-sub">
-          <span id="dateSub"></span>
-          <button type="button" class="today-jump" id="todayBtn" style="display:none;">Bugüne Dön</button>
+    <div class="top-utility-row">
+      <div class="day-switcher">
+        <button type="button" class="day-nav-btn" id="prevDayBtn" aria-label="Önceki Gün">‹</button>
+        <div class="day-center">
+          <div class="day-center-title" id="dateTitle">Yükleniyor...</div>
+          <div class="day-center-sub">
+            <span id="dateSub"></span>
+            <button type="button" class="today-jump" id="todayBtn" style="display:none;">Bugün</button>
+          </div>
         </div>
+        <button type="button" class="day-nav-btn" id="nextDayBtn" aria-label="Sonraki Gün">›</button>
       </div>
-      <button type="button" class="day-nav-btn" id="nextDayBtn" aria-label="Sonraki Gün">›</button>
+
+      <a href="aylik-takvim.html" class="monthly-link-pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="17" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>
+        </svg>
+        <span>Aylık Takvim</span>
+      </a>
     </div>
 
-    <div class="personal-banner" id="personalBanner"></div>
-
-    <section class="sky-hero-card">
-      <div class="sky-hero-top">
-        <div>
-          <span class="sky-badge" id="phaseBadge">Ay Fazı</span>
-          <h1 id="moonHeadline">Gökyüzü Hesaplanıyor...</h1>
-          <p class="sky-hero-desc" id="moonSummary"></p>
-        </div>
-        <div class="moon-orb" id="moonOrb" aria-hidden="true">🌙</div>
-      </div>
-      <div class="sky-metrics" id="skyMetrics"></div>
-    </section>
-
-    <section class="color-card">
-      <div class="color-left">
-        <div class="color-swatch" id="colorSwatch"></div>
-        <div>
-          <div class="color-title" id="colorTitle">Günün Rengi</div>
-          <div class="color-sub" id="colorSub"></div>
-        </div>
-      </div>
-      <button type="button" class="info-circle-btn" id="colorInfoBtn" aria-label="Günün rengi bilgisi">i</button>
-    </section>
-
-    <section class="guide-grid" id="guideGrid"></section>
-
-    <section class="do-dont-grid">
-      <div class="list-card">
-        <h3>Bugün Desteklenenler</h3>
-        <ul id="doList"></ul>
-      </div>
-      <div class="list-card">
-        <h3>Dikkat Edilecekler</h3>
-        <ul id="dontList"></ul>
+    <section class="daily-glass-hero">
+      <h1 id="moonHeadline">Bugünün Enerjisi</h1>
+      <p id="moonSummary">Gökyüzü verileri hazırlanıyor...</p>
+      <div class="color-strip">
+        <span class="color-dot" id="colorSwatch"></span>
+        <span id="colorTitle">Günün Rengi</span>
+        <button type="button" class="color-info-mini" id="colorInfoBtn" aria-label="Günün rengi bilgisi">i</button>
       </div>
     </section>
+
+    <div class="group-title"><span>Bugün Önerilenler</span></div>
+    <section class="topic-grid" id="goodGrid"></section>
+
+    <div class="group-title"><span>Bugün Dikkat Edilmesi Gerekenler</span></div>
+    <section class="topic-grid" id="warnGrid"></section>
   </main>
 
   <div class="modal-backdrop" id="colorModal" role="dialog" aria-modal="true" aria-labelledby="colorModalTitle">
     <div class="modal-box">
       <div class="modal-head">
-        <h3 id="colorModalTitle">Günün Gezegen Rengi</h3>
-        <button type="button" class="info-circle-btn" id="closeColorModal" aria-label="Kapat">×</button>
+        <h3 id="colorModalTitle">Günün Rengi</h3>
+        <button type="button" class="modal-close-btn" id="closeColorModal" aria-label="Kapat">×</button>
       </div>
-      <p id="colorModalBody" style="margin:0;font-size:0.92rem;line-height:1.6;color:var(--text-muted,#6f665f);"></p>
+      <p id="colorModalBody" style="margin:0;font-size:0.9rem;line-height:1.6;opacity:0.82;"></p>
     </div>
   </div>
 
@@ -393,136 +414,28 @@
   <script>
     (function () {
       const SIGNS = [
-        {
-          name: 'Koç', sym: '♈', el: 'Ateş',
-          summary: 'Enerji hızlı, direkt ve girişken akıyor. Ertelenen adımları başlatmak için güçlü bir gün.',
-          rel: 'Açık sözlü ve samimi konuşmalar öne çıkar; sabırsız tepkilerden kaçınmak dengeyi korur.',
-          work: 'Kısa, net hedeflere odaklan ve ilk adımı bugün at; uzun bürokrasi yerine eylem kazandırır.',
-          body: 'Tempolu yürüyüş veya kısa egzersiz fazla enerjiyi dengeler; baş ve yüz bölgesini dinlendir.',
-          ritual: 'Bugün tek bir cesur karar yaz ve ilk küçük hamlesini gün bitmeden yap.',
-          dos: ['Yeni bir işe ilk adımı atmak', 'Fiziksel hareket ve spor', 'Kısa ve net kararlar almak'],
-          donts: ['Aceleyle söz vermek', 'Küçük tartışmaları büyütmek', 'Dinlenmeyi ihmal etmek']
-        },
-        {
-          name: 'Boğa', sym: '♉', el: 'Toprak',
-          summary: 'Huzur, somut sonuçlar ve konfor arayışı baskın. Sabırlı ilerleyen işler bereketli olur.',
-          rel: 'Güven, dokunsal yakınlık ve sakin paylaşımlar ilişkileri besler; inatlaşmadan uzak dur.',
-          work: 'Bütçe planlaması, düzenli rutinler ve yarım kalan işleri sağlamlaştırmak için ideal.',
-          body: 'Besleyici yemekler, boyun/omuz masajı ve doğada kısa bir yürüyüş çok iyi gelir.',
-          ritual: 'Şükrettiğin 3 somut şeyi not al ve yaşam alanından bir köşeyi sadeleştir.',
-          dos: ['Finansal düzen ve bütçe kontrolü', 'Beden ve cilt bakımı', 'Yavaş ama kalıcı üretmek'],
-          donts: ['Gereksiz harcamalara kapılmak', 'Değişime sert direnmek', 'Ağır ve geç yemek']
-        },
-        {
-          name: 'İkizler', sym: '♊', el: 'Hava',
-          summary: 'Zihin hareketli, merak yüksek. İletişim, yazışma ve yeni fikirler kolayca akıyor.',
-          rel: 'Sohbet, mizah ve birlikte yeni bir şey keşfetmek bağları canlandırır.',
-          work: 'Toplantılar, sunumlar, e-posta temizliği ve beyin fırtınası için en verimli günlerden biri.',
-          body: 'Nefes egzersizleri ve ekran molaları zihinsel yorgunluğu azaltır.',
-          ritual: 'Aklındaki dağınık fikirleri 5 dakikalık serbest yazıyla kağıda dök.',
-          dos: ['Yazışma, telefon ve toplantılar', 'Kısa eğitim veya okuma', 'Yeni bağlantılar kurmak'],
-          donts: ['Aynı anda çok fazla işe bölünmek', 'Duyduklarını doğrulamadan paylaşmak', 'Geç saatte ekran başında kalmak']
-        },
-        {
-          name: 'Yengeç', sym: '♋', el: 'Su',
-          summary: 'Duygusal hassasiyet, sezgi ve yuva ihtiyacı ön planda. Kendine şefkat göstermek günü kolaylaştırır.',
-          rel: 'Sevdiklerinle güvenli ve derin paylaşımlar yap; alınganlık yerine ihtiyacını açıkça söyle.',
-          work: 'Perde arkası hazırlıklar, ekip içi destek ve sezgisel değerlendirmeler öne çıkar.',
-          body: 'Ilık içecekler, hafif beslenme ve erken uyku sindirimi ve ruh halini destekler.',
-          ritual: 'Evde sakin bir alan aç, günün duygusunu birkaç cümleyle günlüğüne yaz.',
-          dos: ['Aile ve yakın dostlarla vakit', 'Ev düzeni ve mutfak keyfi', 'Duygusal dinlenme'],
-          donts: ['Geçmiş kırgınlıklara takılmak', 'Başkalarının yükünü tek başına almak', 'Aşırı kafein tüketmek']
-        },
-        {
-          name: 'Aslan', sym: '♌', el: 'Ateş',
-          summary: 'Yaratıcılık, özgüven ve sıcak ifade gücü yükseliyor. Kendini görünür kılmaktan çekinme.',
-          rel: 'Cömert jestler, övgü ve birlikte eğlenmek ilişkilerde kıvılcım yaratır.',
-          work: 'Sunum yapmak, portföy paylaşmak ve liderlik gerektiren işlerde öne çıkmak için harika.',
-          body: 'Duruş egzersizleri, dans veya keyifli bir aktivite kalp enerjini canlı tutar.',
-          ritual: 'Gurur duyduğun bir başarını hatırla ve yeni bir yaratıcı fikir tasarla.',
-          dos: ['Yaratıcı projeler ve içerik üretimi', 'Sosyal buluşmalar', 'Kendine özen göstermek'],
-          donts: ['Onay beklentisini abartmak', 'Ego çatışmalarına girmek', 'Bütçeyi aşan lüks harcamalar']
-        },
-        {
-          name: 'Başak', sym: '♍', el: 'Toprak',
-          summary: 'Düzen, analiz ve verimlilik günü. Küçük detayları toparlamak büyük rahatlama getirir.',
-          rel: 'Pratik destek göstermek sözlerden daha çok anlam taşır; aşırı eleştiriden kaçın.',
-          work: 'Liste yapmak, dosya düzenlemek, hata ayıklamak ve sağlık/iş rutinlerini kurmak için kusursuz.',
-          body: 'Temiz beslenme, bol su ve düzenli uyku saatine dönmek için en iyi zaman.',
-          ritual: 'Önündeki 3 gün için sade bir yapılacaklar listesi çıkar ve gereksizleri ele.',
-          dos: ['Detaylı planlama ve temizlik', 'Sağlık kontrolleri ve beslenme düzeni', 'Yarım işleri tamamlamak'],
-          donts: ['Mükemmeliyetçilikle kendini yormak', 'Küçük kusurlara takılı kalmak', 'Kaygıyı büyütmek']
-        },
-        {
-          name: 'Terazi', sym: '♎', el: 'Hava',
-          summary: 'Denge, zarafet ve iş birliği enerjisi hakim. Uzlaşma ve estetik kararlar kolaylaşır.',
-          rel: 'Ortak zemin bulmak, romantik planlar yapmak ve karşılıklı dinlemek için harika bir gün.',
-          work: 'Ortaklıklar, tasarım, marka estetiği ve diplomatik görüşmeler olumlu sonuç verir.',
-          body: 'Bol su içmek, hafif esneme ve estetik bir ortamda bulunmak zihnini ferahlatır.',
-          ritual: 'Hayatında dengelemek istediğin iki alanı yaz ve küçük bir orta yol belirle.',
-          dos: ['İş birliği ve uzlaşma görüşmeleri', 'Tasarım, stil ve sanat', 'Sosyal davetler'],
-          donts: ['Kararsızlıkla fırsatı kaçırmak', 'Sırf uyum için kendi sınırından vazgeçmek', 'Yüzeysel ertelemeler']
-        },
-        {
-          name: 'Akrep', sym: '♏', el: 'Su',
-          summary: 'Derinlik, odaklanma ve dönüşüm enerjisi yüksek. Yüzeyin altındaki gerçekleri net görebilirsin.',
-          rel: 'Samimi ve derin konuşmalar güveni artırır; kıskançlık veya kontrol dürtüsünü fark et.',
-          work: 'Araştırma, finansal strateji, kriz çözme ve tek bir zor işe derin odaklanma kazandırır.',
-          body: 'Arındırıcı duş, bol su ve yoğun duyguları bırakmak için sessiz zaman iyi gelir.',
-          ritual: 'Artık sana hizmet etmeyen bir alışkanlığı belirleyip bırakma niyeti koy.',
-          dos: ['Derin araştırma ve odaklanma', 'Gereksiz eşya/dijital temizlik', 'İçsel farkındalık'],
-          donts: ['Gizli öfke biriktirmek', 'Keskin ve kırıcı tepkiler', 'Takıntılı düşüncelere dalmak']
-        },
-        {
-          name: 'Yay', sym: '♐', el: 'Ateş',
-          summary: 'İyimserlik, geniş bakış açısı ve keşif isteği artıyor. Rutinin dışına çıkmak ilham verir.',
-          rel: 'Özgürlük alanı tanımak, ortak hayaller kurmak ve birlikte gülmek ilişkileri hafifletir.',
-          work: 'Eğitim, yayın, yabancı bağlantılar ve büyük resmi planlamak için verimli bir gün.',
-          body: 'Açık havada yürüyüş ve esneme hareketleri zihinsel canlılığını destekler.',
-          ritual: 'Önümüzdeki 6 ay için seni heyecanlandıran tek bir hedefi yaz.',
-          dos: ['Öğrenme ve yeni yerler keşfetme', 'Vizyon ve uzun vadeli plan', 'Açık hava etkinlikleri'],
-          donts: ['Detayları tamamen gözden kaçırmak', 'Tutamayacağın büyük sözler vermek', 'Düşünmeden patavatsız konuşmak']
-        },
-        {
-          name: 'Oğlak', sym: '♑', el: 'Toprak',
-          summary: 'Disiplin, sorumluluk ve sağlam adımlar öne çıkıyor. Zor işleri bitirmek için güçlü destek var.',
-          rel: 'Güvenilirlik ve sözünün arkasında durmak ilişkide huzur sağlar; duygularını da ifade et.',
-          work: 'Kariyer planı, yönetimsel kararlar, zaman yönetimi ve uzun vadeli projeler için ideal.',
-          body: 'Eklem ve sırt sağlığına dikkat et, masa başında sık sık esneme molası ver.',
-          ritual: 'En önemli tek hedefini seç ve ona 45 dakika kesintisiz odaklan.',
-          dos: ['Önemli görevleri tamamlamak', 'Uzun vadeli kariyer/finans planı', 'Sınır ve zaman yönetimi'],
-          donts: ['Kendine aşırı katı davranmak', 'Dinlenmeyi tamamen ertelemek', 'Karamsar senaryolara odaklanmak']
-        },
-        {
-          name: 'Kova', sym: '♒', el: 'Hava',
-          summary: 'Özgün fikirler, bağımsızlık ve topluluk enerjisi yükseliyor. Alışılmışın dışında çözümler bulabilirsin.',
-          rel: 'Arkadaşça yakınlık, zihinsel uyum ve birbirinin özgürlüğüne saygı ön planda.',
-          work: 'Teknoloji, dijital projeler, ekip inovasyonu ve yaratıcı sistem kurmak için çok uygun.',
-          body: 'Ayak bileklerini ve dolaşımı rahatlatan kısa yürüyüşler, dijital detoks molaları iyi gelir.',
-          ritual: 'Alışkanlıklarını kıracak küçük, yeni bir yöntem dene.',
-          dos: ['Teknoloji ve dijital projeler', 'Topluluk ve arkadaş buluşmaları', 'Farklı çözümler denemek'],
-          donts: ['Duygusal mesafeyi aşırı artırmak', 'Sırf farklı olmak için inatlaşmak', 'Düzensiz uyku']
-        },
-        {
-          name: 'Balık', sym: '♓', el: 'Su',
-          summary: 'Sezgi, şefkat ve hayal gücü en yüksek seviyede. Akışta kalmak ve dinlenmek yaratıcılığı besler.',
-          rel: 'Empati ve yumuşak iletişim şifalı olur; gerçekçi sınırları korumayı unutma.',
-          work: 'Sanat, tasarım, yazı ve ilham gerektiren işler harika akar; katı hesaplarda iki kez kontrol et.',
-          body: 'Suyla temas, müzik, meditasyon ve kaliteli uyku ruhunu tazeler.',
-          ritual: 'Günün sonunda 5 dakika sessizlikte kalıp sezgilerinin fısıldadığı mesajı dinle.',
-          dos: ['Sanat, müzik ve yaratıcı akış', 'Meditasyon ve dinlenme', 'İçsel şifa çalışmaları'],
-          donts: ['Gerçeklerden kaçıp ertelemek', 'Sınır koymadan herkesi memnun etmeye çalışmak', 'Dağınık kararlar']
-        }
+        { name: 'Koç', el: 'Ateş', summary: 'Hızlı, cesur ve hareketli bir gün. Ertelenen işlere ilk adımı atmak için enerji yüksek.' },
+        { name: 'Boğa', el: 'Toprak', summary: 'Sakin, somut ve keyifli bir akış var. Kendine bakım yapmak ve düzen kurmak iyi gelir.' },
+        { name: 'İkizler', el: 'Hava', summary: 'İletişim, sohbet ve yeni fikirler akıcı. Görüşmeler ve planlamalar kolay ilerler.' },
+        { name: 'Yengeç', el: 'Su', summary: 'Duygusal, sezgisel ve içe dönük bir gün. Ev, aile ve dinlenme ön planda.' },
+        { name: 'Aslan', el: 'Ateş', summary: 'Sıcak, yaratıcı ve özgüvenli bir enerji. Kendini ifade etmek ve parlamak için güzel bir gün.' },
+        { name: 'Başak', el: 'Toprak', summary: 'Düzen, arınma ve detayları toparlama günü. Sağlık ve günlük rutinler verimli olur.' },
+        { name: 'Terazi', el: 'Hava', summary: 'Uyum, estetik ve sosyal denge öne çıkıyor. İlişkiler ve güzellik bakımları desteklenir.' },
+        { name: 'Akrep', el: 'Su', summary: 'Derin odaklanma ve arınma zamanı. Gereksiz yüklerden kurtulmak rahatlatır.' },
+        { name: 'Yay', el: 'Ateş', summary: 'İyimser, özgür ve keşfe açık bir gün. Seyahat, eğitim ve yeni planlar keyifli akar.' },
+        { name: 'Oğlak', el: 'Toprak', summary: 'Ciddi, kararlı ve üretken bir enerji. İş, imza ve uzun vadeli adımlar sağlam oturur.' },
+        { name: 'Kova', el: 'Hava', summary: 'Yenilikçi ve sosyal bir gün. Arkadaş buluşmaları ve farklı fikirler ön planda.' },
+        { name: 'Balık', el: 'Su', summary: 'Sezgisel, yumuşak ve dinlendirici bir akış. Sanat, şifa ve sakinlik iyi gelir.' }
       ];
 
       const DAY_COLORS = [
-        { day: 'Pazar', planet: 'Güneş', name: 'Altın Sarısı', hex: '#D4A03E', desc: 'Pazar günü Güneş yönetimindedir. Altın ve sıcak sarı tonları canlılık, özgüven ve yaratıcı ifadeyi destekler.' },
-        { day: 'Pazartesi', planet: 'Ay', name: 'İnci Beyazı & Gümüş', hex: '#C8CED6', desc: 'Pazartesi Ay yönetimindedir. İnci, krem ve gümüş tonları duygusal denge ve içsel sakinlik verir.' },
-        { day: 'Salı', planet: 'Mars', name: 'Terrakota & Mercan', hex: '#C05A43', desc: 'Salı günü Mars yönetimindedir. Mercan ve sıcak kırmızı tonları cesaret, hareket ve kararlılık katar.' },
-        { day: 'Çarşamba', planet: 'Merkür', name: 'Adaçayı Yeşili', hex: '#6F9279', desc: 'Çarşamba Merkür yönetimindedir. Yeşil ve turkuaz tonları zihinsel berraklık ve akıcı iletişimi destekler.' },
-        { day: 'Perşembe', planet: 'Jüpiter', name: 'Kraliyet Moru & İndigo', hex: '#63538A', desc: 'Perşembe Jüpiter yönetimindedir. Mor ve derin çivit tonları bereket, geniş vizyon ve bilgelik taşır.' },
-        { day: 'Cuma', planet: 'Venüs', name: 'Gül Kurusu & Pastel Pembe', hex: '#C6858E', desc: 'Cuma Venüs yönetimindedir. Gül kurusu ve yumuşak pembe tonları uyum, estetik ve sevgi enerjisini besler.' },
-        { day: 'Cumartesi', planet: 'Satürn', name: 'Gece Laciverti & Antrasit', hex: '#344059', desc: 'Cumartesi Satürn yönetimindedir. Lacivert ve koyu toprak tonları odaklanma, disiplin ve kalıcılık verir.' }
+        { planet: 'Güneş', name: 'Altın Sarısı', hex: '#D4A03E', desc: 'Pazar günü Güneş yönetimindedir. Altın ve sıcak sarı tonları canlılık ve özgüven verir.' },
+        { planet: 'Ay', name: 'İnci Beyazı', hex: '#C8CED6', desc: 'Pazartesi Ay yönetimindedir. İnci, krem ve gümüş tonları sakinlik ve duygusal denge sunar.' },
+        { planet: 'Mars', name: 'Mercan & Terrakota', hex: '#C05A43', desc: 'Salı Mars yönetimindedir. Sıcak kırmızı ve mercan tonları cesaret ve hareket enerjisi katar.' },
+        { planet: 'Merkür', name: 'Adaçayı Yeşili', hex: '#6F9279', desc: 'Çarşamba Merkür yönetimindedir. Yeşil tonları zihinsel berraklık ve akıcı iletişimi destekler.' },
+        { planet: 'Jüpiter', name: 'İndigo & Mor', hex: '#63538A', desc: 'Perşembe Jüpiter yönetimindedir. Mor ve derin çivit tonları bereket ve geniş vizyon taşır.' },
+        { planet: 'Venüs', name: 'Gül Kurusu', hex: '#C6858E', desc: 'Cuma Venüs yönetimindedir. Gül kurusu ve pastel tonlar uyum, zarafet ve sevgi enerjisini besler.' },
+        { planet: 'Satürn', name: 'Gece Laciverti', hex: '#344059', desc: 'Cumartesi Satürn yönetimindedir. Lacivert ve koyu tonlar odaklanma ve sağlamlık hissi verir.' }
       ];
 
       const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
@@ -531,35 +444,71 @@
       let dayOffset = 0;
       const now = new Date();
       const baseDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0);
-
       const colorModal = document.getElementById('colorModal');
 
-      function getPhaseLabel(angle) {
-        if (angle < 22.5 || angle >= 337.5) return { name: 'Yeniay', icon: '🌑', trend: 'Yeni niyet ve başlangıç fazı' };
-        if (angle < 67.5) return { name: 'Hilal (Büyüyen)', icon: '🌒', trend: '↑ Büyüyen Ay · Geliştirme zamanı' };
-        if (angle < 112.5) return { name: 'İlk Dördün', icon: '🌓', trend: '↑ Büyüyen Ay · Harekete geçme fazı' };
-        if (angle < 157.5) return { name: 'Şişkin Ay (Büyüyen)', icon: '🌔', trend: '↑ Büyüyen Ay · İnce ayar zamanı' };
-        if (angle < 202.5) return { name: 'Dolunay', icon: '🌕', trend: 'Zirve, farkındalık ve tamamlanma' };
-        if (angle < 247.5) return { name: 'Şişkin Ay (Küçülen)', icon: '🌖', trend: '↓ Küçülen Ay · Paylaşma ve değerlendirme' };
-        if (angle < 292.5) return { name: 'Son Dördün', icon: '🌗', trend: '↓ Küçülen Ay · Eleme ve sadeleşme' };
-        return { name: 'Balzamik Ay', icon: '🌘', trend: '↓ Küçülen Ay · Dinlenme ve arınma' };
-      }
+      function buildTopics(signIdx, waxing) {
+        const s = SIGNS[signIdx];
+        const el = s.el;
 
-      function getUserSignElement(birthDateStr) {
-        if (!birthDateStr) return null;
-        const [, mStr, dStr] = birthDateStr.split('-');
-        const m = Number(mStr), d = Number(dStr);
-        const ranges = [
-          [1, 19, 'Oğlak', 'Toprak'], [2, 18, 'Kova', 'Hava'], [3, 20, 'Balık', 'Su'],
-          [4, 19, 'Koç', 'Ateş'], [5, 20, 'Boğa', 'Toprak'], [6, 20, 'İkizler', 'Hava'],
-          [7, 22, 'Yengeç', 'Su'], [8, 22, 'Aslan', 'Ateş'], [9, 22, 'Başak', 'Toprak'],
-          [10, 22, 'Terazi', 'Hava'], [11, 21, 'Akrep', 'Su'], [12, 21, 'Yay', 'Ateş'],
-          [12, 31, 'Oğlak', 'Toprak']
+        // Repodaki gerçek konu sayfalarına bağlı, sade ve tekrarsız 8 ana kategori
+        return [
+          {
+            title: 'Saç & Güzellik Bakımı',
+            href: 'sac-bakim.html',
+            good: ['Boğa', 'Aslan', 'Başak', 'Terazi'].includes(s.name) || waxing,
+            goodText: 'Saç kesimi, cilt yenileme ve kişisel bakım uygulamaları bugün çok güzel sonuç verir.',
+            warnText: 'Köklü imaj değişiklikleri veya agresif cilt işlemleri için birkaç gün beklemek daha iyi.'
+          },
+          {
+            title: 'Yeni Başlangıçlar',
+            href: 'yeni-baslangiclar.html',
+            good: waxing && ['Ateş', 'Hava', 'Toprak'].includes(el),
+            goodText: 'Yeni bir projeye, alışkanlığa veya hedefe ilk adımı atmak için gökyüzü destekleyici.',
+            warnText: 'Sıfırdan büyük başlangıçlar yerine yarım kalan işleri toparlamak bugün daha verimli.'
+          },
+          {
+            title: 'İmza, İş & Sözleşme',
+            href: 'imza-sozlesme.html',
+            good: ['Boğa', 'İkizler', 'Başak', 'Terazi', 'Oğlak'].includes(s.name),
+            goodText: 'Resmi anlaşmalar, finansal kararlar ve kariyer görüşmeleri için sağlam bir zemin var.',
+            warnText: 'Büyük sözleşmelerde detayları iki kez oku; aceleyle imza atmaktan kaçın.'
+          },
+          {
+            title: 'İlişkiler & Sosyal Hayat',
+            href: 'sosyal.html',
+            good: ['İkizler', 'Aslan', 'Terazi', 'Yay', 'Kova'].includes(s.name),
+            goodText: 'Buluşmalar, keyifli sohbetler ve ilişkilerde yakınlaşmak için akıcı bir gün.',
+            warnText: 'Alınganlık veya sabırsızlık artabilir; hassas konuşmaları sakin bir ana bırak.'
+          },
+          {
+            title: 'Detoks & Arınma',
+            href: 'detoks.html',
+            good: !waxing || ['Başak', 'Akrep', 'Balık'].includes(s.name),
+            goodText: 'Hafif beslenme, bol su, ev düzenleme ve dijital arınma bugün çok rahat işler.',
+            warnText: 'Bedeni zorlayan sert diyetler yerine dengeli ve besleyici rutinleri tercih et.'
+          },
+          {
+            title: 'Sağlık & Beden',
+            href: 'saglik-tedavi.html',
+            good: ['Boğa', 'Başak', 'Oğlak', 'Terazi'].includes(s.name),
+            goodText: 'Rutin kontroller, esneme, masaj ve bedeni güçlendiren uygulamalar için uygun.',
+            warnText: 'Aşırı yorgunluktan kaçın; bedenin dinlenme sinyallerini bugün görmezden gelme.'
+          },
+          {
+            title: 'Seyahat & Hareket',
+            href: 'seyahat.html',
+            good: ['Koç', 'İkizler', 'Yay', 'Kova'].includes(s.name),
+            goodText: 'Kısa yolculuklar, rota planlama ve açık hava aktiviteleri keyifli ve akıcı geçer.',
+            warnText: 'Yol planlarında küçük gecikmelere karşı zaman payı bırakmak rahat ettirir.'
+          },
+          {
+            title: 'Mutfak & Ev / Bitki',
+            href: ['Yengeç', 'Boğa', 'Başak'].includes(s.name) ? 'gida-mutfak.html' : 'bahcivanlik.html',
+            good: ['Boğa', 'Yengeç', 'Başak', 'Balık'].includes(s.name),
+            goodText: 'Evde yeni tarifler denemek, bitki bakımı ve yaşam alanını güzelleştirmek için harika.',
+            warnText: 'Büyük ev tadilatları veya ağır mutfak hazırlıkları yerine pratik çözümlere yönel.'
+          }
         ];
-        for (const [sm, sd, name, el] of ranges) {
-          if (m < sm || (m === sm && d <= sd)) return { name, el };
-        }
-        return { name: 'Oğlak', el: 'Toprak' };
       }
 
       function renderDay() {
@@ -568,71 +517,48 @@
         document.getElementById('dateSub').textContent = `${DAYS_TR[target.getDay()]}${dayOffset === 0 ? ' · Bugün' : ''}`;
         document.getElementById('todayBtn').style.display = dayOffset === 0 ? 'none' : 'inline-block';
 
-        // Günün Rengi
         const cInfo = DAY_COLORS[target.getDay()];
         document.getElementById('colorSwatch').style.background = cInfo.hex;
-        document.getElementById('colorTitle').textContent = `${cInfo.name} (${cInfo.planet} Günü)`;
-        document.getElementById('colorSub').textContent = `Renk Kodu: ${cInfo.hex}`;
-        document.getElementById('colorModalTitle').textContent = `${cInfo.day} — ${cInfo.planet} & ${cInfo.name}`;
+        document.getElementById('colorTitle').textContent = `Günün Rengi: ${cInfo.name}`;
+        document.getElementById('colorModalTitle').textContent = `${cInfo.name} (${cInfo.planet} Günü)`;
         document.getElementById('colorModalBody').textContent = cInfo.desc;
 
-        if (typeof Astronomy === 'undefined') {
-          document.getElementById('moonHeadline').textContent = 'Astronomi verisi yüklenemedi';
-          document.getElementById('moonSummary').textContent = 'Lütfen bağlantını kontrol edip sayfayı yenile.';
-          return;
-        }
+        let signIdx = 0;
+        let waxing = true;
 
-        try {
-          const normLon = (deg) => ((deg % 360) + 360) % 360;
-          const moonLon = normLon(Astronomy.EclipticGeoMoon(target).lon);
-          const sunLon = normLon(Astronomy.Ecliptic(Astronomy.GeoVector(Astronomy.Body.Sun, target, true)).elon);
-          const sign = SIGNS[Math.floor(moonLon / 30) % 12];
-          const degInSign = Math.floor(moonLon % 30);
-          const angle = normLon(moonLon - sunLon);
-          const phase = getPhaseLabel(angle);
-          const illum = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, target).phase_fraction * 100);
-
-          document.getElementById('phaseBadge').textContent = `${phase.name} · ${sign.el} Elementi`;
-          document.getElementById('moonHeadline').textContent = `Ay ${sign.name} Burcunda (${degInSign}°)`;
-          document.getElementById('moonSummary').textContent = sign.summary;
-          document.getElementById('moonOrb').textContent = phase.icon;
-
-          document.getElementById('skyMetrics').innerHTML = `
-            <div class="metric-box"><div class="metric-label">Ay Burcu</div><div class="metric-val">${sign.sym} ${sign.name}</div></div>
-            <div class="metric-box"><div class="metric-label">Aydınlanma</div><div class="metric-val">%${illum}</div></div>
-            <div class="metric-box"><div class="metric-label">Döngü Yönü</div><div class="metric-val">${angle < 180 ? '↑ Büyüyor' : '↓ Küçülüyor'}</div></div>
-          `;
-
-          // Profil kişiselleştirme
-          const banner = document.getElementById('personalBanner');
-          let profile = null;
-          try { profile = JSON.parse(localStorage.getItem('astro-profile') || 'null'); } catch {}
-          if (profile && profile.birthDate) {
-            const uSign = getUserSignElement(profile.birthDate);
-            const harmony = uSign.el === sign.el
-              ? 'Bugünkü Ay seninle aynı elementte; akışın doğal ve destekleyici.'
-              : ((uSign.el === 'Ateş' && sign.el === 'Hava') || (uSign.el === 'Hava' && sign.el === 'Ateş') || (uSign.el === 'Toprak' && sign.el === 'Su') || (uSign.el === 'Su' && sign.el === 'Toprak'))
-                ? 'Bugünkü Ay senin Güneş burcunla uyumlu bir elementte; verimli adımlar atabilirsin.'
-                : 'Bugünkü Ay farklı bir elementten esiyor; esnek kalmak sana yeni bir bakış açısı kazandırır.';
-            banner.innerHTML = `<strong>Merhaba ${profile.fullName || ''} (${uSign.name})</strong> — ${harmony}`;
-            banner.classList.add('visible');
-          } else {
-            banner.classList.remove('visible');
+        if (typeof Astronomy !== 'undefined') {
+          try {
+            const norm = (deg) => ((deg % 360) + 360) % 360;
+            const moonLon = norm(Astronomy.EclipticGeoMoon(target).lon);
+            const sunLon = norm(Astronomy.Ecliptic(Astronomy.GeoVector(Astronomy.Body.Sun, target, true)).elon);
+            signIdx = Math.floor(moonLon / 30) % 12;
+            waxing = norm(moonLon - sunLon) < 180;
+          } catch (err) {
+            console.error('Gunluk hesaplama hatasi:', err);
           }
-
-          document.getElementById('guideGrid').innerHTML = `
-            <article class="guide-card"><h2>İlişkiler &amp; İletişim</h2><p>${sign.rel}</p></article>
-            <article class="guide-card"><h2>Kariyer &amp; Odak</h2><p>${sign.work}</p></article>
-            <article class="guide-card"><h2>Beden &amp; Bakım</h2><p>${sign.body}</p></article>
-            <article class="guide-card"><h2>Günün Niyeti</h2><p>${sign.ritual}</p></article>
-          `;
-
-          document.getElementById('doList').innerHTML = sign.dos.map((x) => `<li>${x}</li>`).join('');
-          document.getElementById('dontList').innerHTML = sign.donts.map((x) => `<li>${x}</li>`).join('');
-        } catch (err) {
-          console.error('Gunluk hesaplama hatasi:', err);
-          document.getElementById('moonHeadline').textContent = 'Hesaplama sırasında hata oluştu';
         }
+
+        const sign = SIGNS[signIdx];
+        document.getElementById('moonHeadline').textContent = `Ay ${sign.name} Burcunda`;
+        document.getElementById('moonSummary').textContent = sign.summary;
+
+        const topics = buildTopics(signIdx, waxing);
+        const goodItems = topics.filter((t) => t.good);
+        const warnItems = topics.filter((t) => !t.good);
+
+        const renderCard = (t) => `
+          <a href="${t.href}" class="topic-card ${t.good ? 'is-good' : 'is-warn'}">
+            <div class="topic-top">
+              <h2 class="topic-title">${t.title}</h2>
+              <span class="topic-pill">${t.good ? 'Önerilir' : 'Dikkat'}</span>
+            </div>
+            <p class="topic-desc">${t.good ? t.goodText : t.warnText}</p>
+            <div class="topic-foot">Detayı Oku ›</div>
+          </a>
+        `;
+
+        document.getElementById('goodGrid').innerHTML = goodItems.map(renderCard).join('');
+        document.getElementById('warnGrid').innerHTML = warnItems.map(renderCard).join('');
       }
 
       document.getElementById('prevDayBtn').addEventListener('click', () => { dayOffset--; renderDay(); });
