@@ -3,7 +3,7 @@
     { href: 'gunluk.html', label: 'Günlük', icon: '✨' },
     { href: 'aylik-takvim.html', label: 'Takvim', icon: '📅' },
     { href: 'index.html', label: 'Bugün', icon: '🌙', center: true },
-    { href: 'ozel-takvimler.html', label: 'Özel', icon: '🌿' },
+    { href: 'astrologlar.html', label: 'Astrologlar', icon: '🔮' },
     { href: 'kayit.html', label: 'Profil', icon: '👤' }
   ];
 
