@@ -42,7 +42,7 @@ public class LunaAlarmPlugin extends Plugin {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
-            getActivity().startActivity(intent);
+            getContext().startActivity(intent);
             JSObject ret = new JSObject();
             ret.put("opened", true);
             call.resolve(ret);
@@ -75,7 +75,7 @@ public class LunaAlarmPlugin extends Plugin {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
-            getActivity().startActivity(intent);
+            getContext().startActivity(intent);
             JSObject ret = new JSObject();
             ret.put("opened", true);
             call.resolve(ret);
