@@ -8,9 +8,8 @@
   };
 
   const BOTTOM_TABS = [
+    { href: 'index.html', label: 'Bugün', icon: ICONS.bugun },
     { href: 'gunluk.html', label: 'Günlük', icon: ICONS.gunluk },
-    { href: 'aylik-takvim.html', label: 'Takvim', icon: ICONS.takvim },
-    { href: 'index.html', label: 'Bugün', icon: ICONS.bugun, center: true },
     { href: 'astrologlar.html', label: 'Astrologlar', icon: ICONS.astrologlar },
     { href: 'kayit.html', label: 'Profil', icon: ICONS.profil }
   ];
