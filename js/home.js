@@ -190,7 +190,25 @@
     try { renderVoc(); } catch (e) { console.error('VOC hesaplama hatası:', e); }
   }
 
+  function renderProfileCta() {
+    const NT = window.LunaNatal;
+    let p = null;
+    try { p = JSON.parse(localStorage.getItem('astro-profile') || 'null'); } catch (e) {}
+    if (!NT || !p || !p.birthDate || !p.fullName) return;
+    if (!Number.isInteger(p.cityIndex) && p.birthPlace) {
+      const t = p.birthPlace.toLocaleLowerCase('tr-TR');
+      const i = NT.CITIES.findIndex((c) => t.startsWith(c[0].toLocaleLowerCase('tr-TR')));
+      if (i >= 0) p.cityIndex = i;
+    }
+    const ch = NT.chart(p);
+    const parts = [`Güneş ${NT.SIGNS[ch.sun.sign]}`, `Ay ${ch.moonAlt ? NT.SIGNS[ch.moonAlt[0]] + '/' + NT.SIGNS[ch.moonAlt[1]] : NT.SIGNS[ch.moon.sign]}`];
+    if (ch.asc) parts.push(`Yükselen ${NT.SIGNS[ch.asc.sign]}`);
+    $('homeProfileTitle').textContent = `${p.fullName.trim().split(/\s+/)[0]}, haritan`;
+    $('homeProfileSub').textContent = parts.join(' · ');
+  }
+
   function start() {
+    try { renderProfileCta(); } catch (e) { console.error('Profil özeti hatası:', e); }
     tick();
     try { renderSky(); } catch (e) { console.error('Gökyüzü özeti hatası:', e); }
     bindUi();

@@ -7,7 +7,6 @@ const urlsToCache = [
   '/gunluk.html',
   '/aylik-takvim.html',
   '/ozel-takvimler.html',
-  '/danismanlik.html',
   '/hakkimda.html',
   '/bahcivanlik.html',
   '/yeni-baslangiclar.html',

@@ -2,378 +2,179 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Profil &amp; Giriş — astro.takvim</title>
-  <script>if(localStorage.getItem('astro-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil — luna.gram</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    .auth-shell {
-      max-width: 520px;
-      margin: 36px auto 100px;
-      padding: 0 18px;
-    }
-    .auth-card {
-      background: var(--card-bg, rgba(255, 255, 255, 0.78));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.22));
-      border-radius: 20px;
-      padding: 28px 22px;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
-    }
-    .auth-title {
-      font-family: 'Fraunces', serif;
-      font-size: 1.7rem;
-      margin: 0 0 8px;
-    }
-    .auth-sub {
-      color: var(--text-muted, #6f665f);
-      font-size: 0.94rem;
-      margin: 0 0 22px;
-      line-height: 1.5;
-    }
-    .google-btn {
-      width: 100%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 13px 16px;
-      border-radius: 12px;
-      border: 1px solid var(--border, rgba(0, 0, 0, 0.16));
-      background: var(--bg, #fbf9f4);
-      color: var(--text, #1c1b1a);
-      font-size: 0.96rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.15s ease, border-color 0.15s ease;
-    }
-    .google-btn svg {
-      width: 18px !important;
-      height: 18px !important;
-      min-width: 18px;
-      min-height: 18px;
-      flex-shrink: 0;
-      display: block;
-    }
-    .theme-toggle svg {
-      width: 20px !important;
-      height: 20px !important;
-    }
-    .google-btn:active { transform: scale(0.99); }
-    .auth-divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 20px 0;
-      color: var(--text-muted, #8a7b6d);
-      font-size: 0.84rem;
-    }
-    .auth-divider::before,
-    .auth-divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--border, rgba(184, 124, 94, 0.2));
-    }
-    .form-group { margin-bottom: 14px; }
-    .form-group label {
-      display: block;
-      font-size: 0.88rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .form-group input[type="text"],
-    .form-group input[type="date"],
-    .form-group input[type="time"] {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.28));
-      background: var(--bg, #fbf9f4);
-      color: var(--text, #1c1b1a);
-      font-size: 1rem;
-    }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    @media (max-width: 480px) {
-      .form-row { grid-template-columns: 1fr; }
-    }
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.86rem;
-      color: var(--text-muted, #6f665f);
-      margin-top: 8px;
-      cursor: pointer;
-    }
-    .primary-btn {
-      width: 100%;
-      margin-top: 8px;
-      padding: 14px 16px;
-      border: none;
-      border-radius: 12px;
-      background: var(--highlight, #b87c5e);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .secondary-btn {
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.35));
-      background: transparent;
-      color: var(--text, #1c1b1a);
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-    .status-msg {
-      margin-top: 12px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 0.88rem;
-      line-height: 1.45;
-      background: rgba(184, 124, 94, 0.12);
-      display: none;
-    }
-    .status-msg.visible { display: block; }
-    .profile-summary { display: none; }
-    .profile-summary.visible { display: block; }
-    .profile-badge {
-      display: inline-block;
-      padding: 5px 12px;
-      border-radius: 999px;
-      background: rgba(184, 124, 94, 0.16);
-      color: var(--highlight, #b87c5e);
-      font-weight: 600;
-      font-size: 0.88rem;
-      margin-bottom: 12px;
-    }
-    .profile-grid {
-      display: grid;
-      gap: 10px;
-      margin: 16px 0 20px;
-      padding: 14px;
-      border-radius: 14px;
-      background: var(--bg, #fbf9f4);
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.18));
-    }
-    .profile-item {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.93rem;
-      gap: 12px;
-    }
-    .profile-item span:first-child { color: var(--text-muted, #6f665f); }
-    .profile-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-  </style>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="manifest" href="manifest.json">
 </head>
-<body>
-  <header id="mainHeader">
-    <div class="header-inner">
-      <a href="index.html" class="logo">astro<span>.</span>takvim</a>
-      <div class="nav-wrapper">
-        <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
-          <span></span><span></span><span></span>
-        </button>
-        <nav id="mainNav">
-          <a href="gunluk.html">Günlük</a>
-          <a href="aylik-takvim.html">Aylık Takvim</a>
-          <a href="ozel-takvimler.html">Özel Takvimler</a>
-          <a href="astrosozluk.html">Astro Sözlük</a>
-          <a href="hakkimda.html">Hakkımda</a>
-        </nav>
-        <a href="kayit.html" class="btn-ghost highlight">Profil</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
-          <span class="theme-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-              <circle cx="12" cy="12" r="5"/>
-              <line x1="12" y1="1" x2="12" y2="3"/>
-              <line x1="12" y1="21" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="3" y2="12"/>
-              <line x1="21" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            </svg>
-          </span>
-        </button>
-      </div>
-    </div>
-  </header>
+<body class="weather-sky-home prof-page">
 
-  <main class="auth-shell">
-    <section class="auth-card" id="authFormCard">
-      <h1 class="auth-title">Astro-Profilin</h1>
-      <p class="auth-sub">Doğum bilgilerini kaydet; günlük yorumların ve takvimin sana göre kişiselleştirilsin.</p>
+<header id="mainHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo">luna<span>.</span>gram</a>
 
-      <button type="button" id="googleSignInBtn" class="google-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-          <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5c-.3 1.5-1.1 2.8-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.7z"/>
-          <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1C3.3 21.3 7.4 24 12 24z"/>
-          <path fill="#FBBC05" d="M5.3 14.2c-.2-.7-.4-1.5-.4-2.2s.1-1.5.4-2.2V6.7H1.3C.5 8.3 0 10.1 0 12s.5 3.7 1.3 5.3l4-3.1z"/>
-          <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0 7.4 0 3.3 2.7 1.3 6.7l4 3.1c.9-2.9 3.6-5 6.7-5z"/>
-        </svg>
-        <span>Google ile Devam Et</span>
+    <div class="nav-wrapper">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
+        <span></span><span></span><span></span>
       </button>
 
-      <div id="googleStatus" class="status-msg" role="status"></div>
+      <nav id="mainNav">
+        <a href="gunluk.html">Günlük</a>
+        <a href="aylik-takvim.html">Aylık Takvim</a>
+        <a href="ozel-takvimler.html">Özel Takvimler</a>
+        <a href="astrosozluk.html">Astro Sözlük</a>
+        <a href="hakkimda.html">Hakkımda</a>
+      </nav>
 
-      <div class="auth-divider">veya doğum bilgilerini yerel kaydet</div>
+      <a href="kayit.html" class="btn-ghost highlight">Kaydol</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
+        <span class="theme-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
 
-      <form id="profileForm">
-        <div class="form-group">
-          <label for="fullName">Adın veya Takma Adın</label>
-          <input type="text" id="fullName" placeholder="Örn. Zeynep" required>
+<main class="prof" id="profPage">
+
+  <!-- KARŞILAMA / DÜZENLEME -->
+  <section class="prof-form-card glass" id="formCard" hidden>
+    <div class="prof-form-head">
+      <span class="prof-form-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v5.5M12 15v5.5M3.5 12H9M15 12h5.5"/></svg>
+      </span>
+      <div>
+        <h1 class="prof-h1" id="formTitle">Doğum haritanı oluştur</h1>
+        <p class="prof-lead">Güneş, Ay ve yükselen burcunu ve sana özel günleri hesaplayalım.</p>
+      </div>
+    </div>
+    <form id="profileForm" novalidate>
+      <label class="prof-label" for="fullName">Adın</label>
+      <input class="prof-input" type="text" id="fullName" maxlength="40" autocomplete="given-name" placeholder="Ör. Zeynep" required>
+
+      <div class="prof-row">
+        <div>
+          <label class="prof-label" for="birthDate">Doğum tarihi</label>
+          <input class="prof-input" type="date" id="birthDate" min="1900-01-01" required>
         </div>
+        <div>
+          <label class="prof-label" for="birthTime">Doğum saati</label>
+          <input class="prof-input" type="time" id="birthTime">
+        </div>
+      </div>
+      <label class="prof-check"><input type="checkbox" id="unknownTime"><span>Doğum saatimi bilmiyorum</span></label>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="birthDate">Doğum Tarihi</label>
-            <input type="date" id="birthDate" required>
+      <label class="prof-label" for="birthCity">Doğum yeri</label>
+      <select class="prof-input" id="birthCity" required></select>
+      <div class="prof-abroad" id="abroadBox" hidden>
+        <div class="prof-row">
+          <div>
+            <label class="prof-label" for="birthPlace">Şehir / ülke</label>
+            <input class="prof-input" type="text" id="birthPlace" maxlength="60" placeholder="Ör. Berlin, Almanya">
           </div>
-          <div class="form-group">
-            <label for="birthTime">Doğum Saati</label>
-            <input type="time" id="birthTime">
-            <label class="checkbox-row">
-              <input type="checkbox" id="unknownTime">
-              Saatimi bilmiyorum
-            </label>
+          <div>
+            <label class="prof-label" for="tzOffset">Saat farkı (UTC)</label>
+            <select class="prof-input" id="tzOffset"></select>
           </div>
         </div>
-
-        <div class="form-group">
-          <label for="birthPlace">Doğum Şehri</label>
-          <input type="text" id="birthPlace" placeholder="Örn. İstanbul, Türkiye" required>
-        </div>
-
-        <button type="submit" class="primary-btn">Profilimi Kaydet</button>
-      </form>
-    </section>
-
-    <section class="auth-card profile-summary" id="profileSummaryCard">
-      <div class="profile-badge" id="sunSignBadge">Güneş Burcu</div>
-      <h2 class="auth-title" id="summaryName">Hoş geldin</h2>
-      <p class="auth-sub">Doğum bilgilerin cihazında güvenle saklanıyor.</p>
-
-      <div class="profile-grid">
-        <div class="profile-item"><span>Doğum Tarihi</span><strong id="summaryDate">-</strong></div>
-        <div class="profile-item"><span>Doğum Saati</span><strong id="summaryTime">-</strong></div>
-        <div class="profile-item"><span>Doğum Şehri</span><strong id="summaryPlace">-</strong></div>
+        <p class="prof-hint">Yurt dışı doğumlarda yükselen burç hesaplanmaz; gezegen konumları seçtiğin saat farkına göre hesaplanır.</p>
       </div>
 
-      <div class="profile-actions">
-        <button type="button" id="editProfileBtn" class="secondary-btn">Bilgileri Düzenle</button>
-        <button type="button" id="clearProfileBtn" class="secondary-btn">Profili Sıfırla</button>
+      <p class="prof-hint prof-privacy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>
+        Bilgilerin yalnızca bu cihazda saklanır.
+      </p>
+      <div class="prof-form-actions">
+        <button type="submit" class="sheet-btn sheet-btn--primary">Haritamı hesapla</button>
+        <button type="button" class="sheet-btn sheet-btn--ghost" id="cancelEdit" hidden>Vazgeç</button>
       </div>
+    </form>
+  </section>
+
+  <!-- PROFİL -->
+  <div class="prof-view" id="profileView" hidden>
+
+    <section class="prof-hero">
+      <span class="prof-avatar" id="pAvatar" aria-hidden="true"></span>
+      <div class="prof-hero-text">
+        <h1 class="prof-name" id="pName"></h1>
+        <p class="prof-birth" id="pBirth"></p>
+      </div>
+      <button type="button" class="icon-btn" id="editBtn" aria-label="Bilgilerini düzenle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14.5 4.5 5 5L9 20H4v-5z"/></svg>
+      </button>
     </section>
-  </main>
 
-  <script src="js/app.js"></script>
-  <script>
-    (function () {
-      const STORAGE_KEY = 'astro-profile';
-      const formCard = document.getElementById('authFormCard');
-      const summaryCard = document.getElementById('profileSummaryCard');
-      const form = document.getElementById('profileForm');
-      const unknownTimeEl = document.getElementById('unknownTime');
-      const birthTimeEl = document.getElementById('birthTime');
-      const googleBtn = document.getElementById('googleSignInBtn');
-      const googleStatus = document.getElementById('googleStatus');
+    <section class="big3" id="big3" aria-label="Güneş, Ay ve yükselen burç"></section>
 
-      function getSunSign(dateStr) {
-        if (!dateStr) return 'Güneş Burcu';
-        const [, mStr, dStr] = dateStr.split('-');
-        const m = Number(mStr);
-        const d = Number(dStr);
-        const signs = [
-          [1, 19, 'Oğlak ♑'], [2, 18, 'Kova ♒'], [3, 20, 'Balık ♓'],
-          [4, 19, 'Koç ♈'], [5, 20, 'Boğa ♉'], [6, 20, 'İkizler ♊'],
-          [7, 22, 'Yengeç ♋'], [8, 22, 'Aslan ♌'], [9, 22, 'Başak ♍'],
-          [10, 22, 'Terazi ♎'], [11, 21, 'Akrep ♏'], [12, 21, 'Yay ♐'],
-          [12, 31, 'Oğlak ♑']
-        ];
-        for (const [sm, sd, name] of signs) {
-          if (m < sm || (m === sm && d <= sd)) return name;
-        }
-        return 'Oğlak ♑';
-      }
+    <section class="prof-card glass" aria-labelledby="todayTitle">
+      <h2 class="prof-h2" id="todayTitle">Bugün senin için</h2>
+      <ul class="prof-today" id="todayList"></ul>
+    </section>
 
-      function renderProfile(profile) {
-        if (!profile) {
-          formCard.style.display = 'block';
-          summaryCard.classList.remove('visible');
-          return;
-        }
-        document.getElementById('sunSignBadge').textContent = 'Güneş Burcu: ' + getSunSign(profile.birthDate);
-        document.getElementById('summaryName').textContent = 'Merhaba, ' + profile.fullName;
-        document.getElementById('summaryDate').textContent = profile.birthDate || '-';
-        document.getElementById('summaryTime').textContent = profile.unknownTime ? 'Bilinmiyor' : (profile.birthTime || '-');
-        document.getElementById('summaryPlace').textContent = profile.birthPlace || '-';
-        formCard.style.display = 'none';
-        summaryCard.classList.add('visible');
-      }
+    <section class="prof-card glass" aria-labelledby="birthDayTitle">
+      <h2 class="prof-h2" id="birthDayTitle">Doğduğun gün</h2>
+      <div class="birth-phase" id="birthPhase"></div>
+      <div class="balance" id="balance"></div>
+    </section>
 
-      unknownTimeEl.addEventListener('change', () => {
-        birthTimeEl.disabled = unknownTimeEl.checked;
-        if (unknownTimeEl.checked) birthTimeEl.value = '';
-      });
+    <section class="prof-card glass" aria-labelledby="planetsTitle">
+      <div class="prof-h2-row">
+        <h2 class="prof-h2" id="planetsTitle">Gezegenlerin</h2>
+        <span class="prof-h2-meta" id="planetsMeta"></span>
+      </div>
+      <ul class="planet-list" id="planetList"></ul>
+    </section>
 
-      googleBtn.addEventListener('click', () => {
-        googleStatus.textContent = 'Google ile giriş özelliği Firebase/OAuth anahtarları bağlandığında aktif olacak. Şimdilik aşağıdaki formdan profilini hemen kaydedebilirsin.';
-        googleStatus.classList.add('visible');
-      });
+    <section class="prof-card glass" aria-labelledby="settingsTitle">
+      <h2 class="prof-h2" id="settingsTitle">Ayarlar</h2>
+      <div class="set-row">
+        <span>Tema</span>
+        <div class="seg" role="radiogroup" aria-label="Tema">
+          <button type="button" role="radio" data-theme-set="light">Gündüz</button>
+          <button type="button" role="radio" data-theme-set="dark">Gece</button>
+        </div>
+      </div>
+      <button type="button" class="set-row set-link" id="editBtn2">
+        <span>Doğum bilgilerini düzenle</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+      <button type="button" class="set-row set-link set-danger" id="deleteBtn">
+        <span id="deleteLabel">Verilerimi sil</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg>
+      </button>
+      <p class="prof-hint prof-privacy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>
+        Bilgilerin yalnızca bu cihazda saklanır; hiçbir sunucuya gönderilmez.
+      </p>
+    </section>
+  </div>
+</main>
 
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const profile = {
-          fullName: document.getElementById('fullName').value.trim(),
-          birthDate: document.getElementById('birthDate').value,
-          birthTime: birthTimeEl.value,
-          unknownTime: unknownTimeEl.checked,
-          birthPlace: document.getElementById('birthPlace').value.trim()
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
-        renderProfile(profile);
-      });
+<footer>
+  <div>© 2026 luna.gram</div>
+  <div class="mono">İstanbul</div>
+</footer>
 
-      document.getElementById('editProfileBtn').addEventListener('click', () => {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-        if (saved) {
-          document.getElementById('fullName').value = saved.fullName || '';
-          document.getElementById('birthDate').value = saved.birthDate || '';
-          unknownTimeEl.checked = Boolean(saved.unknownTime);
-          birthTimeEl.disabled = unknownTimeEl.checked;
-          birthTimeEl.value = saved.birthTime || '';
-          document.getElementById('birthPlace').value = saved.birthPlace || '';
-        }
-        formCard.style.display = 'block';
-        summaryCard.classList.remove('visible');
-      });
-
-      document.getElementById('clearProfileBtn').addEventListener('click', () => {
-        localStorage.removeItem(STORAGE_KEY);
-        form.reset();
-        birthTimeEl.disabled = false;
-        renderProfile(null);
-      });
-
-      try {
-        renderProfile(JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'));
-      } catch {
-        renderProfile(null);
-      }
-    })();
-  </script>
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
+<script src="js/astro-core.js"></script>
+<script src="js/natal.js"></script>
+<script src="js/device.js" defer></script>
+<script src="js/profil.js" defer></script>
+<script src="js/app.js" defer></script>
 </body>
 </html>
