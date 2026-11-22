@@ -2,697 +2,105 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aylık Takvim — luna.gram</title>
-  <script>if(localStorage.getItem('astro-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');</script>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    .cal-shell {
-      max-width: 960px;
-      margin: 22px auto 104px;
-      padding: 0 16px;
-    }
-    .cal-hero { margin-bottom: 18px; }
-    .cal-hero h1 {
-      font-family: 'Fraunces', serif;
-      font-size: 1.8rem;
-      margin: 0 0 6px;
-    }
-    .cal-hero p {
-      color: var(--text-muted, #6f665f);
-      font-size: 0.93rem;
-      line-height: 1.5;
-      margin: 0;
-    }
-    .section-label {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted, #6f665f);
-      font-weight: 700;
-      margin: 18px 0 10px;
-    }
-    .events-rail {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding: 2px 2px 10px;
-      scrollbar-width: none;
-    }
-    .events-rail::-webkit-scrollbar { display: none; }
-    .event-pill-card {
-      flex: 0 0 215px;
-      background: var(--card-bg, rgba(255, 255, 255, 0.78));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.24));
-      border-radius: 16px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      cursor: pointer;
-      text-align: left;
-      color: var(--text, #1c1b1a);
-      transition: transform 0.14s ease, border-color 0.14s ease;
-    }
-    .event-pill-card:active { transform: scale(0.98); }
-    .event-pill-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.78rem;
-      color: var(--highlight, #b87c5e);
-      font-weight: 700;
-    }
-    .event-pill-title {
-      font-family: 'Fraunces', serif;
-      font-size: 1.02rem;
-      font-weight: 600;
-    }
-    .event-pill-sub {
-      font-size: 0.82rem;
-      color: var(--text-muted, #6f665f);
-    }
-    .retro-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .retro-chip {
-      font-size: 0.82rem;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(184, 124, 94, 0.14);
-      color: var(--highlight, #b87c5e);
-      border: 1px solid rgba(184, 124, 94, 0.28);
-      font-weight: 600;
-    }
-    .controls-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      margin: 14px 0 16px;
-    }
-    .segmented {
-      display: inline-flex;
-      background: var(--card-bg, rgba(255, 255, 255, 0.7));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.24));
-      border-radius: 12px;
-      padding: 3px;
-      gap: 4px;
-    }
-    .seg-btn {
-      min-height: 40px;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 9px;
-      background: transparent;
-      color: var(--text-muted, #6f665f);
-      font-size: 0.86rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .seg-btn.active {
-      background: var(--highlight, #b87c5e);
-      color: #fff;
-    }
-    .filter-chips {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      max-width: 100%;
-    }
-    .filter-chips::-webkit-scrollbar { display: none; }
-    .f-chip {
-      flex-shrink: 0;
-      min-height: 40px;
-      padding: 7px 13px;
-      border-radius: 999px;
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.26));
-      background: var(--card-bg, rgba(255, 255, 255, 0.65));
-      color: var(--text, #1c1b1a);
-      font-size: 0.84rem;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    .f-chip.active {
-      background: var(--highlight, #b87c5e);
-      border-color: var(--highlight, #b87c5e);
-      color: #fff;
-      font-weight: 600;
-    }
-    .month-block {
-      background: var(--card-bg, rgba(255, 255, 255, 0.76));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.22));
-      border-radius: 20px;
-      padding: 16px 12px;
-      margin-bottom: 18px;
-    }
-    .month-block-title {
-      font-family: 'Fraunces', serif;
-      font-size: 1.2rem;
-      margin: 0 0 12px 4px;
-    }
-    .weekdays-row,
-    .days-grid {
-      display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: 6px;
-    }
-    .weekdays-row {
-      margin-bottom: 6px;
-      text-align: center;
-      font-size: 0.76rem;
-      font-weight: 700;
-      color: var(--text-muted, #6f665f);
-    }
-    .day-cell {
-      min-height: 58px;
-      padding: 6px 2px;
-      border-radius: 12px;
-      border: 1px solid transparent;
-      background: var(--bg, #fbf9f4);
-      color: var(--text, #1c1b1a);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: border-color 0.14s ease, transform 0.12s ease;
-    }
-    .day-cell:active { transform: scale(0.95); }
-    .day-cell.empty {
-      background: transparent;
-      cursor: default;
-      pointer-events: none;
-    }
-    .day-cell.today {
-      border-color: var(--highlight, #b87c5e);
-      background: rgba(184, 124, 94, 0.12);
-    }
-    .day-cell.major { border-color: rgba(184, 124, 94, 0.55); }
-    .day-num { font-size: 0.86rem; font-weight: 700; line-height: 1; }
-    .day-sign-mini { font-size: 0.75rem; color: var(--text-muted, #6f665f); line-height: 1.1; }
-    .day-dot-row { display: flex; gap: 3px; height: 6px; align-items: center; }
-    .ev-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--highlight, #b87c5e); }
-    .timeline-list { display: grid; gap: 10px; }
-    .tl-card {
-      width: 100%;
-      text-align: left;
-      background: var(--card-bg, rgba(255, 255, 255, 0.78));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.22));
-      border-radius: 16px;
-      padding: 14px 16px;
-      display: grid;
-      grid-template-columns: 56px 1fr auto;
-      gap: 12px;
-      align-items: center;
-      cursor: pointer;
-      color: var(--text, #1c1b1a);
-    }
-    .tl-card.today {
-      border-color: var(--highlight, #b87c5e);
-      box-shadow: 0 6px 18px rgba(184, 124, 94, 0.14);
-    }
-    .tl-date-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 6px 4px;
-      border-radius: 12px;
-      background: var(--bg, #fbf9f4);
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.18));
-    }
-    .tl-day-num { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 600; line-height: 1.1; }
-    .tl-month-short { font-size: 0.75rem; color: var(--text-muted, #6f665f); text-transform: uppercase; }
-    .tl-main { min-width: 0; }
-    .tl-title { font-weight: 700; font-size: 0.96rem; margin-bottom: 3px; }
-    .tl-sub { font-size: 0.82rem; color: var(--text-muted, #6f665f); display: flex; flex-wrap: wrap; gap: 8px; }
-    .tl-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-    .tl-badge {
-      font-size: 0.76rem;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: rgba(184, 124, 94, 0.14);
-      color: var(--highlight, #b87c5e);
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .sheet-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.52);
-      z-index: 1250;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 14px;
-    }
-    .sheet-backdrop.open { display: flex; }
-    @media (min-width: 640px) { .sheet-backdrop { align-items: center; } }
-    .sheet-card {
-      width: 100%;
-      max-width: 480px;
-      background: var(--bg, #fbf9f4);
-      color: var(--text, #1c1b1a);
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.28));
-      border-radius: 22px;
-      padding: 22px 20px;
-      box-shadow: 0 22px 54px rgba(0, 0, 0, 0.28);
-    }
-    .sheet-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-    .sheet-head h2 { font-family: 'Fraunces', serif; font-size: 1.35rem; margin: 0 0 4px; }
-    .sheet-close {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.3));
-      background: transparent;
-      color: var(--text, #1c1b1a);
-      font-size: 1.3rem;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .sheet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-    .sheet-stat {
-      padding: 12px;
-      border-radius: 14px;
-      background: var(--card-bg, rgba(255, 255, 255, 0.72));
-      border: 1px solid var(--border, rgba(184, 124, 94, 0.2));
-    }
-    .sheet-stat-label { font-size: 0.76rem; color: var(--text-muted, #6f665f); margin-bottom: 4px; }
-    .sheet-stat-val { font-weight: 700; font-size: 0.95rem; }
-    .sheet-tip {
-      padding: 14px;
-      border-radius: 14px;
-      background: rgba(184, 124, 94, 0.1);
-      font-size: 0.9rem;
-      line-height: 1.55;
-      margin-bottom: 14px;
-    }
-    .sheet-cta {
-      display: block;
-      text-align: center;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 13px 16px;
-      border-radius: 12px;
-      background: var(--highlight, #b87c5e);
-      color: #fff;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-    .cal-empty { padding: 24px; text-align: center; color: var(--text-muted, #6f665f); font-size: 0.95rem; }
-    .theme-toggle svg { width: 20px !important; height: 20px !important; }
-  </style>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="manifest" href="manifest.json">
 </head>
-<body>
-  <header id="mainHeader">
-    <div class="header-inner">
-      <a href="index.html" class="logo">luna<span>.</span>gram</a>
-      <div class="nav-wrapper">
-        <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
-          <span></span><span></span><span></span>
-        </button>
-        <nav id="mainNav">
-          <a href="gunluk.html">Günlük</a>
-          <a href="aylik-takvim.html">Aylık Takvim</a>
-          <a href="astrologlar.html">Astrologlar</a>
-          <a href="ozel-takvimler.html">Özel Takvimler</a>
-          <a href="astrosozluk.html">Astro Sözlük</a>
-          <a href="hakkimda.html">Hakkımda</a>
-        </nav>
-        <a href="kayit.html" class="btn-ghost highlight">Profil</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
-          <span class="theme-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-              <circle cx="12" cy="12" r="5"/>
-              <line x1="12" y1="1" x2="12" y2="3"/>
-              <line x1="12" y1="21" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="3" y2="12"/>
-              <line x1="21" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            </svg>
-          </span>
-        </button>
-      </div>
-    </div>
-  </header>
+<body class="weather-sky-home cal-page">
 
-  <main class="cal-shell">
-    <section class="cal-hero">
-      <h1>45 Günlük Gökyüzü Takvimi</h1>
-      <p>Önümüzdeki 45 günün Ay burcu geçişlerini, Yeniay–Dolunay tarihlerini, Güneş sezon değişimlerini ve retro gezegenleri tek ekranda takip et.</p>
-    </section>
+<header id="mainHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo">luna<span>.</span>gram</a>
 
-    <div class="section-label">Aktif Gökyüzü &amp; Retro Durumu</div>
-    <div class="retro-bar" id="retroBar"><span class="retro-chip">Hesaplanıyor...</span></div>
+    <div class="nav-wrapper">
+      <button class="hamburger" id="hamburgerBtn" aria-label="Menüyü aç/kapat">
+        <span></span><span></span><span></span>
+      </button>
 
-    <div class="section-label">Yaklaşan Önemli Olaylar (45 Gün)</div>
-    <div class="events-rail" id="eventsRail"></div>
+      <nav id="mainNav">
+        <a href="gunluk.html">Günlük</a>
+        <a href="aylik-takvim.html" class="active">Aylık Takvim</a>
+        <a href="ozel-takvimler.html">Özel Takvimler</a>
+        <a href="astrosozluk.html">Astro Sözlük</a>
+        <a href="hakkimda.html">Hakkımda</a>
+      </nav>
 
-    <div class="controls-row">
-      <div class="segmented" role="tablist" aria-label="Takvim Görünümü">
-        <button type="button" class="seg-btn active" data-view="grid">Aylık Izgara</button>
-        <button type="button" class="seg-btn" data-view="list">45 Günlük Akış</button>
-      </div>
-      <div class="filter-chips" id="filterChips">
-        <button type="button" class="f-chip active" data-filter="all">Tümü</button>
-        <button type="button" class="f-chip" data-filter="major">Önemli Fazlar</button>
-        <button type="button" class="f-chip" data-filter="Ateş">Ateş</button>
-        <button type="button" class="f-chip" data-filter="Toprak">Toprak</button>
-        <button type="button" class="f-chip" data-filter="Hava">Hava</button>
-        <button type="button" class="f-chip" data-filter="Su">Su</button>
-      </div>
-    </div>
-
-    <section id="calendarContainer"><p class="cal-empty">45 günlük gökyüzü verileri hesaplanıyor...</p></section>
-  </main>
-
-  <div class="sheet-backdrop" id="daySheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-    <div class="sheet-card">
-      <div class="sheet-head">
-        <div>
-          <h2 id="sheetTitle">Gün Detayı</h2>
-          <div id="sheetSubtitle" style="font-size:0.86rem;color:var(--text-muted,#6f665f);"></div>
-        </div>
-        <button type="button" class="sheet-close" id="closeSheet" aria-label="Kapat">×</button>
-      </div>
-      <div class="sheet-grid" id="sheetStats"></div>
-      <div class="sheet-tip" id="sheetTip"></div>
-      <a href="gunluk.html" class="sheet-cta">Günlük Detay Sayfasına Git</a>
+      <a href="kayit.html" class="btn-ghost highlight">Kaydol</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Tema değiştir">
+        <span class="theme-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </span>
+      </button>
     </div>
   </div>
+</header>
 
-  <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
-  <script src="js/app.js" defer></script>
-  <script>
-    (function () {
-      const SIGNS = [
-        { name: 'Koç', sym: '♈', el: 'Ateş', tip: 'Hızlı başlangıçlar, cesur adımlar ve fiziksel hareket için güçlü bir gün.' },
-        { name: 'Boğa', sym: '♉', el: 'Toprak', tip: 'Finansal düzen, konfor, beden bakımı ve somut adımlar için destekleyici.' },
-        { name: 'İkizler', sym: '♊', el: 'Hava', tip: 'İletişim, yazışma, öğrenme ve kısa görüşmeler verimli akabilir.' },
-        { name: 'Yengeç', sym: '♋', el: 'Su', tip: 'Ev, aile, içsel dinlenme ve duygusal ihtiyaçlara kulak verme zamanı.' },
-        { name: 'Aslan', sym: '♌', el: 'Ateş', tip: 'Yaratıcılık, görünürlük, sahne alma ve kalpten gelen projeler öne çıkar.' },
-        { name: 'Başak', sym: '♍', el: 'Toprak', tip: 'Planlama, temizlik, sağlık rutini ve detay isteyen işler için ideal.' },
-        { name: 'Terazi', sym: '♎', el: 'Hava', tip: 'İlişkilerde denge, estetik seçimler, iş birliği ve zarif diyaloglar desteklenir.' },
-        { name: 'Akrep', sym: '♏', el: 'Su', tip: 'Derin odaklanma, araştırma, arınma ve gizli kalan konuları çözme günü.' },
-        { name: 'Yay', sym: '♐', el: 'Ateş', tip: 'Ufuk açan fikirler, eğitim, seyahat planları ve iyimser bakış açısı artar.' },
-        { name: 'Oğlak', sym: '♑', el: 'Toprak', tip: 'Kariyer hedefleri, sorumluluk alma ve uzun vadeli strateji kurma zamanı.' },
-        { name: 'Kova', sym: '♒', el: 'Hava', tip: 'Yenilikçi fikirler, teknoloji, arkadaş çevresi ve özgür projeler parlar.' },
-        { name: 'Balık', sym: '♓', el: 'Su', tip: 'Sezgi, sanat, dinlenme ve ruhsal şifalanma için akışkan bir enerji.' }
-      ];
+<main class="cal" id="calPage">
 
-      const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
-      const MONTHS_SHORT = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
-      const DAYS_TR = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
-      const PHASE_NAMES = ['Yeniay', 'İlk Dördün', 'Dolunay', 'Son Dördün'];
-      const PHASE_ICONS = ['🌑', '🌓', '🌕', '🌗'];
+  <div class="cal-top">
+    <button type="button" class="icon-btn cal-nav" id="prevMonth" aria-label="Önceki ay">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+    </button>
+    <h1 class="cal-title" id="monthTitle" aria-live="polite">&nbsp;</h1>
+    <button type="button" class="icon-btn cal-nav" id="nextMonth" aria-label="Sonraki ay">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+    </button>
+  </div>
 
-      const container = document.getElementById('calendarContainer');
-      const eventsRail = document.getElementById('eventsRail');
-      const retroBar = document.getElementById('retroBar');
-      const daySheet = document.getElementById('daySheet');
+  <div class="act-chips" id="actChips" role="radiogroup" aria-label="Ne yapmak istiyorsun?"></div>
+  <p class="act-summary" id="actSummary">&nbsp;</p>
 
-      if (typeof Astronomy === 'undefined') {
-        container.innerHTML = '<p class="cal-empty">Takvim verisi şu an hesaplanamıyor.</p>';
-        retroBar.innerHTML = '<span class="retro-chip">Veri yüklenemedi</span>';
-        return;
-      }
+  <section class="cal-card glass" aria-label="Takvim">
+    <div class="cal-weekdays" aria-hidden="true"><span>Pzt</span><span>Sal</span><span>Çar</span><span>Per</span><span>Cum</span><span>Cmt</span><span>Paz</span></div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-legend" id="calLegend">
+      <span class="lg lg-good">Uygun</span>
+      <span class="lg lg-bad">Kaçın</span>
+      <span class="lg lg-voc">Ay boşluğu</span>
+    </div>
+  </section>
 
-      const normLon = (deg) => ((deg % 360) + 360) % 360;
-      const getSignIdx = (lon) => Math.floor(normLon(lon) / 30) % 12;
+  <section class="voc-month glass" aria-labelledby="vocMonthTitle">
+    <div class="voc-month-head">
+      <h2 id="vocMonthTitle">Ay boşlukları</h2>
+      <span class="voc-month-meta" id="vocMonthMeta"></span>
+    </div>
+    <ul class="voc-month-list" id="vocMonthList"></ul>
+    <button type="button" class="voc-month-more" id="vocMonthMore" hidden>Tümünü göster</button>
+  </section>
+</main>
 
-      function getBodyLon(body, date) {
-        if (body === Astronomy.Body.Moon) return normLon(Astronomy.EclipticGeoMoon(date).lon);
-        return normLon(Astronomy.Ecliptic(Astronomy.GeoVector(body, date, true)).elon);
-      }
+<div class="sheet-backdrop" id="daySheet" hidden>
+  <div class="sheet glass day-sheet" role="dialog" aria-modal="true" aria-labelledby="daySheetTitle">
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <div class="day-sheet-body" id="daySheetBody"></div>
+  </div>
+</div>
 
-      function isRetrograde(body, date) {
-        const d1 = getBodyLon(body, date);
-        const d2 = getBodyLon(body, new Date(date.getTime() + 86400000));
-        let diff = d2 - d1;
-        if (diff > 180) diff -= 360;
-        if (diff < -180) diff += 360;
-        return diff < 0;
-      }
+<footer>
+  <div>© 2026 luna.gram</div>
+  <div class="mono">İstanbul</div>
+</footer>
 
-      function dateKey(d) {
-        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-      }
-
-      function fmtTime(d) {
-        return d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-      }
-
-      let daysData = [];
-      let majorEvents = [];
-      let currentView = 'grid';
-      let currentFilter = 'all';
-
-      try {
-        const now = new Date();
-        const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0);
-        const TOTAL_DAYS = 45;
-
-        const retroCandidates = [
-          { body: Astronomy.Body.Mercury, name: 'Merkür' },
-          { body: Astronomy.Body.Venus, name: 'Venüs' },
-          { body: Astronomy.Body.Mars, name: 'Mars' },
-          { body: Astronomy.Body.Jupiter, name: 'Jüpiter' },
-          { body: Astronomy.Body.Saturn, name: 'Satürn' }
-        ];
-        const activeRetrosToday = retroCandidates.filter((p) => isRetrograde(p.body, startDay)).map((p) => p.name);
-        retroBar.innerHTML = activeRetrosToday.length
-          ? activeRetrosToday.map((n) => `<span class="retro-chip">℞ ${n} Retrosu Aktif</span>`).join('')
-          : '<span class="retro-chip">Kişisel gezegenlerde aktif retro yok</span>';
-
-        const endLimit = new Date(startDay.getTime() + (TOTAL_DAYS + 1) * 86400000);
-        const eventsByDay = {};
-        let mq = Astronomy.SearchMoonQuarter(new Date(startDay.getTime() - 86400000));
-        let guard = 0;
-        while (mq && mq.time.date <= endLimit && guard < 12) {
-          guard++;
-          const evDate = mq.time.date;
-          if (evDate >= new Date(startDay.getTime() - 43200000)) {
-            const sign = SIGNS[getSignIdx(getBodyLon(Astronomy.Body.Moon, evDate))];
-            const key = dateKey(evDate);
-            const evObj = {
-              key,
-              date: evDate,
-              type: 'phase',
-              quarter: mq.quarter,
-              icon: PHASE_ICONS[mq.quarter],
-              title: `${sign.name} ${PHASE_NAMES[mq.quarter]}`,
-              sub: `${evDate.getDate()} ${MONTHS_SHORT[evDate.getMonth()]} · ${fmtTime(evDate)}`
-            };
-            majorEvents.push(evObj);
-            if (!eventsByDay[key]) eventsByDay[key] = [];
-            eventsByDay[key].push(evObj);
-          }
-          mq = Astronomy.NextMoonQuarter(mq);
-        }
-
-        let prevSunSign = getSignIdx(getBodyLon(Astronomy.Body.Sun, new Date(startDay.getTime() - 86400000)));
-        for (let i = 0; i < TOTAL_DAYS; i++) {
-          const d = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate() + i, 12, 0, 0);
-          const key = dateKey(d);
-          const moonLon = getBodyLon(Astronomy.Body.Moon, d);
-          const sunLon = getBodyLon(Astronomy.Body.Sun, d);
-          const sign = SIGNS[getSignIdx(moonLon)];
-          const sunSignIdx = getSignIdx(sunLon);
-          const illum = Math.round(Astronomy.Illumination(Astronomy.Body.Moon, d).phase_fraction * 100);
-          const waxing = normLon(moonLon - sunLon) < 180;
-
-          if (sunSignIdx !== prevSunSign) {
-            const sunEv = {
-              key,
-              date: d,
-              type: 'sun',
-              icon: '☉',
-              title: `Güneş ${SIGNS[sunSignIdx].name} Burcunda`,
-              sub: `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} · Yeni Sezon`
-            };
-            majorEvents.push(sunEv);
-            if (!eventsByDay[key]) eventsByDay[key] = [];
-            eventsByDay[key].push(sunEv);
-            prevSunSign = sunSignIdx;
-          }
-
-          daysData.push({
-            index: i, key, date: d, isToday: i === 0, sign, illum, waxing,
-            events: eventsByDay[key] || [], retros: activeRetrosToday
-          });
-        }
-
-        majorEvents.sort((a, b) => a.date - b.date);
-
-        eventsRail.innerHTML = majorEvents.map((ev) => `
-          <button type="button" class="event-pill-card" data-key="${ev.key}">
-            <div class="event-pill-top"><span>${ev.icon} ${ev.type === 'sun' ? 'Sezon Geçişi' : 'Ay Fazı'}</span><span>${ev.sub}</span></div>
-            <div class="event-pill-title">${ev.title}</div>
-            <div class="event-pill-sub">Detay için dokun</div>
-          </button>
-        `).join('');
-
-        eventsRail.querySelectorAll('.event-pill-card').forEach((btn) => {
-          btn.addEventListener('click', () => {
-            const found = daysData.find((x) => x.key === btn.dataset.key);
-            if (found) openSheet(found);
-          });
-        });
-
-        renderView();
-      } catch (err) {
-        console.error('Takvim hesaplama hatasi:', err);
-        container.innerHTML = '<p class="cal-empty">Takvim verisi şu an hesaplanamıyor.</p>';
-      }
-
-      function matchesFilter(day) {
-        if (currentFilter === 'all') return true;
-        if (currentFilter === 'major') return day.events.length > 0;
-        return day.sign.el === currentFilter;
-      }
-
-      function renderView() {
-        const filtered = daysData.filter(matchesFilter);
-        if (!filtered.length) {
-          container.innerHTML = '<p class="cal-empty">Bu filtreyle eşleşen gün bulunamadı.</p>';
-          return;
-        }
-
-        if (currentView === 'list') {
-          container.innerHTML = `<div class="timeline-list">${filtered.map((d) => {
-            const phaseTxt = d.waxing ? '↑ Büyüyen Ay' : '↓ Küçülen Ay';
-            const evBadges = d.events.map((e) => `<span class="tl-badge">${e.icon} ${e.title}</span>`).join('');
-            return `
-              <button type="button" class="tl-card${d.isToday ? ' today' : ''}" data-key="${d.key}">
-                <div class="tl-date-box">
-                  <span class="tl-day-num">${d.date.getDate()}</span>
-                  <span class="tl-month-short">${MONTHS_SHORT[d.date.getMonth()]}</span>
-                </div>
-                <div class="tl-main">
-                  <div class="tl-title">${d.sign.sym} Ay ${d.sign.name} Burcunda ${d.isToday ? '· Bugün' : ''}</div>
-                  <div class="tl-sub">
-                    <span>${DAYS_TR[d.date.getDay()]}</span>
-                    <span>${phaseTxt} (%${d.illum})</span>
-                    <span>${d.sign.el}</span>
-                  </div>
-                </div>
-                <div class="tl-badges">${evBadges || `<span class="tl-badge">${d.sign.el}</span>`}</div>
-              </button>
-            `;
-          }).join('')}</div>`;
-        } else {
-          const byMonth = new Map();
-          daysData.forEach((d) => {
-            const mKey = `${d.date.getFullYear()}-${d.date.getMonth()}`;
-            if (!byMonth.has(mKey)) {
-              byMonth.set(mKey, { year: d.date.getFullYear(), month: d.date.getMonth(), map: new Map() });
-            }
-            byMonth.get(mKey).map.set(d.date.getDate(), d);
-          });
-
-          let html = '';
-          byMonth.forEach((mObj) => {
-            const firstDay = new Date(mObj.year, mObj.month, 1);
-            const lastDate = new Date(mObj.year, mObj.month + 1, 0).getDate();
-            const startOffset = (firstDay.getDay() + 6) % 7;
-            let cells = '';
-            for (let b = 0; b < startOffset; b++) cells += '<div class="day-cell empty"></div>';
-            for (let dayNum = 1; dayNum <= lastDate; dayNum++) {
-              const info = mObj.map.get(dayNum);
-              if (!info) {
-                cells += `<div class="day-cell empty" style="opacity:0.25;"><span class="day-num">${dayNum}</span></div>`;
-              } else {
-                const match = matchesFilter(info);
-                const dots = info.events.length ? '<span class="ev-dot"></span>' : '';
-                cells += `
-                  <button type="button" class="day-cell${info.isToday ? ' today' : ''}${info.events.length ? ' major' : ''}" data-key="${info.key}" style="${match ? '' : 'opacity:0.28;'}">
-                    <span class="day-num">${dayNum}</span>
-                    <span class="day-sign-mini">${info.sign.sym} ${info.sign.name.slice(0, 3)}</span>
-                    <span class="day-dot-row">${dots}</span>
-                  </button>
-                `;
-              }
-            }
-            html += `
-              <div class="month-block">
-                <h2 class="month-block-title">${MONTHS_TR[mObj.month]} ${mObj.year}</h2>
-                <div class="weekdays-row">
-                  <span>Pzt</span><span>Sal</span><span>Çar</span><span>Per</span><span>Cum</span><span>Cmt</span><span>Paz</span>
-                </div>
-                <div class="days-grid">${cells}</div>
-              </div>
-            `;
-          });
-          container.innerHTML = html;
-        }
-
-        container.querySelectorAll('[data-key]').forEach((el) => {
-          el.addEventListener('click', () => {
-            const found = daysData.find((x) => x.key === el.dataset.key);
-            if (found) openSheet(found);
-          });
-        });
-      }
-
-      function openSheet(d) {
-        document.getElementById('sheetTitle').textContent = `${d.date.getDate()} ${MONTHS_TR[d.date.getMonth()]} ${d.date.getFullYear()}`;
-        document.getElementById('sheetSubtitle').textContent = `${DAYS_TR[d.date.getDay()]}${d.isToday ? ' · Bugün' : ''}`;
-        const evHtml = d.events.length
-          ? d.events.map((e) => `${e.icon} ${e.title}`).join(' · ')
-          : 'Standart günlük akış';
-
-        document.getElementById('sheetStats').innerHTML = `
-          <div class="sheet-stat"><div class="sheet-stat-label">Ay Burcu</div><div class="sheet-stat-val">${d.sign.sym} ${d.sign.name} (${d.sign.el})</div></div>
-          <div class="sheet-stat"><div class="sheet-stat-label">Ay Fazı</div><div class="sheet-stat-val">${d.waxing ? '↑ Büyüyen' : '↓ Küçülen'} · %${d.illum}</div></div>
-          <div class="sheet-stat" style="grid-column:1 / -1;"><div class="sheet-stat-label">Günün Gökyüzü Olayı</div><div class="sheet-stat-val">${evHtml}</div></div>
-        `;
-        document.getElementById('sheetTip').textContent = `Günün Enerjisi: ${d.sign.tip}`;
-        daySheet.classList.add('open');
-      }
-
-      document.getElementById('closeSheet').addEventListener('click', () => daySheet.classList.remove('open'));
-      daySheet.addEventListener('click', (e) => { if (e.target === daySheet) daySheet.classList.remove('open'); });
-
-      document.querySelectorAll('.seg-btn').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.seg-btn').forEach((b) => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentView = btn.dataset.view;
-          renderView();
-        });
-      });
-
-      document.querySelectorAll('.f-chip').forEach((chip) => {
-        chip.addEventListener('click', () => {
-          document.querySelectorAll('.f-chip').forEach((c) => c.classList.remove('active'));
-          chip.classList.add('active');
-          currentFilter = chip.dataset.filter;
-          renderView();
-        });
-      });
-    })();
-  </script>
+<script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
+<script src="js/astro-core.js"></script>
+<script src="js/activities.js"></script>
+<script src="js/device.js" defer></script>
+<script src="js/takvim.js" defer></script>
+<script src="js/app.js" defer></script>
 </body>
 </html>
