@@ -18,60 +18,127 @@
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const smooth = (e0, e1, x) => { const t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
 
-  // ---------- Gökyüzü arka planı ----------
-  function drawSky(canvas) {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    const ctx = canvas.getContext('2d');
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, w, h);
-    const dark = isDarkMode();
+  // ---------- Hareketli gökyüzü (yıldızlar + süzülen bulutlar) ----------
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sky = { canvas: null, ctx: null, w: 0, h: 0, dpr: 1, stars: [], clouds: [], dark: null, raf: 0, last: 0 };
 
-    if (dark) {
-      const count = Math.min(140, Math.floor((w * h) / 6400));
-      let seed = 73;
-      const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-      for (let i = 0; i < count; i++) {
-        const x = rand() * w;
-        const y = rand() * h * 0.75;
-        const r = 0.4 + rand() * 1.2;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(245, 248, 255, ${(0.16 + rand() * 0.7).toFixed(2)})`;
-        ctx.fill();
-      }
+  function rng(seed) {
+    let s = seed;
+    return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  }
+
+  // Bir bulutu ekran dışı tuvale bir kez çiz (yumuşak, üst kenarı ay ışığıyla aydınlanmış)
+  function makeCloud(rand, width, dark) {
+    const w = Math.round(width), h = Math.round(width * 0.42);
+    const c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    const x = c.getContext('2d');
+    const puffs = 14 + Math.floor(rand() * 10);
+    for (let i = 0; i < puffs; i++) {
+      const t = i / (puffs - 1);
+      const px = w * (0.12 + 0.76 * t) + (rand() - 0.5) * w * 0.08;
+      const bump = Math.sin(t * Math.PI);
+      const py = h * (0.62 - 0.22 * bump) + (rand() - 0.5) * h * 0.12;
+      const r = h * (0.18 + 0.22 * bump) * (0.75 + rand() * 0.5);
+      const g = x.createRadialGradient(px, py, 0, px, py, r);
+      g.addColorStop(0, 'rgba(255,255,255,0.55)');
+      g.addColorStop(0.55, 'rgba(255,255,255,0.28)');
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = g;
+      x.beginPath(); x.arc(px, py, r, 0, Math.PI * 2); x.fill();
     }
+    // Renk: gece mavi-gri, üstte ay ışığı; gündüz beyaz, altta hafif gölge
+    x.globalCompositeOperation = 'source-atop';
+    const tint = x.createLinearGradient(0, 0, 0, h);
+    if (dark) {
+      tint.addColorStop(0, 'rgba(176,190,228,1)');
+      tint.addColorStop(0.5, 'rgba(92,106,150,1)');
+      tint.addColorStop(1, 'rgba(38,48,82,1)');
+    } else {
+      tint.addColorStop(0, 'rgba(255,255,255,1)');
+      tint.addColorStop(0.7, 'rgba(246,249,255,1)');
+      tint.addColorStop(1, 'rgba(214,226,242,1)');
+    }
+    x.fillStyle = tint;
+    x.fillRect(0, 0, w, h);
+    return c;
+  }
 
-    const clouds = [
-      { x: w * 0.06, y: h * 0.30, rx: Math.max(180, w * 0.28), ry: 110, a: dark ? 0.20 : 0.42 },
-      { x: w * 0.18, y: h * 0.42, rx: Math.max(150, w * 0.22), ry: 90, a: dark ? 0.16 : 0.34 },
-      { x: w * 0.94, y: h * 0.34, rx: Math.max(190, w * 0.30), ry: 120, a: dark ? 0.22 : 0.44 },
-      { x: w * 0.82, y: h * 0.46, rx: Math.max(160, w * 0.24), ry: 95, a: dark ? 0.14 : 0.32 }
-    ];
-    clouds.forEach((c) => {
-      ctx.save();
-      ctx.translate(c.x, c.y);
-      ctx.scale(1, c.ry / c.rx);
-      const g = ctx.createRadialGradient(0, 0, c.rx * 0.08, 0, 0, c.rx);
-      if (dark) {
-        g.addColorStop(0, `rgba(116, 132, 178, ${c.a})`);
-        g.addColorStop(0.55, `rgba(42, 54, 92, ${(c.a * 0.55).toFixed(2)})`);
-        g.addColorStop(1, 'rgba(10, 16, 32, 0)');
-      } else {
-        g.addColorStop(0, `rgba(255, 255, 255, ${c.a})`);
-        g.addColorStop(0.6, `rgba(245, 249, 255, ${(c.a * 0.5).toFixed(2)})`);
-        g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  function setupSky() {
+    const c = sky.canvas;
+    sky.dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    sky.w = window.innerWidth;
+    sky.h = window.innerHeight;
+    c.width = Math.round(sky.w * sky.dpr);
+    c.height = Math.round(sky.h * sky.dpr);
+    sky.ctx = c.getContext('2d');
+    sky.dark = isDarkMode();
+    const rand = rng(73);
+
+    const starCount = sky.dark ? Math.min(170, Math.floor((sky.w * sky.h) / 4800)) : 0;
+    sky.stars = Array.from({ length: starCount }, () => ({
+      x: rand() * sky.w,
+      y: rand() * sky.h * 0.8,
+      r: 0.35 + rand() * 1.15,
+      a: 0.25 + rand() * 0.65,
+      tw: 0.4 + rand() * 1.6,
+      ph: rand() * Math.PI * 2
+    }));
+
+    // Üç katman: uzak (küçük, yavaş, silik) → yakın (büyük, hızlı)
+    const layers = sky.dark
+      ? [{ n: 4, size: 0.55, speed: 3.5, alpha: 0.28, yMin: 0.05, yMax: 0.45 }, { n: 3, size: 0.8, speed: 7, alpha: 0.38, yMin: 0.2, yMax: 0.6 }, { n: 2, size: 1.15, speed: 12, alpha: 0.5, yMin: 0.45, yMax: 0.85 }]
+      : [{ n: 4, size: 0.5, speed: 4, alpha: 0.5, yMin: 0.04, yMax: 0.4 }, { n: 3, size: 0.75, speed: 8, alpha: 0.65, yMin: 0.2, yMax: 0.6 }, { n: 2, size: 1.05, speed: 13, alpha: 0.8, yMin: 0.45, yMax: 0.85 }];
+    const base = Math.max(240, Math.min(560, sky.w * 0.75));
+    sky.clouds = [];
+    layers.forEach((L) => {
+      for (let i = 0; i < L.n; i++) {
+        const img = makeCloud(rand, base * L.size * (0.8 + rand() * 0.45), sky.dark);
+        sky.clouds.push({
+          img,
+          x: (i / L.n) * (sky.w + img.width) - img.width * 0.5 + rand() * 80,
+          y: sky.h * (L.yMin + rand() * (L.yMax - L.yMin)) - img.height / 2,
+          speed: L.speed * (0.8 + rand() * 0.4),
+          alpha: L.alpha * (0.8 + rand() * 0.3)
+        });
       }
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(0, 0, c.rx, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
     });
   }
+
+  function frame(t) {
+    const { ctx, w, h, dpr } = sky;
+    const dt = sky.last ? Math.min(0.1, (t - sky.last) / 1000) : 0;
+    sky.last = t;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    const sec = t / 1000;
+    for (const s of sky.stars) {
+      const a = s.a * (0.55 + 0.45 * Math.sin(sec * s.tw + s.ph));
+      ctx.globalAlpha = Math.max(0, a);
+      ctx.fillStyle = '#f4f7ff';
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
+    }
+    for (const c of sky.clouds) {
+      c.x += c.speed * dt;
+      if (c.x > w + 10) c.x = -c.img.width - 10;
+      ctx.globalAlpha = c.alpha;
+      ctx.drawImage(c.img, c.x, c.y);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function loop(t) {
+    sky.raf = 0;
+    if (document.hidden) return;
+    // ~30 fps yeterli; pil dostu
+    if (!sky.last || t - sky.last >= 32) frame(t);
+    sky.raf = requestAnimationFrame(loop);
+  }
+  function startSky() {
+    if (reduceMotion) { frame(performance.now()); return; }
+    if (!sky.raf) { sky.last = 0; sky.raf = requestAnimationFrame(loop); }
+  }
+  function stopSky() { if (sky.raf) cancelAnimationFrame(sky.raf); sky.raf = 0; }
 
   // ---------- Ay geometrisi ----------
   // limbAngle: aydınlık kenarın ekrandaki yönü (yukarıdan, saat yönünün tersine, derece)
@@ -253,20 +320,15 @@
 
   function updateCaption(g) {
     const SIGNS = ['Koç', 'Boğa', 'İkizler', 'Yengeç', 'Aslan', 'Başak', 'Terazi', 'Akrep', 'Yay', 'Oğlak', 'Kova', 'Balık'];
-    const title = document.getElementById('liveMoonPhase');
-    if (title) title.textContent = phaseName(g.elong);
-    const signEl = document.getElementById('moonSignText');
-    if (signEl && g.moonLon !== undefined) {
+    const LOC = ['ta', 'da', 'de', 'te', 'da', 'ta', 'de', 'te', 'da', 'ta', 'da', 'ta'];
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('liveMoonPhase', phaseName(g.elong));
+    if (g.moonLon !== undefined) {
       const idx = Math.floor(g.moonLon / 30) % 12;
-      const inSign = g.moonLon - idx * 30;
-      const d = Math.floor(inSign);
-      const m = Math.floor((inSign - d) * 60);
-      signEl.textContent = `Ay ${SIGNS[idx]} ${d}°${String(m).padStart(2, '0')}′`;
+      set('heroSign', `Ay ${SIGNS[idx]}'${LOC[idx]}`);
     }
-    const illumEl = document.getElementById('moonIllumText');
-    if (illumEl) illumEl.textContent = `%${Math.round(g.frac * 100)} aydınlık`;
-    const dirEl = document.getElementById('moonTrendText');
-    if (dirEl) dirEl.textContent = g.elong < 180 ? 'Büyüyor' : 'Küçülüyor';
+    const big = document.getElementById('heroIllum');
+    if (big) big.innerHTML = `<span class="hero-pct">%</span>${Math.round(g.frac * 100)}`;
     const canvas = document.getElementById('liveMoonCanvas');
     if (canvas) canvas.setAttribute('aria-label', `${phaseName(g.elong)}, yüzde ${Math.round(g.frac * 100)} aydınlık`);
   }
@@ -287,16 +349,18 @@
       bg.id = 'skyBackdrop';
       bg.className = 'sky-backdrop';
       bg.setAttribute('aria-hidden', 'true');
-      const skyCanvas = document.createElement('canvas');
-      skyCanvas.id = 'skyStarsCanvas';
-      bg.appendChild(skyCanvas);
+      sky.canvas = document.createElement('canvas');
+      sky.canvas.id = 'skyStarsCanvas';
+      bg.appendChild(sky.canvas);
       document.body.prepend(bg);
-      drawSky(skyCanvas);
+      setupSky();
+      startSky();
       let rt;
       window.addEventListener('resize', () => {
         clearTimeout(rt);
-        rt = setTimeout(() => { drawSky(skyCanvas); if (geom) drawMoon(document.getElementById('liveMoonCanvas'), geom); }, 150);
+        rt = setTimeout(() => { setupSky(); if (reduceMotion) frame(performance.now()); if (geom) drawMoon(document.getElementById('liveMoonCanvas'), geom); }, 150);
       }, { passive: true });
+      document.addEventListener('visibilitychange', () => { if (document.hidden) stopSky(); else startSky(); });
     }
 
     // Doku yüklenmeden önce düz renkli hızlı bir çizim, sonra gerçek doku
@@ -305,8 +369,7 @@
     setInterval(renderMoon, 60 * 1000);
 
     new MutationObserver(() => {
-      const sky = document.getElementById('skyStarsCanvas');
-      if (sky) drawSky(sky);
+      if (sky.canvas) { setupSky(); if (reduceMotion) frame(performance.now()); }
       const mc = document.getElementById('liveMoonCanvas');
       if (mc && geom) drawMoon(mc, geom);
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });

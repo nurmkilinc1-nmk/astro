@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bugün — luna.gram</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols+2&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="manifest" href="manifest.json">
@@ -25,7 +25,7 @@
         <a href="gunluk.html">Günlük</a>
         <a href="aylik-takvim.html">Aylık Takvim</a>
         <a href="ozel-takvimler.html">Özel Takvimler</a>
-        <a href="astrosozluk.html">Astro Sözlük</a>
+        <a href="notlar.html">Notlarım</a>
         <a href="hakkimda.html">Hakkımda</a>
       </nav>
 
@@ -52,73 +52,27 @@
 <main class="home" id="home">
 
   <!-- CANLI AY -->
-  <section class="home-moon" aria-label="Canlı Ay">
-    <p class="home-date" id="homeDate">&nbsp;</p>
+  <section class="hero" aria-label="Canlı Ay">
     <div class="moon-canvas-wrap">
       <div class="moon-halo" id="moonHalo"></div>
       <canvas id="liveMoonCanvas" role="img" aria-label="Canlı Ay"></canvas>
     </div>
-    <h1 class="home-phase" id="liveMoonPhase">Ay hesaplanıyor…</h1>
-    <div class="moon-chips">
-      <span class="moon-chip" id="moonSignText">—</span>
-      <span class="moon-chip" id="moonIllumText">—</span>
-      <span class="moon-chip" id="moonTrendText">—</span>
-    </div>
+    <p class="hero-place" id="heroSign">&nbsp;</p>
+    <p class="hero-big" id="heroIllum" aria-label="Aydınlanma yüzdesi">&nbsp;</p>
+    <p class="hero-phase" id="liveMoonPhase">&nbsp;</p>
+    <p class="hero-sub" id="heroRiseSet">&nbsp;</p>
   </section>
 
   <!-- AY BOŞLUĞU -->
-  <section class="voc-card glass" id="vocCard" aria-labelledby="vocTitle">
-    <div class="voc-card-head">
-      <div>
-        <p class="voc-kicker">Ay Boşluğu</p>
-        <h2 class="voc-title" id="vocTitle">
-          <span class="voc-dot" aria-hidden="true"></span>
-          <span id="vocStatusText">Hesaplanıyor…</span>
-        </h2>
-      </div>
-      <button type="button" class="icon-btn voc-info-btn" id="vocInfoBtn" aria-expanded="false" aria-controls="vocExplain" aria-label="Ay boşluğu nedir?">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.6" r=".9" fill="currentColor" stroke="none"/></svg>
-      </button>
+  <section class="wx-card glass voc-card voc2" id="vocCard" aria-label="Ay boşluğu">
+    <div class="voc2-top">
+      <span class="voc2-status"><span class="voc-dot" aria-hidden="true"></span><span id="vocStatusText">Hesaplanıyor…</span></span>
+      <button type="button" class="bell-btn" id="vocBell" aria-label="Ay boşluğu için hatırlatıcı kur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.6 2.1H4.4z"/><path d="M10 20.6a2.1 2.1 0 0 0 4 0"/><path class="bell-ring" d="M3.2 9.6a9 9 0 0 1 2.3-4.8M20.8 9.6a9 9 0 0 0-2.3-4.8"/></svg></button>
     </div>
-
-    <div class="voc-explain" id="vocExplain" hidden>
-      <p>Ay, bulunduğu burçta diğer gezegenlerle son majör açısını yaptıktan sonra yeni burca geçene kadar “boşlukta” sayılır. Bu aralık yeni başlangıçlar, imza ve önemli kararlar için uygun görülmez; rutin işler, dinlenme ve yarım kalanları tamamlamak için idealdir.</p>
-    </div>
-
-    <div class="voc-countdown">
-      <span class="voc-countdown-label" id="vocCountdownLabel">—</span>
-      <strong class="voc-countdown-value" id="vocCountdown">—</strong>
-    </div>
-
+    <p class="voc2-label" id="vocCountdownLabel">&nbsp;</p>
+    <p class="voc2-big" id="vocCountdown">&nbsp;</p>
     <div class="voc-progress" aria-hidden="true"><span class="voc-progress-fill" id="vocProgress"></span></div>
-
-    <div class="voc-times">
-      <div class="voc-time-block">
-        <span class="voc-time-label">Başlangıç</span>
-        <span class="voc-time-clock" id="vocStartClock">--:--</span>
-        <span class="voc-time-day" id="vocStartDay">—</span>
-        <button type="button" class="alarm-btn" id="alarmStartBtn" data-kind="start">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="7.5"/><path d="M12 9.5V13l2.3 1.6M4.5 5.5l3-2.4M19.5 5.5l-3-2.4"/></svg>
-          <span>Alarm kur</span>
-        </button>
-      </div>
-      <div class="voc-time-sep" aria-hidden="true">
-        <span id="vocDuration">—</span>
-        <svg viewBox="0 0 40 10" aria-hidden="true"><path d="M1 5h36M33 1.5 37 5l-4 3.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="voc-time-block">
-        <span class="voc-time-label">Bitiş</span>
-        <span class="voc-time-clock" id="vocEndClock">--:--</span>
-        <span class="voc-time-day" id="vocEndDay">—</span>
-        <button type="button" class="alarm-btn" id="alarmEndBtn" data-kind="end">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="7.5"/><path d="M12 9.5V13l2.3 1.6M4.5 5.5l3-2.4M19.5 5.5l-3-2.4"/></svg>
-          <span>Alarm kur</span>
-        </button>
-      </div>
-    </div>
-
-    <p class="voc-foot" id="vocFoot">&nbsp;</p>
-
+    <p class="voc2-when" id="vocWhen">&nbsp;</p>
     <details class="voc-upcoming">
       <summary>
         <span>Sonraki boşluklar</span>
@@ -126,53 +80,47 @@
       </summary>
       <ul id="vocUpcoming"></ul>
     </details>
+    <details class="voc-what">
+      <summary>Ay boşluğu nedir?</summary>
+      <p>Ay, yeni bir burca geçmeden önceki bu aralıkta “boşlukta” sayılır. Bu sürede yeni işlere başlamak, imza atmak ve önemli kararlar almak önerilmez; dinlenmek ve yarım kalanları bitirmek için idealdir.</p>
+    </details>
   </section>
 
-  <!-- GÖKYÜZÜ ÖZETİ -->
-  <section class="home-section" aria-labelledby="skyTitle">
-    <h2 class="home-section-title" id="skyTitle">Gökyüzü özeti</h2>
-    <div class="sky-tiles">
-      <a href="aylik-takvim.html" class="sky-tile glass">
-        <span class="sky-tile-label" id="tilePhaseLabel">Sıradaki faz</span>
-        <span class="sky-tile-value" id="tilePhaseValue">—</span>
-        <span class="sky-tile-sub" id="tilePhaseSub">—</span>
-      </a>
-      <a href="aylik-takvim.html" class="sky-tile glass">
-        <span class="sky-tile-label">Ay'ın sıradaki burcu</span>
-        <span class="sky-tile-value" id="tileSignValue">—</span>
-        <span class="sky-tile-sub" id="tileSignSub">—</span>
-      </a>
-      <a href="aylik-takvim.html" class="sky-tile glass">
-        <span class="sky-tile-label">Sıradaki tutulma</span>
-        <span class="sky-tile-value" id="tileEclipseValue">—</span>
-        <span class="sky-tile-sub" id="tileEclipseSub">—</span>
-      </a>
-      <a href="aylik-takvim.html" class="sky-tile glass">
-        <span class="sky-tile-label">Bugün için uygun</span>
-        <span class="sky-tile-value sky-tile-value--text" id="tileGoodValue">—</span>
-        <span class="sky-tile-sub" id="tileGoodSub">—</span>
-      </a>
-    </div>
+  <!-- 7 GÜNLÜK AY -->
+  <section class="wx-card glass" aria-labelledby="weekTitle">
+    <h2 class="wx-head" id="weekTitle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M8 3v3.5M16 3v3.5M3.5 10h17"/></svg>
+      7 günlük Ay
+    </h2>
+    <ul class="week" id="weekList"></ul>
+    <a class="wx-more" href="aylik-takvim.html">Aylık takvimi aç
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+    </a>
   </section>
 
-  <!-- KEŞFET -->
-  <section class="home-section" aria-label="Keşfet">
-    <a href="kayit.html" class="home-cta glass">
-      <span class="home-cta-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v5.5M12 15v5.5M3.5 12H9M15 12h5.5"/></svg>
+  <!-- KİŞİSEL -->
+  <section class="home-links" aria-label="Kişisel">
+    <a href="kayit.html" class="glass-link" id="profileLink">
+      <span class="gl-ico" id="homeProfileIcon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2l1.6 4.4 4.4 1.6-4.4 1.6L12 15.2l-1.6-4.4L6 9.2l4.4-1.6z"/><path d="M18.5 14.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7zM6 15.5l.5 1.3 1.3.5-1.3.5L6 19.1l-.5-1.3-1.3-.5 1.3-.5z"/></svg>
       </span>
-      <span class="home-cta-text">
+      <span class="gl-text">
         <strong id="homeProfileTitle">Doğum haritanı oluştur</strong>
-        <span id="homeProfileSub">Güneş, Ay ve yükselen burcunu, sana özel günleri keşfet.</span>
+        <span id="homeProfileSub">Güneş, Ay ve yükselen burcunu keşfet.</span>
       </span>
-      <svg class="home-cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      <svg class="gl-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
     </a>
-    <a href="astrosozluk.html" class="home-link glass">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5h10.5a3 3 0 0 1 3 3V20H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h10.5"/></svg>
-      <span>Astro Sözlük</span>
-      <svg class="home-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+    <a href="notlar.html" class="glass-link">
+      <span class="gl-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5h9l3 3v14h-12z"/><path d="M9.5 11h6M9.5 14.5h6M9.5 18h3.5"/><path d="M13.4 5.2a2.4 2.4 0 1 0 1.9 3.4 1.9 1.9 0 0 1-1.9-3.4z" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <span class="gl-text">
+        <strong>Notlarım</strong>
+        <span id="homeNotesSub">Ay günlüğün: duygularını ve niyetlerini kaydet.</span>
+      </span>
+      <svg class="gl-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
     </a>
-    <p class="home-credit">Ay görseli: NASA/GSFC Scientific Visualization Studio, LRO verisi.</p>
+    <p class="home-credit">Ay görseli: NASA/GSFC SVS, LRO verisi.</p>
   </section>
 </main>
 
