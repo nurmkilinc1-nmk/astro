@@ -81,13 +81,18 @@
   }
 
   // Güneş ↔ Ay arasında yumuşak geçiş yapan tema simgesi
-  const THEME_ICON = `<svg class="theme-morph" viewBox="0 0 24 24" aria-hidden="true">
-      <defs><mask id="themeMorphMask"><rect width="24" height="24" fill="#fff"/><circle class="tm-cut" cx="17.5" cy="6.5" r="6.6" fill="#000"/></mask></defs>
-      <circle class="tm-core" cx="12" cy="12" r="5" fill="currentColor" mask="url(#themeMorphMask)"/>
-      <g class="tm-rays" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
-        <path d="M12 2.6v1.9M12 19.5v1.9M21.4 12h-1.9M4.5 12H2.6M18.65 5.35l-1.35 1.35M6.7 17.3l-1.35 1.35M18.65 18.65 17.3 17.3M6.7 6.7 5.35 5.35"/>
-      </g>
-    </svg>`;
+  const THEME_ICON = `<span class="tt-track" aria-hidden="true">
+      <span class="tt-knob">
+        <svg class="tt-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4.2" fill="currentColor" stroke="none"/>
+          <path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2 5.5 5.5"/>
+        </svg>
+        <svg class="tt-moon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14.6 3.6a8.6 8.6 0 1 0 5.8 13.9A7 7 0 0 1 14.6 3.6z"/>
+          <path d="M19.2 3.4l.55 1.45 1.45.55-1.45.55-.55 1.45-.55-1.45-1.45-.55 1.45-.55z"/>
+        </svg>
+      </span>
+    </span>`;
 
   function initAppChrome() {
     applyBrand();

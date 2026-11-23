@@ -1,5 +1,5 @@
 // ===== home.js — luna.gram anasayfa =====
-// Ay doğuş/batış, Ay boşluğu kartı (tek zil), 7 günlük Ay, kişisel bağlantılar.
+// Ay doğuş/batış, Ay boşluğu kartı (tek zil), önümüzdeki 3 gün, kişisel bağlantılar.
 (function () {
   'use strict';
 
@@ -51,7 +51,6 @@
     return `<svg viewBox="0 0 20 20" class="wk-moon" aria-hidden="true"><circle cx="10" cy="10" r="8" class="wk-dark"/><path d="${d}" class="wk-lit"/></svg>`;
   }
   const elongAt = (d) => C.norm(C.moonLon(d) - C.norm(A.Ecliptic(A.GeoVector(A.Body.Sun, d, true)).elon));
-  const illumAt = (d) => A.Illumination(A.Body.Moon, d).phase_fraction;
 
   // ---------- Ay doğuş / batış ----------
   function renderRiseSet() {
@@ -112,41 +111,41 @@
       : { date, kicker: 'Boşluk bitişi', title: 'Ay boşluğu bitti', body: `Ay ${signDative(next)} geçti; boşluk sona erdi. — luna.gram` });
   }
 
-  // ---------- 7 günlük Ay ----------
+  // ---------- Önümüzdeki 3 gün ----------
+  const DAYS = 3;
   function renderWeek() {
     const now = new Date();
     const t0 = istMidnight(now);
-    const t7 = t0 + 7 * DAY;
-    const transitions = C.moonSignTransitions(new Date(t0), new Date(t7));
+    const tN = t0 + DAYS * DAY;
+    const transitions = C.moonSignTransitions(new Date(t0), new Date(tN));
     const vocs = [{ start: voc.voidStart.getTime(), end: voc.voidEnd.getTime() }].concat(upcoming.map((u) => ({ start: u.start.getTime(), end: u.end.getTime() })));
     const quarters = [];
     let q = A.SearchMoonQuarter(A.MakeTime(new Date(t0 - DAY)));
-    while (q.time.date.getTime() < t7) { quarters.push({ t: q.time.date.getTime(), q: q.quarter }); q = A.NextMoonQuarter(q); }
+    while (q.time.date.getTime() < tN) { quarters.push({ t: q.time.date.getTime(), q: q.quarter }); q = A.NextMoonQuarter(q); }
     const QN = ['Yeniay', 'İlk dördün', 'Dolunay', 'Son dördün'];
+    const LOC = ['ta', 'da', 'de', 'te', 'da', 'ta', 'de', 'te', 'da', 'ta', 'da', 'ta'];
 
     const rows = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < DAYS; i++) {
       const ds = t0 + i * DAY, de = ds + DAY;
-      const noon = new Date(ds + 12 * H);
-      const i0 = illumAt(new Date(ds)), i1 = illumAt(new Date(de));
-      const lo = Math.min(i0, i1), hi = Math.max(i0, i1);
       const startSign = C.signIndex(C.moonLon(new Date(ds)));
       const tr = transitions.find((x) => x.time.getTime() >= ds && x.time.getTime() < de);
       const ev = quarters.find((x) => x.t >= ds && x.t < de);
-      const hasVoc = vocs.some((v) => v.end > ds && v.start < de);
-      const label = i === 0 ? 'Bugün' : GUN_KISA[ist(new Date(ds)).getUTCDay()];
-      const signTxt = tr ? `→ ${C.SIGNS[tr.sign]}` : C.SIGNS[startSign];
-      const nowPos = i === 0 ? (illumAt(now) * 100).toFixed(1) : null;
+      const dayVocs = vocs.filter((v) => v.end > ds && v.start < de);
+      const label = i === 0 ? 'Bugün' : i === 1 ? 'Yarın' : GUN_KISA[ist(new Date(ds)).getUTCDay()];
+
+      const main = ev
+        ? `<span class="wk-ev">${QN[ev.q]} · ${clock(new Date(ev.t))}</span>`
+        : `<span class="wk-sign">Ay ${C.SIGNS[startSign]}'${LOC[startSign]}</span>`;
+      const sub = tr ? `${signDative(tr.sign)} geçiş ${clock(tr.time)}` : (ev ? `Ay ${C.SIGNS[startSign]}'${LOC[startSign]}` : '');
+      const vocHtml = dayVocs.map((v) => `<span class="wk-voc-chip" title="Ay boşluğu">${clock(new Date(v.start))}–${clock(new Date(v.end))}</span>`).join('');
+
       rows.push(`
         <li${i === 0 ? ' class="today"' : ''}>
           <span class="wk-day">${label}</span>
-          ${moonIcon(elongAt(noon))}
-          <span class="wk-mid">
-            ${ev ? `<span class="wk-ev">${QN[ev.q]} ${clock(new Date(ev.t))}</span>` : `<span class="wk-sign">${signTxt}</span>`}
-            ${hasVoc ? '<i class="wk-voc" title="Bu gün Ay boşluğu var"></i>' : ''}
-          </span>
-          <span class="wk-bar" aria-hidden="true"><i style="left:${(lo * 100).toFixed(1)}%;width:${Math.max(4, (hi - lo) * 100).toFixed(1)}%"></i>${nowPos ? `<b style="left:${nowPos}%"></b>` : ''}</span>
-          <span class="wk-pct">%${Math.round(hi * 100)}</span>
+          ${moonIcon(elongAt(new Date(ds + 12 * H)))}
+          <span class="wk-mid">${main}${sub ? `<small class="wk-sub">${sub}</small>` : ''}</span>
+          <span class="wk-right">${vocHtml ? `<small class="wk-voc-label">Boşluk</small>${vocHtml}` : ''}</span>
         </li>`);
     }
     $('weekList').innerHTML = rows.join('');
@@ -197,13 +196,13 @@
   function start() {
     safe(renderVoc, 'Ay boşluğu');
     safe(renderRiseSet, 'Doğuş/batış');
-    safe(renderWeek, '7 günlük Ay');
+    safe(renderWeek, '3 günlük Ay');
     safe(renderPersonal, 'Kişisel');
     bind();
     setInterval(() => safe(renderVoc, 'Ay boşluğu'), 30 * 1000);
-    setInterval(() => { safe(renderRiseSet, 'Doğuş/batış'); safe(renderWeek, '7 günlük Ay'); }, 15 * 60 * 1000);
+    setInterval(() => { safe(renderRiseSet, 'Doğuş/batış'); safe(renderWeek, '3 günlük Ay'); }, 15 * 60 * 1000);
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) { safe(renderVoc, 'Ay boşluğu'); safe(renderRiseSet, 'Doğuş/batış'); safe(renderWeek, '7 günlük Ay'); }
+      if (!document.hidden) { safe(renderVoc, 'Ay boşluğu'); safe(renderRiseSet, 'Doğuş/batış'); safe(renderWeek, '3 günlük Ay'); }
     });
   }
 
