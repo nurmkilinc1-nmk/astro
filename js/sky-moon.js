@@ -327,8 +327,6 @@
       const idx = Math.floor(g.moonLon / 30) % 12;
       set('heroSign', `Ay ${SIGNS[idx]}'${LOC[idx]}`);
     }
-    const big = document.getElementById('heroIllum');
-    if (big) big.innerHTML = `<span class="hero-pct">%</span>${Math.round(g.frac * 100)}`;
     const canvas = document.getElementById('liveMoonCanvas');
     if (canvas) canvas.setAttribute('aria-label', `${phaseName(g.elong)}, yüzde ${Math.round(g.frac * 100)} aydınlık`);
   }
