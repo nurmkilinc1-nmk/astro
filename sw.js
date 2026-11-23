@@ -1,5 +1,5 @@
-// ===== SW.js — astro.takvim Service Worker =====
-const CACHE_NAME = 'astro-takvim-v1.0.0';
+// ===== SW.js — luna.gram Service Worker =====
+const CACHE_NAME = 'luna-gram-v1.0.0';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -16,7 +16,9 @@ const urlsToCache = [
   '/imza-sozlesme.html',
   '/sac-bakim.html',
   '/saglik-tedavi.html',
-  '/gida-mutfak.html'
+  '/gida-mutfak.html',
+  '/kayit.html',
+  '/notlar.html'
 ];
 
 // ===== INSTALL =====
@@ -101,7 +103,7 @@ self.addEventListener('push', event => {
   };
   
   event.waitUntil(
-    self.registration.showNotification(data.title || 'astro.takvim', options)
+    self.registration.showNotification(data.title || 'luna.gram', options)
   );
 });
 

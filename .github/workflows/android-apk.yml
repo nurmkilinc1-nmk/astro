@@ -41,5 +41,5 @@ jobs:
       - name: Debug APK dosyasini yukle
         uses: actions/upload-artifact@v4
         with:
-          name: astro-takvim-debug-apk
+          name: luna-gram-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk

@@ -52,7 +52,7 @@
     'gida-mutfak.html': 'aylik-takvim.html', 'imza-sozlesme.html': 'aylik-takvim.html',
     'sac-bakim.html': 'aylik-takvim.html', 'saglik-tedavi.html': 'aylik-takvim.html',
     'seyahat.html': 'aylik-takvim.html', 'sosyal.html': 'aylik-takvim.html',
-    'yeni-baslangiclar.html': 'aylik-takvim.html'
+    'yeni-baslangiclar.html': 'aylik-takvim.html', 'notlar.html': 'index.html'
   };
 
   const rawPath = window.location.pathname.split('?')[0].split('#')[0];
