@@ -3,9 +3,7 @@
 // piksel piksel çizilir. Işık yönü ve faz astronomy-engine ile hesaplanır;
 // aydınlık kenarın yönü İstanbul'dan o an görüldüğü gibidir.
 (function () {
-  const path = window.location.pathname.split('?')[0].split('#')[0];
-  const file = path.split('/').pop();
-  if (file && file !== 'index.html' && file !== '') return;
+  // Gökyüzü bu dosyayı yükleyen her sayfada; Ay yalnızca #liveMoonCanvas olan sayfada çizilir.
 
   const DEG = Math.PI / 180;
   const OBSERVER = { lat: 41.0082, lon: 28.9784, h: 40 }; // İstanbul
@@ -362,9 +360,11 @@
     }
 
     // Doku yüklenmeden önce düz renkli hızlı bir çizim, sonra gerçek doku
-    renderMoon();
-    loadTexture().then(renderMoon);
-    setInterval(renderMoon, 60 * 1000);
+    if (document.getElementById('liveMoonCanvas')) {
+      renderMoon();
+      loadTexture().then(renderMoon);
+      setInterval(renderMoon, 60 * 1000);
+    }
 
     new MutationObserver(() => {
       if (sky.canvas) { setupSky(); if (reduceMotion) frame(performance.now()); }
