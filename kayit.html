@@ -78,8 +78,13 @@
       </div>
       <label class="prof-check"><input type="checkbox" id="unknownTime"><span>Doğum saatimi bilmiyorum</span></label>
 
-      <label class="prof-label" for="birthCity">Doğum yeri</label>
-      <select class="prof-input" id="birthCity" required></select>
+      <span class="prof-label" id="birthCityLabel">Doğum yeri</span>
+      <select id="birthCity" hidden aria-hidden="true" tabindex="-1"></select>
+      <button type="button" class="prof-input city-btn" id="cityPickBtn" aria-labelledby="birthCityLabel cityPickText">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11A6.5 6.5 0 0 1 18.5 10c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+        <span id="cityPickText" class="city-btn-text">Haritadan seç</span>
+        <svg class="city-btn-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
       <div class="prof-abroad" id="abroadBox" hidden>
         <div class="prof-row">
           <div>
@@ -142,13 +147,16 @@
 
     <section class="prof-card glass" aria-labelledby="settingsTitle">
       <h2 class="prof-h2" id="settingsTitle">Ayarlar</h2>
-      <div class="set-row">
-        <span>Tema</span>
-        <div class="seg" role="radiogroup" aria-label="Tema">
-          <button type="button" role="radio" data-theme-set="light">Gündüz</button>
-          <button type="button" role="radio" data-theme-set="dark">Gece</button>
-        </div>
-      </div>
+      <label class="set-row theme-row">
+        <span class="theme-row-text"><span>Gece teması</span><small id="themeHint">Koyu, yıldızlı gökyüzü</small></span>
+        <input type="checkbox" id="themeSwitch" class="lux-switch-input">
+        <span class="lux-switch" aria-hidden="true">
+          <span class="lux-knob">
+            <svg class="lx-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/><path d="M12 3v2M12 19v2M21 12h-2M5 12H3M18.4 5.6 17 7M7 17l-1.4 1.4M18.4 18.4 17 17M7 7 5.6 5.6"/></svg>
+            <svg class="lx-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M15 3.5a8.5 8.5 0 1 0 5.6 13.8A7 7 0 0 1 15 3.5z"/></svg>
+          </span>
+        </span>
+      </label>
       <button type="button" class="set-row set-link" id="editBtn2">
         <span>Doğum bilgilerini düzenle</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
@@ -165,6 +173,28 @@
   </div>
 </main>
 
+<div class="sheet-backdrop" id="citySheet" hidden>
+  <div class="sheet glass city-sheet" role="dialog" aria-modal="true" aria-labelledby="citySheetTitle">
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <div class="city-head">
+      <h3 class="sheet-title" id="citySheetTitle">Doğduğun şehir</h3>
+      <span class="city-sel" id="citySel">Haritada bir noktaya dokun</span>
+    </div>
+    <div class="city-map-wrap">
+      <svg class="city-map" id="cityMap" viewBox="0 0 1540 680" role="img" aria-label="Türkiye il haritası"></svg>
+    </div>
+    <label class="notes-search city-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+      <input type="search" id="citySearch" placeholder="Şehir ara" autocomplete="off" aria-label="Şehir ara">
+    </label>
+    <ul class="city-list" id="cityList" role="listbox" aria-label="Şehirler"></ul>
+    <div class="sheet-actions">
+      <button type="button" class="sheet-btn sheet-btn--primary" id="cityDone" disabled>Seç</button>
+      <button type="button" class="sheet-btn sheet-btn--ghost" id="cityAbroad">Yurt dışında doğdum</button>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div>© 2026 luna.gram</div>
   <div class="mono">İstanbul</div>
@@ -175,6 +205,7 @@
 <script src="js/natal.js"></script>
 <script src="js/device.js" defer></script>
 <script src="js/profil.js" defer></script>
+<script src="js/sky-moon.js" defer></script>
 <script src="js/app.js" defer></script>
 </body>
 </html>

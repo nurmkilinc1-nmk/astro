@@ -58,7 +58,7 @@
     $('birthTime').disabled = $('unknownTime').checked;
     const ci = p && Number.isInteger(p.cityIndex) ? String(p.cityIndex) : '';
     $('birthCity').value = ci;
-    $('abroadBox').hidden = ci !== '-1';
+    syncCity();
     $('birthPlace').value = p && p.cityIndex === -1 ? p.birthPlace || '' : '';
     if (p && typeof p.tzOffset === 'number') $('tzOffset').value = String(p.tzOffset);
     $('cancelEdit').hidden = !p;
@@ -71,7 +71,14 @@
     $('birthTime').disabled = $('unknownTime').checked;
     if ($('unknownTime').checked) $('birthTime').value = '';
   });
-  $('birthCity').addEventListener('change', () => { $('abroadBox').hidden = $('birthCity').value !== '-1'; });
+  function syncCity() {
+    const v = $('birthCity').value;
+    $('abroadBox').hidden = v !== '-1';
+    const t = $('cityPickText');
+    t.textContent = v === '' ? 'Haritadan seç' : v === '-1' ? 'Yurt dışı' : N.CITIES[Number(v)][0];
+    $('cityPickBtn').classList.toggle('has-value', v !== '');
+  }
+  $('birthCity').addEventListener('change', syncCity);
   $('cancelEdit').addEventListener('click', () => render(load()));
 
   $('profileForm').addEventListener('submit', (e) => {
@@ -101,6 +108,105 @@
     render(p);
     D() && D().toast('Haritan hazır ✨');
   });
+
+  // ---------- Harita ile şehir seçimi ----------
+  // Eşdikdörtgen izdüşüm (39° enlemde boylam düzeltmesi); 81 il noktası Türkiye'nin şeklini oluşturur.
+  const MAP = { lon0: 25.4, lat0: 42.4, k: 100, cos: Math.cos(39 * Math.PI / 180) };
+  const px = (c) => [((c[2] - MAP.lon0) * MAP.cos * MAP.k) + 20, ((MAP.lat0 - c[1]) * MAP.k) + 20];
+  const fold = (t) => t.toLocaleLowerCase('tr-TR').replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c').replace(/[̀-ͯ]/g, '');
+  const LANDMARK = ['İstanbul', 'Ankara', 'İzmir', 'Antalya', 'Trabzon', 'Van', 'Diyarbakır', 'Adana', 'Samsun', 'Erzurum'];
+  let pick = null;
+
+  function drawMap() {
+    const dots = N.CITIES.map((c, i) => {
+      const [x, y] = px(c);
+      const lm = LANDMARK.includes(c[0]);
+      return `<g class="cm-city${lm ? ' lm' : ''}" data-i="${i}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${lm ? 19 : 15}" class="cm-dot"/>${lm ? `<text x="${x.toFixed(1)}" y="${(y - 30).toFixed(1)}" class="cm-lm">${c[0]}</text>` : ''}</g>`;
+    }).join('');
+    // Noktaların bulanık birleşimi Türkiye'nin silüetini oluşturur
+    const land = N.CITIES.map((c) => { const [x, y] = px(c); return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="78"/>`; }).join('');
+    $('cityMap').innerHTML = `<defs><filter id="cmLand" x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation="26"/></filter></defs>
+      <g class="cm-land" filter="url(#cmLand)">${land}</g><g class="cm-dots">${dots}</g><g id="cmSel"></g>`;
+  }
+  function renderPick() {
+    $('cityMap').querySelectorAll('.cm-city').forEach((g) => g.classList.toggle('on', Number(g.dataset.i) === pick));
+    const sel = $('cmSel');
+    if (pick !== null && pick >= 0) {
+      const [x, y] = px(N.CITIES[pick]);
+      const left = x > 1300;
+      sel.innerHTML = `<circle cx="${x}" cy="${y}" r="52" class="cm-ring"/><circle cx="${x}" cy="${y}" r="24" class="cm-pin"/>
+        <text x="${left ? x - 40 : x + 40}" y="${y + 18}" text-anchor="${left ? 'end' : 'start'}" class="cm-label">${N.CITIES[pick][0]}</text>`;
+      $('citySel').textContent = N.CITIES[pick][0];
+    } else {
+      sel.innerHTML = '';
+      $('citySel').textContent = 'Haritada bir noktaya dokun ya da ara';
+    }
+    $('cityDone').disabled = pick === null;
+    $('cityList').querySelectorAll('[data-i]').forEach((li) => li.setAttribute('aria-selected', String(Number(li.dataset.i) === pick)));
+  }
+  function renderCityList() {
+    const q = fold($('citySearch').value.trim());
+    const items = N.CITIES.map((c, i) => [c[0], i])
+      .filter(([n]) => !q || fold(n).includes(q))
+      .sort((a, b) => {
+        if (q) { const as = fold(a[0]).startsWith(q), bs = fold(b[0]).startsWith(q); if (as !== bs) return as ? -1 : 1; }
+        return a[0].localeCompare(b[0], 'tr');
+      });
+    $('cityList').innerHTML = items.length
+      ? items.map(([n, i]) => `<li role="option" data-i="${i}" aria-selected="${i === pick}">${n}</li>`).join('')
+      : '<li class="empty">Bulunamadı. Yurt dışında doğduysan aşağıdan seç.</li>';
+  }
+  function openCity() {
+    const v = $('birthCity').value;
+    pick = v === '' || v === '-1' ? null : Number(v);
+    $('citySearch').value = '';
+    renderCityList();
+    renderPick();
+    const s = $('citySheet');
+    s.hidden = false;
+    requestAnimationFrame(() => s.classList.add('open'));
+  }
+  function closeCity() {
+    const s = $('citySheet');
+    s.classList.remove('open');
+    setTimeout(() => { s.hidden = true; }, 260);
+  }
+  function choose(v) {
+    $('birthCity').value = String(v);
+    syncCity();
+    closeCity();
+  }
+  $('cityPickBtn').addEventListener('click', openCity);
+  $('cityMap').addEventListener('click', (e) => {
+    // En yakın ile dokunma (küçük noktalar için parmak dostu)
+    const svg = $('cityMap');
+    const pt = svg.createSVGPoint();
+    pt.x = e.clientX; pt.y = e.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    let best = -1, bd = Infinity;
+    N.CITIES.forEach((c, i) => { const [x, y] = px(c); const d = (x - p.x) ** 2 + (y - p.y) ** 2; if (d < bd) { bd = d; best = i; } });
+    if (best >= 0 && bd < 90 * 90) {
+      pick = best;
+      renderPick();
+      if (navigator.vibrate) navigator.vibrate(5);
+    }
+  });
+  $('citySearch').addEventListener('input', () => {
+    renderCityList();
+    const first = $('cityList').querySelector('[data-i]');
+    if (first && $('citySearch').value.trim()) { pick = Number(first.dataset.i); renderPick(); }
+  });
+  $('cityList').addEventListener('click', (e) => {
+    const li = e.target.closest('[data-i]');
+    if (!li) return;
+    pick = Number(li.dataset.i);
+    renderPick();
+    choose(pick);
+  });
+  $('cityDone').addEventListener('click', () => { if (pick !== null) choose(pick); });
+  $('cityAbroad').addEventListener('click', () => choose(-1));
+  $('citySheet').addEventListener('click', (e) => { if (e.target.id === 'citySheet') closeCity(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('citySheet').hidden) closeCity(); });
 
   // ---------- Profil görünümü ----------
   function fmtBirth(p) {
@@ -264,17 +370,15 @@
   // ---------- Ayarlar ----------
   function renderTheme() {
     const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-    document.querySelectorAll('[data-theme-set]').forEach((b) => {
-      const on = (b.dataset.themeSet === 'dark') === dark;
-      b.classList.toggle('on', on);
-      b.setAttribute('aria-checked', String(on));
-    });
+    $('themeSwitch').checked = dark;
+    $('themeHint').textContent = dark ? 'Koyu, yıldızlı gökyüzü' : 'Açık, gündüz gökyüzü';
   }
-  document.querySelectorAll('[data-theme-set]').forEach((b) => b.addEventListener('click', () => {
+  $('themeSwitch').addEventListener('change', () => {
     const root = document.documentElement;
-    if (b.dataset.themeSet === 'dark') { root.setAttribute('data-theme', 'dark'); localStorage.setItem('astro-theme', 'dark'); }
+    if ($('themeSwitch').checked) { root.setAttribute('data-theme', 'dark'); localStorage.setItem('astro-theme', 'dark'); }
     else { root.removeAttribute('data-theme'); localStorage.setItem('astro-theme', 'light'); }
-  }));
+    if (navigator.vibrate) navigator.vibrate(6);
+  });
   new MutationObserver(renderTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   $('editBtn').addEventListener('click', () => showForm(load()));
@@ -305,5 +409,6 @@
     return;
   }
   fillSelects();
+  drawMap();
   render(load());
 })();
